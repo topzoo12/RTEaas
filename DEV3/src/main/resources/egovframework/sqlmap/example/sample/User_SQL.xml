@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="user">
+
+	<typeAlias  alias="userVO" type="egovframework.zieumtn.system.vo.UserVO"/>
+
+	<resultMap id="resetpw" class="egovframework.zieumtn.system.vo.UserVO">
+		<result property="usrId" column="usrId"/>
+	</resultMap>
+
+	<resultMap id="user" class="egovframework.zieumtn.system.vo.UserVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+		<result property="sectNo" column="sectNo"/>
+		<result property="cotelNo" column="cotelNo"/>
+		<result property="mpNo" column="mpNo"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="deptCd" column="deptCd"/>
+		<result property="deptNm" column="deptNm"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+
+		<result property="authgrpId" column="authgrpId"/>
+		<result property="authgrpNm" column="authgrpNm"/>
+		<result property="statConfirm" column="statConfirm"/>
+		<result property="adminYn" column="adminYn"/>
+		<result property="useDt" column="useDt"/>
+		<result property="endDt" column="endDt"/>
+	</resultMap>
+
+	<resultMap id="admin" class="egovframework.zieumtn.system.vo.UserVO">
+		<result property="usrId" column="usrId"/>
+	</resultMap>
+
+	<select id="userDAO.selectUserListTotCnt" parameterClass="userVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_users a
+			left outer join tsys_author_group_user b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			where a.co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="authgrpId">
+        	and b.authgrp_id like concat('%'||coalesce(#authgrpId#,'')||'%')
+        </isNotEmpty>
+        <isNotEmpty property="statConfirm">
+        	and a.stat_confirm like concat('%'||coalesce(#statConfirm#,'')||'%')
+        </isNotEmpty>
+        <isNotEmpty property="usrId">
+			and a.usr_id like concat('%'||coalesce(#usrId#,'')||'%')
+        </isNotEmpty>
+	</select>
+
+	<select id="userDAO.getUserIdCheck" parameterClass="userVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_users
+			where usr_id = #usrId#
+		]]>
+	</select>
+
+	<select id="userDAO.getUserPwdCheck" parameterClass="userVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_users
+			where co_id = #sessionCoId#
+			and usr_id = #usrId#
+			and sect_no = ENCODE(DIGEST(#sectNoOrg#, 'sha256'), 'hex')
+		]]>
+	</select>
+
+	<select id="userDAO.selectUserList" parameterClass="userVO" resultMap="user">
+     <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by a.reg_dtm) as rowno
+				,a.co_id as coId
+				,a.usr_id as usrId
+				,a.usr_nm as usrNm
+				,a.sect_no as sectNo
+				,a.cotel_no as cotelNo
+				,a.mp_no as mpNo
+				,a.email_addr as emailAddr
+				,a.dept_cd as deptCd
+				,a.dept_nm as deptNm
+				,case a.use_yn when '1' then '사용' else '미사용' end as useYn
+				,a.rmks_cts as rmksCts
+				,c.authgrp_nm as authgrpNm
+				,a.regpsn_id as regId
+				,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+				,a.upd_id as updId
+				,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+				,b.authgrp_id as authgrpId
+				,case a.stat_confirm when '1' then '승인' else '미승인' end as statConfirm
+				,a.admin_yn as adminYn
+				,b.use_dt as useDt
+				,b.end_dt as endDt
+			from tsys_users a
+			left outer join tsys_author_group_user b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			left outer join tsys_author_group c
+			on b.authgrp_id = c.authgrp_id
+			where a.co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="authgrpId">
+        	and b.authgrp_id like concat('%'||coalesce(#authgrpId#,'')||'%')
+        </isNotEmpty>
+        <isNotEmpty property="statConfirm">
+        	and a.stat_confirm like concat('%'||coalesce(#statConfirm#,'')||'%')
+        </isNotEmpty>
+        <isNotEmpty property="usrId">
+			and (a.usr_id like concat('%'||coalesce(#usrId#,'')||'%')
+			or a.usr_nm like concat('%'||coalesce(#usrId#,'')||'%'))
+        </isNotEmpty>
+			order by a.reg_dtm
+    </select>
+
+	<select id="userDAO.selectAdminList" parameterClass="userVO" resultMap="admin">
+		<![CDATA[
+			select usr_id as usrId
+			from tsys_users
+			where co_id = (
+				select max(co_id)
+				from tsys_users
+				where substring(usr_id,position('@' in usr_id),length(usr_id)-position('@' in usr_id)+1)
+					= substring(#usrId#,position('@' in #usrId#),length(#usrId#)-position('@' in #usrId#)+1)
+				)
+			and admin_yn = '1'
+		]]>
+	</select>
+
+	<insert id="userDAO.insertUser" parameterClass="userVO">
+		<![CDATA[
+			insert into tsys_users
+				(co_id
+				,usr_id
+				,usr_nm
+				,sect_no
+				,cotel_no
+				,mp_no
+				,email_addr
+				,dept_cd
+				,dept_nm
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,admin_yn
+				,stat_confirm)
+			VALUES
+				(#sessionCoId#
+				,#usrId#
+				,#usrNm#
+				,ENCODE(DIGEST(#sectNo#, 'sha256'), 'hex')
+				,#cotelNo#
+				,#mpNo#
+				,#emailAddr#
+				,#deptCd#
+				,#deptNm#
+				,#useYn#
+				,#rmksCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now()
+				,#adminYn#
+				,#statConfirm#)
+		]]>
+	</insert>
+
+	<insert id="userDAO.reqUser" parameterClass="userVO">
+		<![CDATA[
+			insert into tsys_users
+				(co_id
+				,usr_id
+				,usr_nm
+				,sect_no
+				,cotel_no
+				,mp_no
+				,email_addr
+				,dept_cd
+				,dept_nm
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,admin_yn
+				,stat_confirm)
+			VALUES
+				(
+				'A0001'
+				,#usrId#
+				,#usrNm#
+				,ENCODE(DIGEST(#sectNo#, 'sha256'), 'hex')
+				,#cotelNo#
+				,#mpNo#
+				,#emailAddr#
+				,#deptCd#
+				,#deptNm#
+				,#useYn#
+				,#rmksCts#
+				,coalesce(#sessionUserId#,'SYSTEM')
+				,now()
+				,coalesce(#sessionUserId#,'SYSTEM')
+				,now()
+				,#adminYn#
+				,#statConfirm#)
+		]]>
+	</insert>
+	<insert id="userDAO.inserAuthgrptUser" parameterClass="userVO">
+		insert into tsys_author_group_user
+				(co_id
+				,authgrp_id
+				,usr_id
+				,use_yn
+				,rmks_cts
+				,use_dt
+				,end_dt
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+		values
+				(#coId#
+				,#authgrpId#
+				,#usrId#
+				,'1'
+				,''
+				,coalesce(#useDt#,to_char(now(),'YYYY-MM-DD'))
+				,coalesce(#endDt#,'9999-12-31')
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+
+	</insert>
+	<update id="userDAO.updateUser" parameterClass="userVO">
+		<![CDATA[
+			update tsys_users
+			set
+				usr_id		=#usrId#
+				,usr_nm		=#usrNm#
+				,cotel_no	=#cotelNo#
+				,mp_no		=#mpNo#
+				,email_addr	=#emailAddr#
+				,dept_cd	=#deptCd#
+				,dept_nm	=#deptNm#
+				,use_yn		=#useYn#
+				,rmks_cts	=#rmksCts#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+				,admin_yn	=#adminYn#
+			where co_id = #sessionCoId#
+			and usr_id =#usrId#
+		]]>
+	</update>
+	<update id="userDAO.updateUserStat" parameterClass="userVO">
+		<![CDATA[
+			update tsys_users
+			set
+				usr_nm		=#usrNm#
+				,cotel_no	=#cotelNo#
+				,dept_nm	=#deptNm#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id = #sessionCoId#
+			and usr_id =#usrId#
+		]]>
+	</update>
+	<update id="userDAO.approveUser" parameterClass="userVO">
+		<![CDATA[
+			update tsys_users
+			set
+				stat_confirm ='1'
+			where co_id = #sessionCoId#
+			and usr_id =#usrId#
+		]]>
+	</update>
+
+	<update id="userDAO.updateAuthgrpUser" parameterClass="userVO">
+		<![CDATA[
+		with upsert as (
+			update tsys_author_group_user
+				set
+					authgrp_id	=#authgrpId#
+					,use_dt		=#useDt#
+					,end_dt		=#endDt#
+					,upd_id		=#sessionUserId#
+					,upd_dtm	=now()
+				where co_id = #sessionCoId#
+				and usr_id =#usrId#
+				returning *
+		)
+		insert into tsys_author_group_user
+				(co_id
+				,authgrp_id
+				,usr_id
+				,use_yn
+				,rmks_cts
+				,use_dt
+				,end_dt
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+		select
+			#sessionCoId#
+			,#authgrpId#
+			,#usrId#
+			,'1'
+			,''
+			,#useDt#
+			,#endDt#
+			,#sessionUserId#
+			,now()
+			,#sessionUserId#
+			,now()
+		where not exists(select * from upsert)
+
+		]]>
+	</update>
+
+	<update id="userDAO.updateUserPwd" parameterClass="userVO">
+		<![CDATA[
+			update tsys_users
+			set
+				sect_no	=ENCODE(DIGEST(#sectNo#, 'sha256'), 'hex')
+				,upd_id	=coalesce(#sessionUserId#,'SYSTEM')
+				,upd_dtm=now()
+			where co_id =#sessionCoId#
+			and usr_id =#usrId#
+		]]>
+	</update>
+
+	<update id="userDAO.resetPwd" parameterClass="userVO">
+		<![CDATA[
+			update tsys_users
+			set
+				sect_no	=ENCODE(DIGEST(#sectNo#, 'sha256'), 'hex')
+				,upd_id	='SYSTEM'
+				,upd_dtm=now()
+			where usr_id =#usrId#
+		]]>
+	</update>
+
+	<delete id="userDAO.deleteUser" parameterClass="userVO">
+		<![CDATA[
+			DELETE FROM tsys_users
+			where co_id = #sessionCoId#
+			and usr_id =#usrId#
+		]]>
+	</delete>
+	<delete id="userDAO.deleteAuthgrpUser" parameterClass="userVO">
+		<![CDATA[
+			DELETE FROM tsys_author_group_user
+			where usr_id =#usrId#
+		]]>
+	</delete>
+
+		<select id="userDAO.chkResetPwd" parameterClass="userVO" resultMap="resetpw">
+		<![CDATA[
+			SELECT
+				USR_ID AS usrId
+			  FROM TSYS_USERS
+			 WHERE USR_ID = #usrId#
+			   AND USR_NM = #usrNm#
+		]]>
+	</select>
+
+
+</sqlMap>

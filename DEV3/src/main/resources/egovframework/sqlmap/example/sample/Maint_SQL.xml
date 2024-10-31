@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="maint">
+
+	<typeAlias  alias="fcltsMngVO" type="egovframework.zieumtn.device.vo.FcltsMngVO"/>
+
+	<resultMap id="fcltsInfo" class="egovframework.zieumtn.device.vo.FcltsInfoVO">
+		<result property="rowno" column="rowno"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+<!-- 		<result property="fcltsClUuid" column="fcltsClUuid"/>
+		<result property="fcltsClUuidNm" column="fcltsClUuidNm"/> -->
+		<result property="fcltsNm" column="fcltsNm"/>
+		<result property="fcltsItlpcNm" column="fcltsItlpcNm"/>
+		<result property="fcltsItlpcNmDs" column="fcltsItlpcNmDs"/>
+		<!-- <result property="fcltsItlpcAddr" column="fcltsItlpcAddr"/>
+		<result property="fcltsItlpcLa" column="fcltsItlpcLa"/>
+		<result property="fcltsItlpcLo" column="fcltsItlpcLo"/>
+		<result property="fcltsTyp" column="fcltsTyp"/>
+		<result property="fcltsTypDtl" column="fcltsTypDtl"/>
+		<result property="dataAqstMth" column="dataAqstMth"/>
+		<result property="ipAddr" column="ipAddr"/>
+		<result property="port" column="port"/>
+		<result property="cctvLoginId" column="cctvLoginId"/>
+		<result property="cctvLoginPwd" column="cctvLoginPwd"/>
+		<result property="cctvStreamUrl" column="cctvStreamUrl"/>
+		<result property="cctvAuthType" column="cctvAuthType"/>
+		<result property="instlDe" column="instlDe"/> -->
+		<result property="useSttus" column="useSttus"/>
+		<!-- <result property="reason" column="reasonz"/> -->
+<!-- 		<result property="vmsId" column="vmsId"/>
+		<result property="tlphonNo" column="tlphonNo"/>
+		<result property="fwNo" column="fwNo"/>
+		<result property="sendDt" column="sendDt"/> -->
+		<result property="stat" column="stat"/>
+	</resultMap>
+
+	<resultMap id="fcltsMng" class="egovframework.zieumtn.device.vo.FcltsMngVO">
+		<result property="rowno" column="rowno"/>
+		<result property="checkNo" column="checkNo"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+		<result property="checkNm" column="checkNm"/>
+		<result property="checkDt" column="checkDt"/>
+		<result property="checkDiv" column="checkDiv"/>
+		<result property="checkDivNm" column="checkDivNm"/>
+		<result property="checkCts" column="checkCts"/>
+	</resultMap>
+
+	<select id="maintDAO.selectMaintList" parameterClass="fcltsMngVO" resultMap="fcltsInfo">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by device_id) as rowno
+				,device_id 		  as fcltsUuid
+				,device_nm         as fcltsNm
+				, '어쩌구' as fcltsItlpcNmDs
+				,''         as stat
+				,case when USE_YN = 'Y' then '사용' else '미사용' end        as useSttus
+				, '뭔데' as fcltsItlpcNm
+				from tb_device td
+			where co_id = #sessionCoId#
+		]]>
+
+<!-- 		<isNotEmpty property="fcltsItlpcNm">
+        	and area_div = #fcltsItlpcNm#
+        </isNotEmpty> -->
+
+		<isNotEmpty property="fcltsNm">
+        	and device_nm ILIKE concat('%',coalesce(#fcltsNm#,''),'%')
+        </isNotEmpty>
+<!--
+		<isNotEmpty property="stat">
+        	and #stat# = #stat#
+        </isNotEmpty> -->
+        order by device_id
+    </select>
+
+	<select id="maintDAO.selectDeviceMngList" parameterClass="fcltsMngVO" resultMap="fcltsMng">
+        <![CDATA[
+        	SELECT
+				ROW_NUMBER() OVER (order by seq_no) as rowno
+				,seq_no as checkNo
+				,device_id as fcltsUuid
+				,check_nm as checkNm
+				,check_dt as checkDt
+				,check_div as checkDiv
+				,(select cd_nm from tsys_code where co_id = #sessionCoId# and com_cd = a.check_div) as checkDivNm
+				,check_cts as checkCts
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			FROM tb_device_as a
+			where device_id = #fcltsUuid#
+			order by seq_no
+		]]>
+    </select>
+
+    <insert id="maintDAO.insertDeviceMng" parameterClass="fcltsMngVO">
+		<![CDATA[
+			insert into tb_device_as
+				(device_id
+				,check_nm
+				,check_dt
+				,check_div
+				,check_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#fcltsUuid#
+				,#checkNm#
+				,#checkDt#
+				,#checkDiv#
+				,#checkCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+	<update id="maintDAO.updateDeviceMng" parameterClass="fcltsMngVO">
+		<![CDATA[
+			update tb_device_as
+			set
+				check_nm = #checkNm#
+				,check_dt = #checkDt#
+				,check_div = #checkDiv#
+				,check_cts = #checkCts#
+				,upd_id = #sessionUserId#
+				,upd_dtm = now()
+			where device_id = #fcltsUuid#
+			and seq_no = #checkNo#::double precision
+
+		]]>
+	</update>
+	<delete id="maintDAO.deleteDeviceMng" parameterClass="fcltsMngVO">
+		<![CDATA[
+			DELETE FROM tb_device_as
+			where seq_no = #checkNo#::double precision
+		]]>
+	</delete>
+</sqlMap>

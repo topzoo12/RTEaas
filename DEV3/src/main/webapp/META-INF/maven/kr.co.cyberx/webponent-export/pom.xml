@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>webponent-export</name>
+    <url>http://www.webponent.com</url>
+
+    <groupId>kr.co.cyberx</groupId>
+    <artifactId>webponent-export</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.7-SNAPSHOT</version>
+
+
+    <properties>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:http://memo.cyber-i.com:30000/cx/webponent-export.git</developerConnection>
+        <connection>scm:git:http://memo.cyber-i.com:30000/cx/webponent-export.git</connection>
+        <url>http://memo.cyber-i.com:30000/cx/webponent-export.git</url>
+        <tag>webponent-export-2.0.0</tag>
+    </scm>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>javaee</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>kr.co.cyberx</groupId>
+            <artifactId>webponent-export-ext</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <skipSource>true</skipSource>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <attachClasses>false</attachClasses>
+                    <archiveClasses>true</archiveClasses>
+                    <packagingExcludes>WEB-INF/classes/**/**,WEB-INF/**/**.log,WEB-INF/**/**.java,,WEB-INF/**/**.classes</packagingExcludes>
+                    <webResources>
+                        <resource>
+                            <!--  change if necessary -->
+                            <directory>src/main/webapp/WEB-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
+                                    <type>jar</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+
+    </build>
+
+
+
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://build.cyber-i.com/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://build.cyber-i.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+
+        <repository>
+            <id>cyberx-releases-repository</id>
+            <name>cyberX releases repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/releases/</url>
+        </repository>
+
+        <repository>
+            <id>snapshots</id>
+            <name>cyberX snapshots repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>cyberx-thirdparty-repository</id>
+            <name>cyberX thirdparty repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/thirdparty/</url>
+        </repository>
+
+    </repositories>
+
+</project>

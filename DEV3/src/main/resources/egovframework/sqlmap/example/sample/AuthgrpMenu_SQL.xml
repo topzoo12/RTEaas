@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="authgrpMenu">
+
+	<typeAlias  alias="authgrpMenuVO" type="egovframework.zieumtn.system.vo.AuthgrpMenuVO"/>
+	<typeAlias  alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="authgrpMenu" class="egovframework.zieumtn.system.vo.AuthgrpMenuVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="authgrpId" column="authgrpId"/>
+
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="mnuNmEng" column="mnuNmEng"/>
+		<result property="mnuNmJp" column="mnuNmJp"/>
+		<result property="mnuLvl" column="mnuLvl"/>
+		<result property="rauthYn" column="rauthYn"/>
+		<result property="cauthYn" column="cauthYn"/>
+		<result property="uauthYn" column="uauthYn"/>
+		<result property="dauthYn" column="dauthYn"/>
+		<result property="sauthYn" column="sauthYn"/>
+		<result property="optauthYn" column="optauthYn"/>
+		<result property="pauthYn" column="pauthYn"/>
+		<result property="eauthYn" column="eauthYn"/>
+		<result property="fauthYn" column="fauthYn"/>
+
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpMenuDAO.selectAuthgrpMenuList" parameterClass="authgrpMenuVO" resultMap="authgrpMenu">
+        <![CDATA[
+        	WITH RECURSIVE menu(
+				co_id
+				,mnu_id
+				,mnu_nm
+				,mnu_nm_eng
+				,mnu_nm_jp
+				,mnu_lvl
+				,hrnkmnu_id
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,LEVEL
+				,PATH
+				,CYCLE)
+			AS (
+				select
+					co_id
+					,mnu_id
+					,mnu_nm
+					,mnu_nm_eng
+					,mnu_nm_jp
+					,mnu_lvl
+					,hrnkmnu_id
+					,srt_seq
+					,srn_id
+					,arg_val
+					,mark_yn
+					,use_yn
+					,mnu_desc
+					,mp_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm
+					,0
+					,ARRAY[a.srt_seq]
+					,false
+				from tsys_menus a
+				where co_id = #coId#
+				and mnu_lvl = 1
+
+				UNION ALL
+
+				select
+					a.co_id
+					,a.mnu_id
+					,a.mnu_nm
+					,a.mnu_nm_eng
+					,a.mnu_nm_jp
+					,a.mnu_lvl
+					,a.hrnkmnu_id
+					,a.srt_seq
+					,a.srn_id
+					,a.arg_val
+					,a.mark_yn
+					,a.use_yn
+					,a.mnu_desc
+					,a.mp_yn
+					,a.regpsn_id
+					,a.reg_dtm
+					,a.upd_id
+					,a.upd_dtm
+					,LEVEL + 1
+					,PATH || a.srt_seq
+					,a.srt_seq = ANY(PATH)
+				from tsys_menus a
+				inner join menu b
+				on a.co_id = b.co_id
+				and a.hrnkmnu_id = b.mnu_id
+				where a.co_id = #coId#
+			)
+			SELECT
+				ROW_NUMBER() OVER () as rowno
+				,b.co_id as coId
+        		,#authgrpId# as authgrpId
+        		,b.mnu_id as mnuId
+        		,b.mnu_nm as mnuNm
+        		,b.mnu_nm_eng as mnuNmEng
+        		,b.mnu_nm_jp as mnuNmJp
+        		,b.mnu_lvl as mnuLvl
+        		,a.rauth_yn as rauthYn
+        		,a.cauth_yn as cauthYn
+        		,a.uauth_yn as uauthYn
+        		,a.dauth_yn as dauthYn
+        		,a.sauth_yn as sauthYn
+        		,a.optauth_yn as optauthYn
+        		,a.pauth_yn as pauthYn
+        		,a.eauth_yn as eauthYn
+        		,a.fauth_yn as fauthYn
+        		,a.rmks_cts as rmksCts
+        		,a.regpsn_id as regId
+        		,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+        		,a.upd_id as updId
+        		,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+				,PATH
+			FROM menu b
+			left outer join tsys_author_group_menus a
+			on b.co_id = a.co_id
+			and b.mnu_id = a.mnu_id
+			and a.authgrp_id = #authgrpId#
+			ORDER BY PATH
+		]]>
+
+		<!--  <![CDATA[
+        	WITH RECURSIVE menu(
+				co_id
+				,mnu_id
+				,mnu_nm
+				,mnu_lvl
+				,hrnkmnu_id
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,LEVEL
+				,PATH
+				,CYCLE)
+			AS (
+				select
+					co_id
+					,mnu_id
+					,mnu_nm
+					,mnu_lvl
+					,hrnkmnu_id
+					,srt_seq
+					,srn_id
+					,arg_val
+					,mark_yn
+					,use_yn
+					,mnu_desc
+					,mp_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm
+					,0
+					,ARRAY[a.srt_seq]
+					,false
+				from tsys_menus a
+				where co_id = #coId#
+				and mnu_lvl = 1
+
+				UNION ALL
+
+				select
+					a.co_id
+					,a.mnu_id
+					,a.mnu_nm
+					,a.mnu_lvl
+					,a.hrnkmnu_id
+					,a.srt_seq
+					,a.srn_id
+					,a.arg_val
+					,a.mark_yn
+					,a.use_yn
+					,a.mnu_desc
+					,a.mp_yn
+					,a.regpsn_id
+					,a.reg_dtm
+					,a.upd_id
+					,a.upd_dtm
+					,LEVEL + 1
+					,PATH || a.srt_seq
+					,a.srt_seq = ANY(PATH)
+				from tsys_menus a
+				inner join menu b
+				on a.co_id = b.co_id
+				and a.hrnkmnu_id = b.mnu_id
+				where a.co_id = #coId#
+			)
+			SELECT
+				ROW_NUMBER() OVER () as rowno
+				,b.co_id as coId
+        		,#authgrpId# as authgrpId
+        		,b.mnu_id as mnuId
+        		,b.mnu_nm as mnuNm
+        		,b.mnu_lvl as mnuLvl
+        		,a.rauth_yn as rauthYn
+        		,a.cauth_yn as cauthYn
+        		,a.uauth_yn as uauthYn
+        		,a.dauth_yn as dauthYn
+        		,a.sauth_yn as sauthYn
+        		,a.optauth_yn as optauthYn
+        		,a.pauth_yn as pauthYn
+        		,a.eauth_yn as eauthYn
+        		,a.fauth_yn as fauthYn
+        		,a.rmks_cts as rmksCts
+        		,a.regpsn_id as regId
+        		,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+        		,a.upd_id as updId
+        		,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+				,PATH
+			FROM menu b
+			left outer join tsys_author_group_menus a
+			on b.co_id = a.co_id
+			and b.mnu_id = a.mnu_id
+			and a.authgrp_id = #authgrpId#
+			ORDER BY PATH
+		]]> -->
+    </select>
+
+	<update id="authgrpMenuDAO.updateAuthgrpMenu" parameterClass="authgrpMenuVO">
+		<![CDATA[
+			with upsert as (
+				update tsys_author_group_menus
+				set
+	        		rauth_yn	=#rauthYn#
+	        		,cauth_yn	=#cauthYn#
+	        		,uauth_yn	=#uauthYn#
+	        		,dauth_yn	=#dauthYn#
+	        		,sauth_yn	=#sauthYn#
+	        		,optauth_yn	=#optauthYn#
+	        		,pauth_yn	=#pauthYn#
+	        		,eauth_yn	=#eauthYn#
+	        		,fauth_yn	=#fauthYn#
+					,upd_id		=#sessionUserId#
+					,upd_dtm	=now()
+				where co_id = #coId#
+				and authgrp_id =#authgrpId#
+				and mnu_id =#mnuId#
+				returning *
+			)
+			insert into tsys_author_group_menus
+					(co_id
+					,authgrp_id
+					,mnu_id
+					,rauth_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm)
+			select
+				#coId#
+				,#authgrpId#
+				,#mnuId#
+				,#rauthYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now()
+			where not exists(select * from upsert)
+
+		]]>
+	</update>
+
+	<update id="authgrpMenuDAO.copyAuthgrpMenu" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_author_group_menus
+					(co_id
+					,authgrp_id
+					,mnu_id
+					,rauth_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm)
+			select
+				#coId#
+				,concat(#coId#,substring(a.authgrp_id,6,15))
+				,concat(#coId#,substring(a.mnu_id,6,15))
+				,rauth_yn
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_author_group_menus a
+			left outer join tsys_menus b
+			on a.co_id = b.co_id
+			and a.mnu_id = b.mnu_id
+			where a.co_id = 'A0001'
+
+		]]>
+	</update>
+
+	<update id="authgrpMenuDAO.confirmcopyAuthgrpMenu" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_author_group_menus
+					(co_id
+					,authgrp_id
+					,mnu_id
+					,rauth_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm)
+			select
+				#coId#
+				,concat(#coId#,substring(a.authgrp_id,6,15))
+				,concat(#coId#,substring(a.mnu_id,6,15))
+				,case when a.mnu_id in ('A0001SMS201603000006','A0001SMS202102000007') then rauth_yn else
+					case when mnu_lvl = 1 then case when POSITION(a.mnu_id in #reqServiceList#)>0 then '1' else '0' end else
+					rauth_yn end
+				end as rauth_yn
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_author_group_menus a
+			left outer join tsys_menus b
+			on a.co_id = b.co_id
+			and a.mnu_id = b.mnu_id
+			where a.co_id = 'A0001'
+
+		]]>
+	</update>
+</sqlMap>

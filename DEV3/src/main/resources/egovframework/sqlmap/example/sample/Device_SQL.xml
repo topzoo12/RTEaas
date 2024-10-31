@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="device">
+
+	<typeAlias  alias="fcltsInfoVO" type="egovframework.zieumtn.device.vo.FcltsInfoVO"/>
+	<typeAlias  alias="sensorInfoVO" type="egovframework.zieumtn.device.vo.SensorInfoVO"/>
+
+	<resultMap id="fcltsInfo" class="egovframework.zieumtn.device.vo.FcltsInfoVO">
+		<result property="rowno" column="rowno"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+		<result property="fcltsClUuid" column="fcltsClUuid"/>
+		<result property="fcltsClUuidNm" column="fcltsClUuidNm"/>
+		<result property="fcltsNm" column="fcltsNm"/>
+		<result property="fcltsItlpcNm" column="fcltsItlpcNm"/>
+		<result property="fcltsItlpcNmDs" column="fcltsItlpcNmDs"/>
+		<result property="fcltsItlpcAddr" column="fcltsItlpcAddr"/>
+		<result property="fcltsItlpcLa" column="fcltsItlpcLa"/>
+		<result property="fcltsItlpcLo" column="fcltsItlpcLo"/>
+		<result property="fcltsTyp" column="fcltsTyp"/>
+		<result property="fcltsTypDtl" column="fcltsTypDtl"/>
+		<result property="dataAqstMth" column="dataAqstMth"/>
+		<result property="ipAddr" column="ipAddr"/>
+		<result property="port" column="port"/>
+		<result property="cctvLoginId" column="cctvLoginId"/>
+		<result property="cctvLoginPwd" column="cctvLoginPwd"/>
+		<result property="cctvStreamUrl" column="cctvStreamUrl"/>
+		<result property="cctvAuthType" column="cctvAuthType"/>
+		<result property="instlDe" column="instlDe"/>
+		<result property="useSttus" column="useSttus"/>
+		<result property="reason" column="reason"/>
+		<result property="vmsId" column="vmsId"/>
+		<result property="tlphonNo" column="tlphonNo"/>
+		<result property="fwNo" column="fwNo"/>
+		<result property="sendDt" column="sendDt"/>
+		<result property="stat" column="stat"/>
+		<result property="checkDt" column="checkDt"/>
+	</resultMap>
+
+	<resultMap id="sensorInfo" class="egovframework.zieumtn.device.vo.SensorInfoVO">
+		<result property="rowno" column="rowno"/>
+		<result property="ioId" column="ioId"/>
+		<result property="ioIdDs" column="ioIdDs"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+		<result property="ioNm" column="ioNm"/>
+		<result property="ioType" column="ioType"/>
+		<result property="ioAttr" column="ioAttr"/>
+		<result property="ioValueType" column="ioValueType"/>
+		<result property="ioValueUnit" column="ioValueUnit"/>
+		<result property="textLength" column="textLength"/>
+		<result property="conncId" column="conncId"/>
+		<result property="adptrId" column="adptrId"/>
+		<result property="ioDscr" column="ioDscr"/>
+		<result property="startChar" column="startChar"/>
+		<result property="lastChar" column="lastChar"/>
+		<result property="delimChar" column="delimChar"/>
+		<result property="parsedIdx" column="parsedIdx"/>
+	</resultMap>
+
+	<select id="deviceDAO.checkDevice" parameterClass="fcltsInfoVO" resultMap="fcltsInfo">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by fclts_uuid) as rowno
+				,fclts_uuid		  as fcltsUuid
+				,fclts_cl_uuid    as fcltsClUuid
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'BB' and etc_2=a.fclts_cl_uuid) as fcltsClUuidNm
+				,fclts_nm         as fcltsNm
+				,area_div   as fcltsItlpcNm
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd=a.area_div) as fcltsItlpcNmDs
+				,fclts_itlpc_addr as fcltsItlpcAddr
+				,fclts_itlpc_la   as fcltsItlpcLa
+				,fclts_itlpc_lo   as fcltsItlpcLo
+				,fclts_typ        as fcltsTyp
+				,fclts_typ_dtl    as fcltsTypDtl
+				,data_aqst_mth    as dataAqstMth
+				,ip_addr          as ipAddr
+				,port             as port
+				,cctv_login_id    as cctvLoginId
+				,cctv_login_pwd   as cctvLoginPwd
+				,cctv_stream_url  as cctvStreamUrl
+				,cctv_auth_type   as cctvAuthType
+				,instl_de         as instlDe
+				,use_sttus        as useSttus
+				,reason           as reason
+				,vms_id           as vmsId
+				,tlphon_no        as tlphonNo
+				,creat_dtm        as regDt
+				,creat_user       as regId
+				,updt_dtm         as updDt
+				,updt_user        as updId
+				,fw_no         	  as fwNo
+				,send_dtm         as sendDt
+				,'' as stat
+				,'' as checkDt
+			FROM tb_fclts_info a
+			where fclts_uuid = #fcltsUuid#
+		]]>
+        order by fclts_uuid
+    </select>
+
+	<select id="deviceDAO.selectDeviceList" parameterClass="fcltsInfoVO" resultMap="fcltsInfo">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by fclts_uuid) as rowno
+				,fclts_uuid		  as fcltsUuid
+				,fclts_cl_uuid    as fcltsClUuid
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'BB' and etc_2=a.fclts_cl_uuid) as fcltsClUuidNm
+				,fclts_nm         as fcltsNm
+				,area_div   as fcltsItlpcNm
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd=a.area_div) as fcltsItlpcNmDs
+				,fclts_itlpc_addr as fcltsItlpcAddr
+				,fclts_itlpc_la   as fcltsItlpcLa
+				,fclts_itlpc_lo   as fcltsItlpcLo
+				,fclts_typ        as fcltsTyp
+				,fclts_typ_dtl    as fcltsTypDtl
+				,data_aqst_mth    as dataAqstMth
+				,ip_addr          as ipAddr
+				,port             as port
+				,cctv_login_id    as cctvLoginId
+				,cctv_login_pwd   as cctvLoginPwd
+				,cctv_stream_url  as cctvStreamUrl
+				,cctv_auth_type   as cctvAuthType
+				,instl_de         as instlDe
+				,use_sttus        as useSttus
+				,reason           as reason
+				,vms_id           as vmsId
+				,tlphon_no        as tlphonNo
+				,creat_dtm        as regDt
+				,creat_user       as regId
+				,updt_dtm         as updDt
+				,updt_user        as updId
+				,fw_no         	  as fwNo
+				,send_dtm         as sendDt
+				,fn_getDeviceStatus(a.co_id,a.fclts_uuid) as stat
+				,(select max(check_dt) from tb_fclts_mng where fclts_uuid = a.fclts_uuid) as checkDt
+			FROM tb_fclts_info a
+			where co_id = #sessionCoId#
+		]]>
+
+		<isNotEmpty property="fcltsItlpcNm">
+        	and area_div = #fcltsItlpcNm#
+        </isNotEmpty>
+
+		<isNotEmpty property="fcltsClUuid">
+        	and fclts_cl_uuid like concat('%',coalesce(#fcltsClUuid#,''),'%')
+        </isNotEmpty>
+
+		<isNotEmpty property="fcltsUuid">
+        	and fclts_uuid like concat('%',coalesce(#fcltsUuid#,''),'%')
+        </isNotEmpty>
+        order by fclts_uuid
+    </select>
+
+	<select id="deviceDAO.selectIoList" parameterClass="sensorInfoVO" resultMap="sensorInfo">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by io_id) as rowno
+				,a.io_id			as ioId
+				,(select etc_2 from tsys_code where co_id = b.co_id and com_cd = a.io_id) as ioIdDs
+				, a.fclts_uuid	as fcltsUuid
+				, a.io_nm			as ioNm
+				, a.io_type		as ioType
+				, a.io_attr		as ioAttr
+				, a.io_value_type	as ioValueType
+				, a.io_value_unit	as ioValueUnit
+				, a.text_length	as textLength
+				, a.connc_id		as conncId
+				, a.adptr_id		as adptrId
+				, a.io_dscr		as ioDscr
+				, a.start_char	as startChar
+				, a.last_char		as lastChar
+				, a.delim_char	as delimChar
+				, a.parsed_idx	as parsedIdx
+				, a.creat_dtm		as regDt
+				, a.creat_user	as regId
+				, a.updt_dtm		as updDt
+				, a.updt_user		as updId
+			FROM tb_fclts_io_sensor_info a
+			inner join tb_fclts_info b
+			on a.fclts_uuid = b.fclts_uuid
+			where a.fclts_uuid = #fcltsUuid#
+			and b.co_id = #sessionCoId#
+			order by io_id
+		]]>
+    </select>
+
+	<select id="deviceDAO.selectDeviceCodeList" parameterClass="fcltsInfoVO" resultMap="fcltsInfo">
+        <![CDATA[
+        	SELECT
+				ROW_NUMBER() OVER (order by fclts_uuid) as rowno
+				,fclts_uuid		  as fcltsUuid
+				,fclts_cl_uuid    as fcltsClUuid
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'BB' and etc_2=a.fclts_cl_uuid) as fcltsClUuidNm
+				,fclts_nm         as fcltsNm
+				,area_div   as fcltsItlpcNm
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd=a.area_div) as fcltsItlpcNmDs
+				,fclts_itlpc_addr as fcltsItlpcAddr
+				,fclts_itlpc_la   as fcltsItlpcLa
+				,fclts_itlpc_lo   as fcltsItlpcLo
+				,fclts_typ        as fcltsTyp
+				,fclts_typ_dtl    as fcltsTypDtl
+				,data_aqst_mth    as dataAqstMth
+				,ip_addr          as ipAddr
+				,port             as port
+				,cctv_login_id    as cctvLoginId
+				,cctv_login_pwd   as cctvLoginPwd
+				,cctv_stream_url  as cctvStreamUrl
+				,cctv_auth_type   as cctvAuthType
+				,instl_de         as instlDe
+				,use_sttus        as useSttus
+				,reason           as reason
+				,vms_id           as vmsId
+				,tlphon_no        as tlphonNo
+				,creat_dtm        as regDt
+				,creat_user       as regId
+				,updt_dtm         as updDt
+				,updt_user        as updId
+				, fw_no         as fwNo
+				, send_dtm      as sendDt
+				, '' as stat
+				, '' as checkDt
+			FROM tb_fclts_info a
+			where co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="fcltsNm">
+			and fclts_nm like concat('%',coalesce(#fcltsNm#,''),'%')
+		</isNotEmpty>
+
+
+    </select>
+
+    <insert id="deviceDAO.insertDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			insert into tb_fclts_info
+				(co_id
+				,fclts_uuid
+				, fclts_cl_uuid
+				, fclts_nm
+				, area_div
+				, fclts_itlpc_addr
+				, fclts_itlpc_la
+				, fclts_itlpc_lo
+				, fclts_typ
+				, fclts_typ_dtl
+				, data_aqst_mth
+				, ip_addr
+				, port
+				, cctv_login_id
+				, cctv_login_pwd
+				, cctv_stream_url
+				, cctv_auth_type
+				, instl_de
+				, use_sttus
+				, reason
+				, vms_id
+				, tlphon_no
+				, creat_dtm
+				, creat_user
+				, updt_dtm
+				, updt_user
+				, fw_no)
+			VALUES
+				(#sessionCoId#
+				,#fcltsUuid#
+				, #fcltsClUuid#
+				, #fcltsNm#
+				, #fcltsItlpcNm#
+				, #fcltsItlpcAddr#
+				, #fcltsItlpcLa#
+				, #fcltsItlpcLo#
+				, coalesce(#fcltsTyp#,'01')
+				, #fcltsTypDtl#
+				, coalesce(#dataAqstMth#,'01')
+				, #ipAddr#
+				, #port#
+				, #cctvLoginId#
+				, #cctvLoginPwd#
+				, #cctvStreamUrl#
+				, coalesce(#cctvAuthType#,'Digest')
+				, #instlDe#
+				, #useSttus#
+				, #reason#
+				, #vmsId#
+				, #tlphonNo#
+				, to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, #sessionUserId#
+				, to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, #sessionUserId#
+				, #fwNo#)
+		]]>
+	</insert>
+	<update id="deviceDAO.insertIoCode" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			insert into tb_fclts_io_sensor_info
+				(io_id
+				, fclts_uuid
+				, io_nm
+				, io_type
+				, io_attr
+				, io_value_type
+				, io_value_unit
+				, text_length
+				, connc_id
+				, adptr_id
+				, io_dscr
+				, start_char
+				, last_char
+				, delim_char
+				, parsed_idx
+				, creat_dtm
+				, creat_user
+				, updt_dtm
+				, updt_user)
+			select
+				com_cd
+				,#fcltsUuid#
+				,cd_nm
+				,'02'
+				,'R'
+				,'04'
+				,etc_3
+				,''
+				,''
+				,'ADT_001'
+				,''
+				,'$$'
+				,'##'
+				,'|'
+				,srt_seq
+				,to_char(now(), 'YYYY-MM-DD hh24:mi')
+				,#sessionUserId#
+				,to_char(now(), 'YYYY-MM-DD hh24:mi')
+				,#sessionUserId#
+			from tsys_code
+			where co_id = #sessionCoId#
+			and cdgrp_id = 'BA'
+		]]>
+	</update>
+	<update id="deviceDAO.updateDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			update tb_fclts_info
+			set
+				fclts_cl_uuid      =#fcltsClUuid#
+				, fclts_nm         =#fcltsNm#
+				, area_div   =#fcltsItlpcNm#
+				, fclts_itlpc_addr =#fcltsItlpcAddr#
+				, fclts_itlpc_la   =#fcltsItlpcLa#
+				, fclts_itlpc_lo   =#fcltsItlpcLo#
+				, fclts_typ        =coalesce(#fcltsTyp#,'01')
+				, fclts_typ_dtl    =#fcltsTypDtl#
+				, data_aqst_mth    =#dataAqstMth#
+				, ip_addr          =#ipAddr#
+				, port             =#port#
+				, cctv_login_id    =#cctvLoginId#
+				, cctv_login_pwd   =#cctvLoginPwd#
+				, cctv_stream_url  =#cctvStreamUrl#
+				, cctv_auth_type   =#cctvAuthType#
+				, instl_de         =#instlDe#
+				, use_sttus        =#useSttus#
+				, reason           =#reason#
+				, vms_id           =#vmsId#
+				, tlphon_no        =#tlphonNo#
+				, updt_dtm         =to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, updt_user        =#sessionUserId#
+				, fw_no            =#fwNo#
+			where fclts_uuid = #fcltsUuid#
+			and co_id = #sessionCoId#
+
+		]]>
+	</update>
+	<update id="deviceDAO.updateDeviceFw" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			update tb_fclts_info
+			set
+				updt_dtm        =to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, updt_user     =#sessionUserId#
+				, fw_no         =#fwNo#
+				, send_dtm      =to_char(now(), 'YYYY-MM-DD hh24:mi')
+			where fclts_uuid = #fcltsUuid#
+			and co_id = #sessionCoId#
+
+		]]>
+	</update>
+	<delete id="deviceDAO.deleteDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			DELETE FROM tb_fclts_info
+			where fclts_uuid = #fcltsUuid#
+			and co_id = #sessionCoId#
+		]]>
+	</delete>
+	<delete id="deviceDAO.deleteIoCode" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			DELETE FROM tb_fclts_io_sensor_info
+			where fclts_uuid = #fcltsUuid#
+		]]>
+	</delete>
+</sqlMap>

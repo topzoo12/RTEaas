@@ -1,0 +1,170 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>kr.co.cyberx</groupId>
+    <artifactId>webponent-grid</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.11</version>
+
+    <name>webponent-grid</name>
+    <url>http://www.webponent.com</url>
+
+    <properties>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+        <skipMinify>false</skipMinify>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:http://memo.cyber-i.com:30000/cx/webponent-grid.git</developerConnection>
+        <connection>scm:git:http://memo.cyber-i.com:30000/cx/webponent-grid.git</connection>
+        <url>http://memo.cyber-i.com:30000/cx/webponent-grid.git</url>
+        <tag>webponent-grid-2.0.11</tag>
+    </scm>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>kr.co.cyberx</groupId>
+            <artifactId>webponent-export</artifactId>
+            <version>[2.0.0,3.0.0)</version>
+            <type>war</type>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <skipSource>true</skipSource>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <echo message="Creating minify source output directory" />
+                                <mkdir dir="./target/min" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>src/main/webapp/WEB-APP/webponent/grid2.0</sourceDirectory>
+                    <webappDirectory>${project.build.directory}/min</webappDirectory>
+
+                    <excludes>
+                        <exclude>**/external/**.js</exclude>
+                        <exclude>**/*.test.js</exclude>
+                        <exclude>**/jquery.*.js</exclude>
+                        <exclude>**/**.css</exclude>
+                        <exclude>**/webponent.chart.style.js</exclude>
+                        <exclude>**/webponent.licenseKey.js</exclude>
+                    </excludes>
+                    <nosuffix>true</nosuffix>
+                    <linebreakpos>50000</linebreakpos>
+                    <preserveAllSemiColons>true</preserveAllSemiColons>
+                    <skip>${skipMinify}</skip>
+                    <jswarn>false</jswarn>
+
+
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+
+                    <packagingExcludes>
+                        WEB-INF/classes/**/**,WEB-APP/webponent/grid2.0/qunit/**/**,WEB-INF/webponent/export/bin/**/**
+                    </packagingExcludes>
+
+
+                    <webResources>
+                        <resource>
+                            <directory>${project.build.directory}/min</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://build.cyber-i.com/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://build.cyber-i.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+
+        <repository>
+            <id>cyberx-releases-repository</id>
+            <name>cyberX releases repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/releases/</url>
+        </repository>
+
+        <repository>
+            <id>snapshots</id>
+            <name>cyberX snapshots repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>cyberx-thirdparty-repository</id>
+            <name>cyberX thirdparty repository for Maven</name>
+            <url>http://build.cyber-i.com/nexus/content/repositories/thirdparty/</url>
+        </repository>
+
+    </repositories>
+
+</project>

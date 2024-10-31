@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="page">
+
+	<typeAlias  alias="pageVO" type="egovframework.zieumtn.system.vo.PageVO"/>
+
+	<resultMap id="page" class="egovframework.zieumtn.system.vo.PageVO">
+		<result property="rowno" column="rowno"/>
+		<result property="srnId" column="srnId"/>
+		<result property="srnNm" column="srnNm"/>
+		<result property="srnUrl" column="srnUrl"/>
+		<result property="srntpCd" column="srntpCd"/>
+		<result property="opntpCd" column="opntpCd"/>
+		<result property="authgrpCd" column="authgrpCd"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="mpYn" column="mpYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="pageDAO.selectPageListTotCnt" parameterClass="pageVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_screen
+			where srn_nm like concat('%'||coalesce(#srnNm#,'')||'%')
+	</select>
+
+    <select id="pageDAO.selectPageList" parameterClass="pageVO" resultMap="page">
+        <![CDATA[
+            select
+				ROW_NUMBER() OVER (order by srn_id) as rowno
+				,srn_id as srnId
+				,srn_nm as srnNm
+				,srn_url as srnUrl
+				,srntp_cd as srntpCd
+				,opntp_cd as opntpCd
+				,authgrp_cd as authgrpCd
+				,rmks_cts as rmksCts
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,mp_yn as mpYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from tsys_screen
+			where srn_nm like concat('%'||coalesce(#srnNm#,'')||'%')
+			order by srn_id
+        ]]>
+    </select>
+
+	<insert id="pageDAO.insertPage" parameterClass="pageVO">
+		<![CDATA[
+			insert into tsys_screen
+				(srn_id
+				,srn_nm
+				,srn_url
+				,rmks_cts
+				,use_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				((select concat('A0001SPS',to_char(now(),'YYYYMM'),lpad((coalesce(max(substring(srn_id,15,6)),'0')::integer+1)::varchar,6,'0')) from tsys_screen where substring(srn_id,1,14) = concat('A0001SPS',to_char(now(),'YYYYMM')))
+				,#srnNm#
+				,#srnUrl#
+				,#rmksCts#
+				,#useYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+
+		]]>
+	</insert>
+
+	<update id="pageDAO.updatePage" parameterClass="pageVO">
+		<![CDATA[
+			update tsys_screen
+			set
+				srn_nm		=#srnNm#
+				,srn_url	=#srnUrl#
+				,rmks_cts	=#rmksCts#
+				,use_yn		=#useYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where srn_id = #srnId#
+		]]>
+	</update>
+
+	<delete id="pageDAO.deletePage" parameterClass="pageVO">
+		<![CDATA[
+			DELETE FROM tsys_screen
+			where srn_id = #srnId#
+		]]>
+	</delete>
+
+</sqlMap>

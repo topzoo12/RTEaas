@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sysDevice">
+
+	<typeAlias alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+	<typeAlias alias="deviceVO" type="egovframework.zieumtn.system.vo.sysDeviceVO"/>
+
+	<resultMap id="service" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="corpNo" column="corpNo"/>
+		<result property="estbDt" column="estbDt"/>
+		<result property="hpgAddr" column="hpgAddr"/>
+		<result property="roadzpNo" column="roadzpNo"/>
+		<result property="roadnmAddr" column="roadnmAddr"/>
+		<result property="roadnmdtlAddr" column="roadnmdtlAddr"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="rdrtrNm" column="rdrtrNm"/>
+		<result property="bztpNm" column="bztpNm"/>
+		<result property="bzcatNm" column="bzcatNm"/>
+		<result property="aprvYn" column="aprvYn"/>
+		<result property="telNo" column="telNo"/>
+		<result property="useYn" column="useYn"/>
+		<result property="coDiv" column="coDiv"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+		<result property="wtX" column="wtX"/>
+		<result property="wtY" column="wtY"/>
+		<result property="mapX" column="mapX"/>
+		<result property="mapY" column="mapY"/>
+		<result property="wtNm" column="wtNm"/>
+		<result property="confirmYn" column="confirmYn"/>
+		<result property="reqServiceList" column="reqServiceList"/>
+	</resultMap>
+
+
+	<resultMap id="sysDevice" class="egovframework.zieumtn.system.vo.sysDeviceVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="deviceId" column="deviceId"/>
+		<result property="deviceNm" column="deviceNm"/>
+		<result property="deviceDiv" column="deviceDiv"/>
+		<result property="fwInfo" column="fwInfo"/>
+		<result property="deviceSpec" column="deviceSpec"/>
+		<result property="deviceRmks" column="deviceRmks"/>
+		<result property="useYn" column="useYn"/>
+		<result property="regpsnId" column="regpsnId"/>
+		<result property="regDtm" column="regDtm"/>
+		<result property="updId" column="updId"/>
+		<result property="updDtm" column="updDtm"/>
+		<result property="macAddr" column="macAddr"/>
+	</resultMap>
+
+
+   	<select id="sysDeviceDAO.selectDeviceList" parameterClass="deviceVO" resultMap="sysDevice">
+			SELECT CO_ID as coId
+				 , DEVICE_ID as deviceId
+				 , DEVICE_NM as deviceNm
+				 , DEVICE_DIV as deviceDiv
+				 , FW_INFO as fwInfo
+				 , DEVICE_SPEC as deviceSpec
+				 , DEVICE_RMKS as deviceRmks
+				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
+				 , REGPSN_ID as regpsnId
+				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
+				 , UPD_ID as updId
+				 , UPD_DTM as updDtm
+				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , MAC_ADDR as macAddr
+		 	  FROM PUBLIC.TB_DEVICE
+		 	 WHERE CO_ID = #coId#
+        <isNotEmpty property="deviceNm">
+        	   AND DEVICE_NM ILIKE concat('%'||coalesce(#deviceNm#,'')||'%')
+        </isNotEmpty>
+        <isNotEmpty property="useYn">
+        	   AND USE_YN = #useYn#
+        </isNotEmpty>
+    </select>
+
+
+	<insert id="sysDeviceDAO.insertSysDevice" parameterClass="deviceVO">
+	     <![CDATA[
+		INSERT
+		  INTO PUBLIC.TB_DEVICE
+			 ( CO_ID, DEVICE_ID, DEVICE_NM, FW_INFO, DEVICE_RMKS, USE_YN, REGPSN_ID, REG_DTM, DEL_YN, MAC_ADDR )
+		VALUES
+		 	 ( #sessionCoId#, #deviceId#, #deviceNm#, #fwInfo#, #deviceRmks#, #useYn#, #sessionUserId#, NOW(), 'N', #macAddr# )
+		 ]]>
+
+	</insert>
+
+
+	<insert id="sysDeviceDAO.updateSysDevice" parameterClass="deviceVO">
+	<![CDATA[
+		UPDATE PUBLIC.TB_DEVICE
+		   SET DEVICE_NM = #deviceNm#
+		     , FW_INFO = #fwInfo#
+		     , DEVICE_RMKS = #deviceRmks#
+		     , USE_YN = #useYn#
+		     , UPD_ID = #sessionUserId#
+		     , UPD_DTM  = NOW()
+		     , MAC_ADDR = #macAddr#
+	  	 WHERE DEVICE_ID = #deviceId#
+		 ]]>
+	</insert>
+
+
+
+</sqlMap>

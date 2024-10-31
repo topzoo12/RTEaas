@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="authgrpUser">
+
+	<typeAlias  alias="authgrpUserVO" type="egovframework.zieumtn.system.vo.AuthgrpUserVO"/>
+
+	<resultMap id="authgrpUser" class="egovframework.zieumtn.system.vo.AuthgrpUserVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="authgrpId" column="authgrpId"/>
+
+		<result property="usrId" column="usrId"/>
+		<result property="useYn" column="useYn"/>
+		<result property="useDt" column="useDt"/>
+		<result property="endDt" column="endDt"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpUserDAO.selectAuthgrpUserListTotCnt" parameterClass="authgrpUserVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			FROM public.tsys_author_group_user
+			where authgrp_id = #authgrpId#
+		]]>
+	</select>
+
+
+	<select id="authgrpUserDAO.selectAuthgrpUserList" parameterClass="authgrpUserVO" resultMap="authgrpUser">
+        <![CDATA[
+        	SELECT
+				ROW_NUMBER() OVER (order by a.authgrp_id,a.usr_id) as rowno
+        		,a.co_id as coId
+				,a.authgrp_id as authgrpId
+				,a.usr_id as usrId
+				,case a.use_yn when 1 then '사용' else '미사용' end as useYn
+				,a.rmks_cts as rmksCts
+				,a.use_dt as useDt
+				,a.end_dt as endDt
+				,a.regpsn_id as regId
+				,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+				,a.upd_id as updId
+				,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+				,b.usr_nm as usrNm
+				,b.cotel_no as cotelNo
+				,b.email_addr as emailAddr
+				,b.mp_no as mpNo
+			FROM public.tsys_author_group_user a
+			left outer join public.tsys_users b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			where a.authgrp_id = #authgrpId#
+			order by a.authgrp_id,a.usr_id
+		]]>
+    </select>
+
+</sqlMap>

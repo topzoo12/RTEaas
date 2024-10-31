@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+    <title>ICDP : Integrated City Data Platform</title>
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+	<script  src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="./js/script.js"></script>
+
+	<!--달력-->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+				<a href="./list_type02.html"><img src="./img/t_logo.png"></a>
+            </div>
+            <div class="member">
+                <span class="name"><span>도봉구청</span> 구봉도 계장</span>
+                <span class="logout"><a href="#"></a></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+		<section class="container">
+            <div class="left item">
+
+				<div class="sub menu">
+					<div class="sub_box" id="menu">
+						<ul class="subtitle">
+							Menu
+							<a href="#" class="btn_favorites favorites"></a>
+							<button class="menu_bar"></button>
+							<button class="menu_bar_close"></button>
+						</ul>
+						<ul class="submenu">
+							<li class="on">
+								<a href="#">시설정보관리</a>
+								<ul>
+									<li class="on"><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">품질관리</a>
+								<ul>
+									<li class="on"><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">시스템관리</a>
+								<ul>
+									<li class="on"><a href="#">화면관리</a></li>
+									<li><a href="#">메뉴관리</a></li>
+									<li><a href="#">코드관리</a></li>
+									<li><a href="#">메시지관리</a></li>
+									<li><a href="#">회사관리</a></li>
+									<li><a href="#">사용자관리</a></li>
+									<li><a href="#">권한그룹관리</a></li>
+									<li><a href="#">그룹별메뉴관리</a></li>
+									<li><a href="#">그룹별사용자관리</a></li>
+									<li><a href="#">공지사항관리</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="sub_box" id="favorites">
+						<ul class="subtitle">
+							Favorites
+							<a href="#" class="btn_menu menu"></a>
+							<button class="menu_bar"></button>
+							<button class="menu_bar_close"></button>
+						</ul>
+						<ul class="submenu">
+							<li class="on">
+								<a href="#">시설정보관리</a>
+							</li>
+							<li>
+								<a href="#">점검관리</a>
+							</li>
+							<li>
+								<a href="#">화면관리</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+            </div>
+
+            <div class="contents_box item">
+				<p class="title">측정 데이터 활용관리</p>
+
+				<ul class="search_box">
+					<li>
+						<span class="stl">조회기간<span class="remark2"></span></span>
+						<span class="date">
+							<input type="text" value="" name="start" id="start" class="input2" readonly> ~ <input type="text" value="" name="end" id="end" class="input2" readonly>
+							<button class="search_calender" id="search_calender"></button>
+						</span>
+
+						<span class="stl">인증키 상태</span>
+						<span class="selectBox bottom">
+						  <button class="label">전체</button>
+						  <ul class="optionList">
+							<li class="optionItem">미생성</li>
+							<li class="optionItem">생성완료</li>
+						  </ul>
+						</span>
+
+						<span class="stl">요청기관명</span>
+						<span class="id search">
+							<input type="text" value="" name="group_id" id="group_id" class="input1" placeholder="">
+						<span>
+					</li>
+					<li>
+						<button class="btn_search">Search</button>
+					</li>
+				</ul>
+
+				<ul class="contents">
+					<li class="view">
+						<div class="stitle">
+							<p class="tl">총 <strong>40</strong> 건</p>
+
+							<p class="bbs_btn">
+                            	<a href="#" class="btn_bbs btn_write pop_open" data-pop="write"></a>
+								<a href="#" class="btn_bbs btn_edit pop_open" data-pop="write"></a>
+                                <a href="#" class="btn_bbs btn_delete pop_open" data-pop="alert"></a>
+							</p>
+						</div>
+						
+	
+						<table class="table">
+							<colgroup>
+								<col style="width: 48px">
+								<col style="width: 150px">
+								<col style="width: 120px">
+								<col style="width: 120px">
+								<col style="width: 250px">
+								<col style="width: 120px">
+								<col style="width: ">
+								<col style="width: 150px">
+								<col style="width: 120px">
+							</colgroup>
+							<thead>
+								<tr>
+								<th>No</th>
+								<th>Open API 서비스</th>
+								<th>요청기관명</th>
+								<th>요청자</th>
+								<th>이메일</th>
+								<th>인증키 상태</th>
+								<th>인증키</th>
+								<th>생성일</th>
+								<th>사용여부</th>
+								</tr>
+							</thead>
+						</table>
+						<div class="tbody">
+						<table class="table">
+							<colgroup>
+								<col style="width: 48px">
+								<col style="width: 150px">
+								<col style="width: 120px">
+								<col style="width: 120px">
+								<col style="width: 250px">
+								<col style="width: 120px">
+								<col style="width: ">
+								<col style="width: 150px">
+								<col style="width: calc(120px - 17px)">
+							</colgroup>
+							<tbody>
+								<tr class="on">
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>미생성</td>
+								<td>-</td>
+								<td>-</td>
+								<td>사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+								<tr>
+								<td>1</td>
+								<td>도봉구</td>
+								<td>구로구청</td>
+								<td>김구로</td>
+								<td>karm0988@naver.com</td>
+								<td>생성완료</td>
+								<td>Oxx68DjuS09837sdF</td>
+								<td>2022.09.15</td>
+								<td>미사용</td>
+								</tr>
+
+							</tbody>
+						</table>
+						</div>
+
+					</li>
+				</ul>
+
+            </div>
+
+        </section>
+	</main>
+	<footer class="footer">
+		<div class="container">
+			Copyright(C) 2020 Dobong-Gu All Rights Reserved.
+		</div>
+	</footer>
+
+<script>
+$(function() {
+	
+	//날짜선택
+   $('.search_box #search_calender').daterangepicker({
+	   maxSpan: {
+            days: 365
+        },
+		"locale": {
+			"format": "YYYY-MM-DD",
+			"separator": " - ",
+			"applyLabel": "확인",
+			"cancelLabel": "취소",
+			"fromLabel": "From",
+			"toLabel": "~",
+			"customRangeLabel": "Custom",
+			"weekLabel": "W",
+			"daysOfWeek": [
+				"일",
+				"월",
+				"화",
+				"수",
+				"목",
+				"금",
+				"토"
+			],
+			"monthNames": [
+				"1월",
+				"2월",
+				"3월",
+				"4월",
+				"5월",
+				"6월",
+				"7월",
+				"8월",
+				"9월",
+				"10월",
+				"11월",
+				"12월"
+			],
+			"firstDay": 0
+		}
+	},function(start, end, label) {
+			$("#start").val(start.format('YYYY-MM-DD'));
+			$("#end").val(end.format('YYYY-MM-DD'));
+			//console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+	});
+	
+});
+</script>
+
+<div class="pop_wrap" id="pop_write">
+    <div class="pop_box">
+		<div class="pop_content">
+			<h3 class="pop_tit">
+			   Open API 신청정보
+			</h3>
+
+			<ul class="user_write">
+				<li>
+					<table class="table_write">
+						<tbody>
+							<tr>
+							<th>소속 및 기관명<span class="remark"></span></th>
+							<td>
+								<input type="text" value="" name="name" id="name" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>요청자<span class="remark"></span></th>
+							<td>
+								<input type="text" value="" name="mb" id="mb" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>이메일<span class="remark"></span></th>
+							<td>
+								<ul>
+									<li class="flleft wdp50 pr3">
+										<input type="text" value="" name="email" id="email" class="input3 wd200" placeholder=""> @ 
+									</li>
+									<li class="flleft wdp50">
+										<span class="selectBox bottom border wd200">
+										  <button class="label">선택</button>
+										  <ul class="optionList">
+											<li class="optionItem">naver.com</li>
+											<li class="optionItem">kakao.com</li>
+											<li class="optionItem">daum.net</li>
+											<li class="optionItem">hanmail.net</li>
+											<li class="optionItem">google.com</li>
+											<li class="optionItem">직접입력</li>
+										  </ul>
+										</span>
+									</li>
+								</ul>
+							</td>
+							</tr>
+							<tr>
+							<th>활용사이트</th>
+							<td>
+								<input type="text" value="" name="site" id="site" class="input3 wdp100" placeholder="https://"></td>
+							</tr>
+							<tr>
+							<th>Open API 서비스<span class="remark"></span></th>
+							<td>
+								<span class="selectBox bottom border">
+							  <button class="label">선택</button>
+							  <ul class="optionList">
+								<li class="optionItem">도봉구</li>
+								<li class="optionItem">도봉구</li>
+								<li class="optionItem">도봉구</li>
+							  </ul>
+							</span></td>
+							</tr>
+							<tr>
+							<th>인증키</th>
+							<td>
+								<input type="text" value="Oxx68DjuS09837sdF" name="key" id="key" class="input3" placeholder="" readonly disabled="disabled"> <button class="btn_check2 id">생성</button></td>
+							</tr>
+							<tr>
+							<th>생성일</th>
+							<td>
+								<input type="text" value="" name="date" id="date" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>사용여부</th>
+							<td>
+								<label class="checkbox"><input type="checkbox" value="1" checked><span class="icon"></span></label></td>
+							</tr>
+						</tbody>
+					</table>
+					<!--<p class="mark"><span>*</span> 표시는 필수입력항목입니다.</p>-->
+
+					<div class="pop_btn">
+						<span class="btn_close pop_close">취소</span>
+						<button class="btn_select">저장</button>
+
+						<span class="btn_email_send">요청자 이메일 발송</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>
+<!-- 삭제 20221012 수정 시작 -->
+<div class="pop_wrap" id="pop_alert" >
+    <div class="pop_box2">
+    <div class="pop_content">
+      <ul class="contents">
+        <p class="box center">해당 데이터를 삭제하시겠습니까?</p>
+        <li>
+          <div class="pop_btn"><span class="btn_close pop_close">취소</span>
+            <button class="btn_select">확인</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+   </div>
+</div>
+<!-- 삭제 20221012 수정 끝 -->
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+    <title>ICDP : Integrated City Data Platform</title>
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+	<script  src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="./js/script.js"></script>
+</head>
+
+<body>
+    <div class="login_wrap">
+		<section class="container">
+			<div class="login_box">
+				<h1 class="logo"><strong>ICDP</strong> <span>Integrated City Data Platform</span></h1>
+				<p class="id"><input type="text" value="" name="id" id="id" class="input3 icon_id" placeholder="이메일을 입력해주세요"></p>
+				<p class="password"><input type="password" value="" name="password" id="password" class="input3 icon_password" placeholder="8~16자 비밀번호를 입력해주세요."></p>
+				<button class="login_button">로그인</button>
+				<p class="info"><a href="#" class="pop_open" data-pop="account">계정 신청</a><a href="#">비밀번호 초기화</a><a href="#" class="pop_open" data-pop="api">Open API 신청</a></p>
+				<p class="copy">Powered by NFLUX.</p>
+			</div>
+		</section>
+	</div>
+</body>
+<div class="pop_wrap" id="pop_account">
+    <div class="pop_box">
+		<div class="pop_content">
+			<h3 class="pop_tit">
+			   계정신청
+			</h3>
+
+			<ul class="user_write">
+				<li>
+					<table class="table_write">
+						<tbody>
+							<tr>
+							<th>사용자ID<span class="remark"></span></th>
+							<td colspan="3">
+								<input type="text" value="" name="id" id="id" class="input3" placeholder="이메일을 입력해주세요"> <button class="btn_check id">중복확인</button></td>
+							</tr>
+							<tr>
+							<th>비밀번호<span class="remark"></span></th>
+							<td colspan="3">
+								<input type="password" value="" name="password" id="password" class="input3" placeholder="8~16자 비밀번호를 입력해주세요."> <span class="txt">※ 8~16자, 영문, 숫자, 특수문자 조합</span></td>
+							</tr>
+							<tr>
+							<tr>
+							<th>비밀번호 확인<span class="remark"></span></th>
+							<td colspan="3">
+								<input type="password" value="" name="password" id="password" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>사용자명<span class="remark"></span></th>
+							<td colspan="3"><input type="text" value="" name="name" id="name" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>부서명</th>
+							<td colspan="3"><input type="text" value="" name="part" id="part" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>전화번호</th>
+							<td colspan="3"><input type="text" value="" name="tel" id="tel" class="input3" placeholder=""></td>
+							</tr>
+						</tbody>
+					</table>
+					<!--<p class="mark"><span>*</span> 표시는 필수입력항목입니다.</p>-->
+
+					<div class="pop_btn">
+						<span class="btn_close pop_close">취소</span>
+						<button class="btn_select">신청</button>
+					</div>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>
+
+<div class="pop_wrap" id="pop_api">
+    <div class="pop_box">
+		<div class="pop_content">
+			<h3 class="pop_tit">
+			   Open API 신청
+			</h3>
+
+			<ul class="user_write">
+				<li>
+					<table class="table_write">
+						<tbody>
+							<tr>
+							<th>소속 및 기관명<span class="remark"></span></th>
+							<td>
+								<input type="text" value="" name="name" id="name" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>요청자<span class="remark"></span></th>
+							<td>
+								<input type="text" value="" name="mb" id="mb" class="input3" placeholder=""></td>
+							</tr>
+							<tr>
+							<th>이메일<span class="remark"></span></th>
+							<td>
+								<ul>
+									<li class="flleft wdp50 pr3">
+										<input type="text" value="" name="email" id="email" class="input3 wd200" placeholder=""> @ 
+									</li>
+									<li class="flleft wdp50">
+										<span class="selectBox bottom border wd200">
+										  <button class="label">선택</button>
+										  <ul class="optionList">
+											<li class="optionItem">naver.com</li>
+											<li class="optionItem">kakao.com</li>
+											<li class="optionItem">daum.net</li>
+											<li class="optionItem">hanmail.net</li>
+											<li class="optionItem">google.com</li>
+											<li class="optionItem">직접입력</li>
+										  </ul>
+										</span>
+									</li>
+								</ul>
+							</td>
+							</tr>
+							<tr>
+							<th>활용사이트</th>
+							<td>
+								<input type="text" value="" name="site" id="site" class="input3 wdp100" placeholder="https://"></td>
+							</tr>
+							<tr>
+							<th>Open API 서비스<span class="remark"></span></th>
+							<td>
+								<span class="selectBox bottom border">
+							  <button class="label">선택</button>
+							  <ul class="optionList">
+								<li class="optionItem">도봉구</li>
+								<li class="optionItem">도봉구</li>
+								<li class="optionItem">도봉구</li>
+							  </ul>
+							</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<!--<p class="mark"><span>*</span> 표시는 필수입력항목입니다.</p>-->
+
+					<div class="pop_btn">
+						<span class="btn_close pop_close">취소</span>
+						<button class="btn_select">신청</button>
+					</div>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>
+</html>

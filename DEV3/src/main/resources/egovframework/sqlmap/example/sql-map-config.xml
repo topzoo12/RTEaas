@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="egovframework/sqlmap/example/sample/EgovSample_Sample_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Common_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Authgrp_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/AuthgrpMenu_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/AuthgrpUser_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Code_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Menu_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Message_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Page_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Service_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/User_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Status_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Statis_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Device_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Monitor_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Maint_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Usage_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Car_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Openapi_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/Owner_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/sysDevice_SQL.xml"/>
+</sqlMapConfig>

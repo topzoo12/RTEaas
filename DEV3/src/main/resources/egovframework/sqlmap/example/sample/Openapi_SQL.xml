@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="openapi">
+
+	<typeAlias  alias="dataTargetVO" type="egovframework.zieumtn.openapi.vo.DataTargetVO"/>
+
+	<resultMap id="dataTarget" class="egovframework.zieumtn.openapi.vo.DataTargetVO">
+		<result property="rowno" column="rowno"/>
+		<result property="areaDiv" column="areaDiv"/>
+		<result property="areaDivNm" column="areaDivNm"/>
+		<result property="deviceId" column="deviceId"/>
+		<result property="deviceNm" column="deviceNm"/>
+		<result property="deviceType" column="deviceType"/>
+		<result property="openYn" column="openYn"/>
+	</resultMap>
+
+	<typeAlias  alias="openapiReqVO" type="egovframework.zieumtn.openapi.vo.OpenapiReqVO"/>
+
+	<resultMap id="openapiReq" class="egovframework.zieumtn.openapi.vo.OpenapiReqVO">
+		<result property="rowno" column="rowno"/>
+		<result property="reqNo" column="reqNo"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="reqCoNm" column="reqCoNm"/>
+		<result property="reqNm" column="reqNm"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="useSite" column="useSite"/>
+		<result property="openKey" column="openKey"/>
+		<result property="openKeyDt" column="openKeyDt"/>
+		<result property="reqDtm" column="reqDtm"/>
+	</resultMap>
+
+	<resultMap id="openapiData" class="egovframework.zieumtn.openapi.vo.OpenapiVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coNm" column="coNm"/>
+		<result property="deviceId" column="deviceId"/>
+		<result property="deviceIo" column="deviceIo"/>
+		<result property="deviceValue" column="deviceValue"/>
+		<result property="getDtm" column="getDtm"/>
+	</resultMap>
+	<select id="dataTargetDAO.selectDataTargetList" parameterClass="dataTargetVO" resultMap="dataTarget">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by a.fclts_uuid) as rowno
+				,a.fclts_uuid as deviceId
+				,a.fclts_nm as deviceNm
+				,a.area_div as areaDiv
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'BB' and etc_2 = a.fclts_cl_uuid) as deviceType
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'AA' and com_cd = a.area_div) as areaDivNm
+				,b.open_yn as openYn
+			from tb_fclts_info a
+			left outer join tb_openapi_list b
+			on a.co_id = b.co_id
+			and a.fclts_uuid = b.device_id
+			where a.co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="areaDiv">
+        	and a.area_div = #areaDiv#
+        </isNotEmpty>
+			order by a.fclts_uuid
+    </select>
+
+	<update id="dataTargetDAO.updateDataTarget" parameterClass="dataTargetVO">
+		<![CDATA[
+			with upsert as (
+				update tb_openapi_list
+				set
+	        		open_yn	=#openYn#
+					,upd_id		=#sessionUserId#
+					,upd_dtm	=now()
+				where co_id = #sessionCoId#
+				and device_id =#deviceId#
+				returning *
+			)
+			insert into tb_openapi_list
+					(co_id
+					,device_id
+					,open_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm)
+			select
+				#sessionCoId#
+				,#deviceId#
+				,#openYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now()
+			where not exists(select * from upsert)
+
+		]]>
+	</update>
+
+	<select id="openapiReqDAO.selectOpenapiReqList" parameterClass="openapiReqVO" resultMap="openapiReq">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by a.req_no) as rowno
+				,req_no as reqNo
+				,co_id coId
+				,(select co_nm from tsys_company where co_id = a.co_id) as coNm
+				,req_co_nm as reqCoNm
+				,req_nm as reqNm
+				,email_addr as emailAddr
+				,use_site as useSite
+				,coalesce(open_key,'') as openKey
+				,open_key_dt as openKeyDt
+				,to_char(req_dtm,'YYYY-MM-DD hh24:mi:ss') as reqDtm
+				,upd_id as updId
+				,upd_dtm as updDt
+			FROM tb_openapi_req a
+			where co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="fromDt">
+        	<![CDATA[and req_dtm >= concat(#fromDt#, ' 00:00:00')::timestamp]]>
+        </isNotEmpty>
+        <isNotEmpty property="toDt">
+        	<![CDATA[and req_dtm < concat(#toDt#, ' 00:00:00')::timestamp + '1 day'::interval]]>
+        </isNotEmpty>
+		<isNotEmpty property="openKeyYn">
+			<isEqual property="openKeyYn" compareValue="1">
+        		and coalesce(a.open_key_dt,'') != ''
+			</isEqual>
+			<isEqual property="openKeyYn" compareValue="0">
+        		and coalesce(a.open_key_dt,'') = ''
+			</isEqual>
+        </isNotEmpty>
+        <isNotEmpty property="reqCoNm">
+        	and req_co_nm like concat('',#reqCoNm#,'')
+        </isNotEmpty>
+			order by a.req_no
+    </select>
+
+	<select id="openapiReqDAO.checkOpenapiKey" parameterClass="openapiReqVO" resultMap="openapiReq">
+		SELECT
+			0 as rowno
+			,req_no as reqNo
+			,co_id coId
+			,'' as coNm
+			,req_co_nm as reqCoNm
+			,req_nm as reqNm
+			,email_addr as emailAddr
+			,use_site as useSite
+			,open_key as openKey
+			,open_key_dt as openKeyDt
+			,req_dtm as reqDtm
+			,upd_id as updId
+			,upd_dtm as updDt
+		FROM tb_openapi_req a
+		where open_key = #openKey#
+	</select>
+
+	<insert id="openapiReqDAO.reqOpenapi" parameterClass="openapiReqVO">
+		<![CDATA[
+			insert into tb_openapi_req
+				(co_id
+				,req_co_nm
+				,req_nm
+				,email_addr
+				,use_site
+				,req_dtm
+				,upd_id
+				,upd_dtm)
+			values
+				(#coId#
+				,#reqCoNm#
+				,#reqNm#
+				,#emailAddr#
+				,#useSite#
+				,now()
+				,'SYSTEM'
+				,now())
+		]]>
+	</insert>
+
+	<insert id="openapiReqDAO.approveOpenapi" parameterClass="openapiReqVO">
+		<![CDATA[
+			update tb_openapi_req
+			set open_key = #openKey#
+				,open_key_dt = to_char(now(),'YYYY-MM-DD')
+				,upd_id = #sessionUserId#
+				,upd_dtm = now()
+			where req_no = #reqNo#::double precision
+		]]>
+	</insert>
+
+
+
+	<select id="openapiDAO.selectOpenapiDataList" parameterClass="openapiReqVO" resultMap="openapiData">
+        <![CDATA[
+
+			SELECT
+				ROW_NUMBER() OVER (order by a.data_no) as rowno
+				,c.co_nm as coNm
+				,b.fclts_nm as deviceId
+				,a.device_io as deviceIo
+				,a.device_value as deviceValue
+				,a.get_dtm as getDtm
+			FROM tb_device_data a
+			left outer join tb_fclts_info b
+			on a.device_id = b.fclts_uuid
+			left outer join tsys_company c
+			on b.co_id = c.co_id
+			where get_dtm <= now()
+			and get_dtm >= concat(to_char(now(),'YYYY-MM-DD'),' 00:00:00')::timestamp
+			and device_id in (select device_id from tb_openapi_list where co_id = (select max(co_id) from tb_openapi_req where open_key=#openKey#))
+			order by a.data_no
+		]]>
+
+    </select>
+</sqlMap>

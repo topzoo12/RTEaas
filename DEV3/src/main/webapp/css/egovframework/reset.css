@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, 
+u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+
+html,body{
+	max-width: 100%;
+	overflow-x: hidden;
+	font-family: 'Noto Sans KR', sans-serif, "맑은 고딕", dotum;;
+	font-size: 62.5%;
+	line-height: 1.285;
+	letter-spacing: -0.04em;
+	color: #333;
+}
+ol, ul, menu {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* 추가속성 */
+a{
+    /* a요소의 글자색상은 부모로 부터 상속받습니다. */
+    color: inherit;
+    text-decoration: none;
+}
+hr{
+	border: 0;
+	margin: 0;
+}
+button{
+	border: 0;
+	background-color: transparent;
+}
+
+/* 입력양식관련 속성 */
+input, textarea, select{
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+*:focus{
+	outline: 0;
+}
+input[type=button], input[type=submit], input[type=reset], button{
+	cursor: pointer;
+}
+
+/*! 팝업창 공통---------------------- */
+.pop_wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  display: none;
+}
+.pop_wrap .pop {
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  background-color: #fff;
+  border: 1px solid #F3F3F3;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+.pop_wrap .pop .pop_close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 30px;
+  height: 30px;
+}
+.pop_wrap .pop .pop_close span {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #222;
+  transition: transform 0.3s;
+}
+.pop_wrap .pop .pop_close span:nth-child(1) {
+  transform: rotate(45deg);
+}
+.pop_wrap .pop .pop_close span:nth-child(2) {
+  transform: rotate(-45deg);
+}
+.pop_wrap .pop .pop_close:hover span {
+  transform: rotate(0);
+}
+
+
+/*공통*/
+.table {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border: 1px solid #ededed;
+}
+.table input[type=checkbox] {
+  accent-color: #fff;
+  width: 17px;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  color: #4863f3;
+}
+.table thead tr th{
+	border-top: 1px solid #b8c2cc;
+	border-bottom: 1px solid #b8c2cc;
+}
+.table th {
+  padding: 8px 0px;
+  vertical-align: middle;
+}
+.table td {
+  padding: 5px 0px;
+  vertical-align: middle;
+}
+.table th {
+  font-weight: 600;
+  background-color: #f0f4fb;
+  color: #34373b;
+}
+.table th:not(:last-of-type) {
+  border-right: 1px solid #ededed;
+}
+.table td {
+  border-bottom: 1px solid #e6e6e6;
+  color: #666666;
+}
+.table td:not(:last-of-type) {
+  border-right: 1px solid #ededed;
+}
+
+.table td.type .go{
+	display: none;
+}
+
+.table tr.on td.type .go {
+	position: relative;
+	display: inline-block;
+	width: 9px;
+	height: 5px;
+}
+
+.table tr.on td.type .go:after{
+	position: absolute;
+	top: -2px;
+	right: -10px;
+	content:"";
+	width: 9px;
+	height: 5px;
+	margin: 0 0 0 15px;
+	background: url(../img/icon_arrow_down2.png) no-repeat center center;
+}
+
+.table tr.on, .table tr:hover {
+	background: #eff5fe;
+}
+
+.table .txt_hidden {
+  text-align: left;
+  padding: 0;
+  display: inline-block;
+}
+
+/*글쓰기*/
+.table_write {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border-top: 1px solid #d9e1e9;
+  border-bottom: 1px solid #d9e1e9;
+}
+.table_write input[type=checkbox] {
+  accent-color: #0096ff;
+  width: 17px;
+  aspect-ratio: 1;
+  border-radius: 3px;
+}
+.table_write th {
+  font-weight: 600;
+  background-color: #f0f4fb;
+  color: #34373b;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 13px 20px;
+  vertical-align: middle;
+  width: 130px;
+  text-align: left;
+}
+
+.table_write td {
+  border-bottom: 1px solid #e6e6e6;
+  color: #666666;
+  padding: 10px 15px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+
+/*기본 값*/
+
+input[type=text], input[type=password] {
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #C7C7C7;
+  padding: 0 20px;
+}
+
+select {
+  width: 270px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #fff;
+  padding: 0 20px;
+  appearance: none;
+  background: url("../img/icon_arrow_down.png") no-repeat center #fff;;
+  background-position-x: 93%;
+  color: #888888;
+}
+
+select.select1 {
+  width: 195px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #fff;
+  padding: 0 20px;
+  appearance: none;
+  background: url("../img/icon_arrow_down.png") no-repeat center #fff;;
+  background-position-x: 93%;
+  color: #888888;
+}
+
+input.input1 {
+  width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #fff;
+  padding: 0 10px;
+  color: #888888;
+}
+
+input.input2 {
+  width: 100px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #fff;
+  padding: 0 10px;
+  color: #888888;
+}
+
+input.input3 {
+  width: 260px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid #cccccc;
+  padding: 0 10px;
+  color: #666666;
+}
+
+/*버튼*/
+.btn_search {
+	position: relative;
+	display: inline-block;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 20px 0 30px;
+	color: #fff;
+	font-size: 1.4rem;
+	font-weight: 300;
+	background: #575b66;
+	border-radius: 5px;
+}
+
+.btn_search:before {
+	position: absolute;
+	top: 9px;
+	left: 13px;
+	content:"";
+	width: 13px;
+	height: 12px;
+	background: url(../img/icon_search2.png) no-repeat center center;
+}
+
+.btn_bbs {
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	margin: 0 0 0 3px;
+	background-size: 28px 28px;
+}
+
+.btn_write {
+	background: url(../img/icon_write.png) no-repeat center center;
+}
+
+.btn_delete {
+	background: url(../img/icon_delete.png) no-repeat center center;
+}
+
+.btn_file {
+	background: url(../img/icon_file.png) no-repeat center center;
+}
+
+.btn_write:hover, .btn_write_on {
+	background: url(../img/icon_write_on.png) no-repeat center center;
+}
+
+.btn_delete:hover, .btn_delete_on {
+	background: url(../img/icon_delete_on.png) no-repeat center center;
+}
+
+.btn_file:hover, .btn_file_on {
+	background: url(../img/icon_file_on.png) no-repeat center center;
+}
+
+.btn_favorites {
+	background: url(../img/top_menu_star.png) no-repeat center center;
+}
+
+.btn_menu{
+	background: url(../img/top_menu_all.png) no-repeat center center;
+}
+
+.btn_close {
+	cursor: pointer;
+	display: inline-block;
+	width: 65px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	color: #666666;
+	border: 1px solid #d2d2d2;
+	background: #fff;
+	border-radius: 3px;
+	font-size: 1.2rem;
+	margin: 0 5px;
+}
+
+.btn_select {
+	cursor: pointer;
+	display: inline-block;
+	width: 65px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	color: #fff;
+	border: 1px solid #2d313a;
+	background: #2d313a;
+	border-radius: 3px;
+	font-size: 1.2rem;
+	margin: 0 5px;
+}
+
+.btn_check {
+	cursor: pointer;
+	display: inline-block;
+	width: 120px;
+	height: 27px;
+	line-height: 27px;
+	text-align: center;
+	color: #333333;
+	border: 1px solid #acacac;
+	background: #fff;
+	border-radius: 3px;
+	font-size: 1.2rem;
+	margin: 0 5px;
+	font-weight: 400;
+}
+
+.remark {
+  padding-right: 8px;
+  color: #ff000f;
+  position: relative;
+}
+.remark:after {
+  position: absolute;
+  content:"*";
+  width: 3px;
+  color: #ff000f;
+  right: 0;
+  top: 5px;
+}
+
+.txt {
+	color: #666666;
+	font-size: 1.2rem;
+	font-weight: 200;
+}
+
+/*체크박스 커스텀*/
+label {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background: 0;
+    border-width: 0;
+	vertical-align: middle;
+}
+
+input[type=checkbox]{position:absolute; width:20px; height:20px; z-index: 1; -webkit-appearance: none; -moz-appearance: none; appearance: none; left:-10000%}
+input[type=checkbox]:focused {-webkit-appearance: none; -moz-appearance: none; appearance: none; border:0}
+input[type=checkbox]+.none{ padding:0 0 0 0; }
+input[type=checkbox]+.none .icon{ display: none; }
+
+input[type=checkbox]+ .icon{ position: relative; display:inline-block; width:20px; height:20px; border:1px solid #c6c6c6; border-radius:3px; background: #fff; z-index: 2;}
+
+input[type=checkbox]+ .icon em {font-size: 0.7rem}
+input[type=checkbox]:checked + .icon { border:1px solid #3c4cf8;  z-index: 2; background: #fff url("../img/icon_checkbox.png") no-repeat center center; background-size: 14px 14px;}  

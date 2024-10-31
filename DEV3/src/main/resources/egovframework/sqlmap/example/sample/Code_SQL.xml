@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="code">
+
+	<typeAlias alias="codeVO" type="egovframework.zieumtn.system.vo.CodeVO"/>
+	<typeAlias alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="codegroup" class="egovframework.zieumtn.system.vo.CodeVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="cdgrpId" column="cdgrpId"/>
+		<result property="cdgrpNm" column="cdgrpNm"/>
+		<result property="taskDiv" column="taskDiv"/>
+		<result property="taskDivNm" column="taskDivNm"/>
+		<result property="cdgrpDesc" column="cdgrpDesc"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<resultMap id="code" class="egovframework.zieumtn.system.vo.CodeVO">
+		<result property="rowno" column="rowno"/>
+		<result property="comCd" column="comCd"/>
+		<result property="cdgrpId" column="cdgrpId"/>
+		<result property="cdId" column="cdId"/>
+		<result property="cdNm" column="cdNm"/>
+		<result property="cdDesc" column="cdDesc"/>
+		<result property="srtSeq" column="srtSeq"/>
+		<result property="hrnkcomCd" column="hrnkcomCd"/>
+		<result property="etc1" column="etc1"/>
+		<result property="etc2" column="etc2"/>
+		<result property="etc3" column="etc3"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+		<result property="coId" column="coId"/>
+		<result property="cdNmEng" column="cdNmEng"/>
+		<result property="cdNmJp" column="cdNmJp"/>
+	</resultMap>
+
+
+	<select id="codeDAO.checkCodeGroup" parameterClass="codeVO" resultMap="codegroup">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id) as rowno
+				,co_id as coId
+				,cdgrp_id as cdgrpId
+				,cdgrp_nm as cdgrpNm
+				,task_div as taskDiv
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd = task_div) as taskDivNm
+				,cdgrp_desc as cdgrpDesc
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from tsys_code_group a
+			where co_id = #coId#
+			and cdgrp_id = #cdgrpId#
+		]]>
+			order by cdgrp_id
+    </select>
+
+	<select id="codeDAO.selectCodeGroupListTotCnt" parameterClass="codeVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_code_group
+			where 1=1
+		<isNotEmpty property="taskDiv">
+       		and task_div = #taskDiv#
+        </isNotEmpty>
+		<isNotEmpty property="cdgrpId">
+			and (cdgrp_id like concat('%'||coalesce(#cdgrpId#,'')||'%') or cdgrp_nm like concat('%'||coalesce(#cdgrpId#,'')||'%'))
+		</isNotEmpty>
+	</select>
+
+	<select id="codeDAO.selectCodeGroupList" parameterClass="codeVO" resultMap="codegroup">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id) as rowno
+				,co_id as coId
+				,cdgrp_id as cdgrpId
+				,cdgrp_nm as cdgrpNm
+				,task_div as taskDiv
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd = task_div) as taskDivNm
+				,cdgrp_desc as cdgrpDesc
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from tsys_code_group a
+			where co_id = #sessionCoId#
+		]]>
+        <isNotEmpty property="taskDiv">
+        	and task_div = #taskDiv#
+        </isNotEmpty>
+		<isNotEmpty property="cdgrpId">
+			and (cdgrp_id like concat('%'||coalesce(#cdgrpId#,'')||'%') or cdgrp_nm like concat('%'||coalesce(#cdgrpId#,'')||'%'))
+		</isNotEmpty>
+			order by cdgrp_id
+    </select>
+
+	<insert id="codeDAO.insertCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			insert into tsys_code_group
+				(co_id
+				,cdgrp_id
+				,cdgrp_nm
+				,task_div
+				,cdgrp_desc
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#coId#
+				,#cdgrpId#
+				,#cdgrpNm#
+				,#taskDiv#
+				,#cdgrpDesc#
+				,#useYn#
+				,#rmksCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="codeDAO.updateCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			update tsys_code_group
+			set
+				cdgrp_id	=#cdgrpId#
+				,cdgrp_nm	=#cdgrpNm#
+				,task_div	=#taskDiv#
+				,cdgrp_desc	=#cdgrpDesc#
+				,use_yn		=#useYn#
+				,rmks_cts	=#rmksCts#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id		=#coId#
+			and cdgrp_id = #cdgrpId#
+		]]>
+	</update>
+
+	<delete id="codeDAO.deleteCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			DELETE FROM tsys_code_group
+			WHERE co_id = #coId#
+			and cdgrp_id=#cdgrpId#
+		]]>
+	</delete>
+
+	<select id="codeDAO.checkCode" parameterClass="codeVO" resultMap="code">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id,cd_id) as rowno
+				,co_id as coId
+				,com_cd as comCd
+				,cdgrp_id as cdgrpId
+				,cd_id as cdId
+				,cd_nm as cdNm
+				,cd_desc as cdDesc
+				,srt_seq as srtSeq
+				,hrnkcom_cd as hrnkcomCd
+				,etc_1 as etc1
+				,etc_2 as etc2
+				,etc_3 as etc3
+				,rmks_cts as rmksCts
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+				,cd_nm_eng as cdNmEng
+				,cd_nm_jp as cdNmJp
+			from tsys_code
+			where co_id = #coId#
+			and cdgrp_id = #cdgrpId#
+			and cd_id = #cdId#
+			order by cdgrp_id,cd_id
+		]]>
+    </select>
+
+
+	<select id="codeDAO.selectCodeList" parameterClass="codeVO" resultMap="code">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id,cd_id) as rowno
+				,co_id as coId
+				,com_cd as comCd
+				,cdgrp_id as cdgrpId
+				,cd_id as cdId
+				,cd_nm as cdNm
+				,cd_desc as cdDesc
+				,srt_seq as srtSeq
+				,hrnkcom_cd as hrnkcomCd
+				,etc_1 as etc1
+				,etc_2 as etc2
+				,etc_3 as etc3
+				,rmks_cts as rmksCts
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+				,cd_nm_eng as cdNmEng
+				,cd_nm_jp as cdNmJp
+			from tsys_code
+			where co_id = #coId#
+			and cdgrp_id = #cdgrpId#
+			order by cdgrp_id,cd_id
+        ]]>
+    </select>
+
+	<select id="codeDAO.selectCommCodeList" parameterClass="codeVO" resultMap="code">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id,cd_id) as rowno
+				,co_id as coId
+				,com_cd as comCd
+				,cdgrp_id as cdgrpId
+				,cd_id as cdId
+				,cd_nm as cdNm
+				,cd_desc as cdDesc
+				,srt_seq as srtSeq
+				,hrnkcom_cd as hrnkcomCd
+				,etc_1 as etc1
+				,etc_2 as etc2
+				,etc_3 as etc3
+				,rmks_cts as rmksCts
+				,use_yn as useYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+				,cd_nm_eng as cdNmEng
+				,cd_nm_jp as cdNmJp
+			from tsys_code
+			where co_id = #sessionCoId#
+			and cdgrp_id = #cdgrpId#
+			and use_yn = '1'
+			order by srt_seq
+        ]]>
+    </select>
+
+	<insert id="codeDAO.insertCode" parameterClass="codeVO">
+		<![CDATA[
+			insert into tsys_code
+				(cdgrp_id
+				,co_id
+				,com_cd
+				,cd_id
+				,cd_nm
+				,cd_nm_eng
+				,cd_nm_jp
+				,cd_desc
+				,srt_seq
+				,hrnkcom_cd
+				,etc_1
+				,etc_2
+				,etc_3
+				,rmks_cts
+				,use_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#cdgrpId#
+				,#coId#
+				,concat(#cdgrpId#||#cdId#)
+				,#cdId#
+				,#cdNm#
+				,#cdNmEng#
+				,#cdNmJp#
+				,#cdDesc#
+				,#srtSeq#
+				,#hrnkcomCd#
+				,#etc1#
+				,#etc2#
+				,#etc3#
+				,#rmksCts#
+				,#useYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="codeDAO.updateCode" parameterClass="codeVO">
+		<![CDATA[
+			update tsys_code
+			set
+				 cd_nm		=#cdNm#
+				,cd_nm_eng	=#cdNmEng#
+				,cd_nm_jp	=#cdNmJp#
+				,cd_desc	=#cdDesc#
+				,srt_seq	=#srtSeq#
+				,hrnkcom_cd	=#hrnkcomCd#
+				,etc_1		=#etc1#
+				,etc_2		=#etc2#
+				,etc_3		=#etc3#
+				,rmks_cts	=#rmksCts#
+				,use_yn		=#useYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id = #coId#
+			and com_cd = #comCd#
+		]]>
+	</update>
+
+	<delete id="codeDAO.deleteCode" parameterClass="codeVO">
+		<![CDATA[
+			DELETE FROM tsys_code
+			WHERE com_cd=#comCd#
+		]]>
+	</delete>
+	<update id="codeDAO.copyCodeGroup" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_code_group
+				(co_id
+				,cdgrp_id
+				,cdgrp_nm
+				,task_div
+				,cdgrp_desc
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			select
+				#coId#
+				,cdgrp_id
+				,cdgrp_nm
+				,task_div
+				,cdgrp_desc
+				,use_yn
+				,rmks_cts
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_code_group
+			where co_id = 'A0001'
+		]]>
+	</update>
+	<update id="codeDAO.copyCode" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_code
+				(cdgrp_id
+				,co_id
+				,com_cd
+				,cd_id
+				,cd_nm
+				,cd_desc
+				,srt_seq
+				,hrnkcom_cd
+				,etc_1
+				,etc_2
+				,etc_3
+				,rmks_cts
+				,use_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			select
+				cdgrp_id
+				,#coId#
+				,com_cd
+				,cd_id
+				,cd_nm
+				,cd_desc
+				,srt_seq
+				,hrnkcom_cd
+				,etc_1
+				,etc_2
+				,etc_3
+				,rmks_cts
+				,use_yn
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_code
+			where co_id = 'A0001'
+		]]>
+	</update>
+</sqlMap>

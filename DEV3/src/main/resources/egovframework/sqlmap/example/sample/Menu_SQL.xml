@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="menu">
+
+	<typeAlias  alias="menuVO" type="egovframework.zieumtn.system.vo.MenuVO"/>
+	<typeAlias  alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="menu" class="egovframework.zieumtn.system.vo.MenuVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="mnuNmUs" column="mnuNmUs"/>
+		<result property="mnuNmJp" column="mnuNmJp"/>
+		<result property="mnuLvl" column="mnuLvl"/>
+		<result property="hrnkmnuId" column="hrnkmnuId"/>
+		<result property="srtSeq" column="srtSeq"/>
+		<result property="srnId" column="srnId"/>
+		<result property="srnNm" column="srnNm"/>
+		<result property="srnUrl" column="srnUrl"/>
+		<result property="argVal" column="argVal"/>
+		<result property="markYn" column="markYn"/>
+		<result property="useYn" column="useYn"/>
+		<result property="mnuDesc" column="mnuDesc"/>
+		<result property="mpYn" column="mpYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+    <select id="menuDAO.selectMenuList" parameterClass="menuVO" resultMap="menu">
+        <![CDATA[
+			WITH RECURSIVE menu(
+				co_id
+				,mnu_id
+				,mnu_nm
+				,mnu_nm_eng
+				,mnu_nm_jp
+				,mnu_lvl
+				,hrnkmnu_id
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,LEVEL
+				,PATH
+				,CYCLE)
+			AS (
+				select
+					co_id
+					,mnu_id
+					,mnu_nm
+					,mnu_nm_eng
+					,mnu_nm_jp
+					,mnu_lvl
+					,hrnkmnu_id
+					,srt_seq
+					,srn_id
+					,arg_val
+					,mark_yn
+					,use_yn
+					,mnu_desc
+					,mp_yn
+					,regpsn_id
+					,reg_dtm
+					,upd_id
+					,upd_dtm
+					,0
+					,ARRAY[a.srt_seq]
+					,false
+				from tsys_menus a
+				where co_id = #coId#
+				and mnu_lvl = 1
+
+				UNION ALL
+
+				select
+					a.co_id
+					,a.mnu_id
+					,a.mnu_nm
+					,a.mnu_nm_eng
+					,a.mnu_nm_jp
+					,a.mnu_lvl
+					,a.hrnkmnu_id
+					,a.srt_seq
+					,a.srn_id
+					,a.arg_val
+					,a.mark_yn
+					,a.use_yn
+					,a.mnu_desc
+					,a.mp_yn
+					,a.regpsn_id
+					,a.reg_dtm
+					,a.upd_id
+					,a.upd_dtm
+					,LEVEL + 1
+					,PATH || a.srt_seq
+					,a.srt_seq = ANY(PATH)
+				from tsys_menus a
+				inner join menu b
+				on a.co_id = b.co_id
+				and a.hrnkmnu_id = b.mnu_id
+				where a.co_id = #coId#
+			)
+			SELECT
+				ROW_NUMBER() OVER (order by PATH) as rowno
+				,co_id as coId
+				,(select co_nm from tsys_company where co_id = menu.co_id) as coNm
+				,mnu_id as mnuId
+				,mnu_nm as mnuNm
+				,mnu_nm_eng as mnuNmUs
+				,mnu_nm_jp as mnuNmJp
+				,mnu_lvl as mnuLvl
+				,hrnkmnu_id as hrnkmnuId
+				,srt_seq as srtSeq
+				,srn_id as srnId
+				,(select srn_nm from tsys_screen where srn_id = menu.srn_id) as srnNm
+				,(select srn_url from tsys_screen where srn_id = menu.srn_id) as srnUrl
+				,arg_val as argVal
+				,mark_yn as markYn
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,mnu_desc as mnuDesc
+				,mp_yn as mpYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+				,PATH
+			FROM menu
+			ORDER BY PATH
+        ]]>
+    </select>
+
+	<insert id="menuDAO.insertMenu" parameterClass="menuVO">
+		<![CDATA[
+			insert into tsys_menus
+				(co_id
+				,mnu_id
+				,mnu_nm
+				,mnu_nm_eng
+				,mnu_nm_jp
+				,mnu_lvl
+				,hrnkmnu_id
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#coId#
+				,#mnuId#
+				,#mnuNm#
+				,#mnuNmUs#
+				,#mnuNmJp#
+				,#mnuLvl#::integer
+				,#hrnkmnuId#
+				,#srtSeq#::bigint
+				,#srnId#
+				,#argVal#
+				,#markYn#
+				,#useYn#
+				,#mnuDesc#
+				,#mpYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="menuDAO.updateMenu" parameterClass="menuVO">
+		<![CDATA[
+			update tsys_menus
+			set
+				mnu_id		=#mnuId#
+				,mnu_nm		=#mnuNm#
+				,mnu_nm_eng	=#mnuNmUs#
+				,mnu_nm_jp	=#mnuNmJp#
+				,mnu_lvl	=#mnuLvl#::integer
+				,hrnkmnu_id	=#hrnkmnuId#
+				,srt_seq	=#srtSeq#::bigint
+				,srn_id		=#srnId#
+				,arg_val	=#argVal#
+				,mark_yn	=#markYn#
+				,use_yn		=#useYn#
+				,mnu_desc	=#mnuDesc#
+				,mp_yn		=#mpYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id = #coId#
+			and mnu_id = #mnuId#
+		]]>
+	</update>
+
+<!-- 	<delete id="menuDAO.deleteMenu" parameterClass="menuVO">
+		<![CDATA[
+			DELETE FROM tsys_menus
+			where co_id = #coId#
+			and mnu_id =#mnuId#
+		]]>
+	</delete> -->
+
+	<update id="menuDAO.copyMenu" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_menus
+				(co_id
+				,mnu_id
+				,mnu_nm
+				,mnu_lvl
+				,hrnkmnu_id
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			select
+				#coId#
+				,concat(#coId#,substring(mnu_id,6,15))
+				,mnu_nm
+				,mnu_lvl
+				,concat(#coId#,substring(hrnkmnu_id,6,15))
+				,srt_seq
+				,srn_id
+				,arg_val
+				,mark_yn
+				,use_yn
+				,mnu_desc
+				,mp_yn
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_menus
+			where co_id = 'A0001'
+		]]>
+	</update>
+</sqlMap>

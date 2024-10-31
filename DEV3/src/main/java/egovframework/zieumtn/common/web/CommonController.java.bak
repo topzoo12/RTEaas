@@ -1,0 +1,470 @@
+/*
+ * Copyright 2008-2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package egovframework.zieumtn.common.web;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import egovframework.zieumtn.common.service.AuthVO;
+import egovframework.zieumtn.common.service.CommonDefaultVO;
+import egovframework.zieumtn.common.service.CommonService;
+import egovframework.zieumtn.common.service.DeviceDataVO;
+import egovframework.zieumtn.common.service.InterfaceDeviceDataVO;
+import egovframework.zieumtn.common.service.LoginMenuVO;
+import egovframework.zieumtn.common.service.MainDataVO;
+import egovframework.zieumtn.common.service.WeatherItemVO;
+import egovframework.zieumtn.common.service.WeatherVO;
+import egovframework.zieumtn.device.service.DeviceService;
+import egovframework.zieumtn.device.vo.FcltsInfoVO;
+import egovframework.zieumtn.system.service.UsageDataService;
+import egovframework.zieumtn.system.vo.MenuVO;
+import egovframework.zieumtn.system.vo.ServiceVO;
+import egovframework.zieumtn.system.vo.UserVO;
+import egovframework.zieumtn.system.web.AuthgrpController;
+import net.sf.json.JSONObject;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springmodules.validation.commons.DefaultBeanValidator;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @Class Name : EgovSampleController.java
+ * @Description : EgovSample Controller Class
+ * @Modification Information
+ * @
+ * @  수정일      수정자              수정내용
+ * @ ---------   ---------   -------------------------------
+ * @ 2009.03.16           최초생성
+ *
+ * @author 개발프레임웍크 실행환경 개발팀
+ * @since 2009. 03.16
+ * @version 1.0
+ * @see
+ *
+ *  Copyright (C) by MOPAS All right reserved.
+ */
+
+@Controller
+public class CommonController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonController.class);
+
+	/** EgovSampleService */
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
+	@Resource(name = "deviceService")
+	private DeviceService deviceService;
+
+	/** EgovPropertyService */
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertiesService;
+
+	/** Validator */
+	@Resource(name = "beanValidator")
+	protected DefaultBeanValidator beanValidator;
+
+	/**
+	 * 글 목록을 조회한다. (pageing)
+	 * @param searchVO - 조회할 정보가 담긴 SampleDefaultVO
+	 * @param model
+	 * @return "egovSampleList"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/main.do")
+	public ModelAndView loginView(@ModelAttribute("searchVO") CommonDefaultVO searchVO, ModelMap model, HttpSession session) throws Exception {
+
+		AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+
+		ModelAndView mv = new ModelAndView("/cmmn/main");
+		FcltsInfoVO fcltsVO = new FcltsInfoVO();
+		fcltsVO.setSessionCoId(authInfo.getSessionCoId());
+		List<?> deviceList = deviceService.selectDeviceList(fcltsVO);
+
+		MainDataVO maindataVO = new MainDataVO();
+		maindataVO.setSessionCoId(authInfo.getSessionCoId());
+		List<MainDataVO> bestList = (List<MainDataVO>) commonService.selectBestDataMaster(maindataVO);
+		List<MainDataVO> worstList = (List<MainDataVO>) commonService.selectWorstDataMaster(maindataVO);
+
+		for (int i=0;i<bestList.size();i++) {
+			MainDataVO mainDetaildataVO = new MainDataVO();
+			mainDetaildataVO.setSessionCoId(authInfo.getSessionCoId());
+			mainDetaildataVO.setDeviceId(bestList.get(i).getDeviceId());
+			mainDetaildataVO.setGetDtm(bestList.get(i).getGetDtm());
+			List<MainDataVO> bestDetailList = (List<MainDataVO>) commonService.selectMainDataDetail(mainDetaildataVO);
+
+			HashMap<String,Object> output = new HashMap<>();
+
+			for(int j=0;j<bestDetailList.size();j++) {
+				output.put(bestDetailList.get(j).getIoId(), bestDetailList.get(j).getDeviceValue());
+			}
+			bestList.get(i).setDetailList(output);
+		}
+		mv.addObject("bestList", bestList);
+
+		for (int i=0;i<worstList.size();i++) {
+			MainDataVO mainDetaildataVO = new MainDataVO();
+			mainDetaildataVO.setSessionCoId(authInfo.getSessionCoId());
+			mainDetaildataVO.setDeviceId(worstList.get(i).getDeviceId());
+			mainDetaildataVO.setGetDtm(worstList.get(i).getGetDtm());
+			List<MainDataVO> worstDetailList = (List<MainDataVO>) commonService.selectMainDataDetail(mainDetaildataVO);
+
+			HashMap<String,Object> output = new HashMap<>();
+
+			for(int j=0;j<worstDetailList.size();j++) {
+				output.put(worstDetailList.get(j).getIoId(), worstDetailList.get(j).getDeviceValue());
+			}
+
+			worstList.get(i).setDetailList(output);
+		}
+		mv.addObject("worstList", worstList);
+
+
+		mv.addObject("y", 37.6686932);
+		mv.addObject("x", 127.047072);
+		mv.addObject("deviceList", deviceList);
+		WeatherVO weatherVO = new WeatherVO();
+		weatherVO.setX("61");
+		weatherVO.setY("129");
+
+		String naverhtml = cwGetWeather(weatherVO);
+
+		if(naverhtml.indexOf("<strong class=\"title\">일출</strong>")>=0) {
+			mv.addObject("weather_html", naverhtml.substring(naverhtml.indexOf("<div class=\"status_wrap\">"), naverhtml.indexOf("<strong class=\"title\">일출</strong>")+150));
+		} else {
+			mv.addObject("weather_html", naverhtml.substring(naverhtml.indexOf("<div class=\"status_wrap\">"), naverhtml.indexOf("<strong class=\"title\">일몰</strong>")+150));
+		}
+
+
+		LocalDateTime nowDateTime = LocalDateTime.now();
+
+		int y = nowDateTime.getYear();
+		int m = nowDateTime.getMonthValue();
+		int d = nowDateTime.getDayOfMonth();
+
+		String mm = "00";
+		String dd = "00";
+
+		if(m<10) {
+			mm = "0"+m;
+		} else {
+			mm = ""+m;
+		}
+
+		if(d<10) {
+			dd = "0"+d;
+		} else {
+			dd = ""+d;
+		}
+
+		int hh = nowDateTime.getHour();
+		int mi = nowDateTime.getMinute();
+		int ss = nowDateTime.getSecond();
+
+		mv.addObject("yy", y);
+		mv.addObject("mm", mm);
+		mv.addObject("dd", dd);
+
+		mv.addObject("hh", hh);
+		mv.addObject("mi", mi);
+		mv.addObject("ss", ss);
+
+		return mv;
+	}
+	@RequestMapping(value = "/api/getWeather.do", method=RequestMethod.POST)
+	public void getWeather(@ModelAttribute("weatherVO") WeatherVO searchVO, HttpServletResponse response, HttpSession session) throws Exception {
+
+		HashMap<String, Object> resultMap = restApiGetWeather(searchVO);
+
+		response.setContentType("text/html; charset=UTF-8");
+
+		Iterator<String> keys = resultMap.keySet().iterator();
+
+		JSONObject jsonObject = new JSONObject();
+
+		while( keys.hasNext() ){
+			String strKey = keys.next();
+			Object objValue = resultMap.get(strKey);
+			jsonObject.put(strKey, objValue);
+		}
+
+		PrintWriter out = response.getWriter();
+		out.write(jsonObject.toString());
+	}
+	public HashMap<String, Object> restApiGetWeather(WeatherVO searchVO) throws Exception {
+
+		LocalDateTime now = LocalDateTime.now();
+		String ymd = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String hh = now.format(DateTimeFormatter.ofPattern("HH"));
+		String mm = now.format(DateTimeFormatter.ofPattern("mm"));
+		String hm = now.format(DateTimeFormatter.ofPattern("mm"));
+
+		if(Integer.parseInt(mm)<=30) {
+			Integer ih =Integer.parseInt(hh)-1 ;
+			hm = ih.toString()+mm;
+		} else {
+			hm = hh+mm;
+		}
+
+		String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst"
+				+"?serviceKey=k60l1%2FPSzjLxaAZsoAaRxVJlfXNCZY%2F6va5VxVxJLkvlOaK%2FV0nHgDC7U0%2BvE0IK%2B67mVyYdeqO3RUVMuFq7Lg%3D%3D"
+				+"&pageNo=1"
+				+"&numOfRows=1000"
+				+"&dataType=JSON"
+				+"&base_date="+ymd
+				+"&base_time="+hm
+				+"&nx="+searchVO.getX()
+				+"&ny="+searchVO.getY();
+
+		URL apiURL = new URL(url);
+
+		HttpURLConnection conn = null;
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			conn = (HttpURLConnection) apiURL.openConnection();
+			conn.setConnectTimeout(5000);
+			conn.setReadTimeout(5000);
+			conn.setDoOutput(true);
+
+			br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+
+			String line = null;
+
+			StringBuffer result = new StringBuffer();
+/*
+			while ((line=br.readLine()) != null) {
+				result.append(line);
+			}
+*/
+			line = br.readLine();
+			result.append(line);
+			while (line != null) {
+				line = br.readLine();
+				result.append(line);
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+
+			resultMap = mapper.readValue(result.toString(), HashMap.class);
+
+		} catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		} finally {
+			if (conn != null) conn.disconnect();
+			if (br != null) br.close();
+			if (bw != null) bw.close();
+		}
+
+		return resultMap;
+	}
+	public String cwGetWeather(WeatherVO searchVO) throws Exception {
+
+		LocalDateTime now = LocalDateTime.now();
+		String ymd = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String hh = now.format(DateTimeFormatter.ofPattern("HH"));
+		String mm = now.format(DateTimeFormatter.ofPattern("mm"));
+		String hm = now.format(DateTimeFormatter.ofPattern("mm"));
+
+		if(Integer.parseInt(mm)<=30) {
+			Integer ih =Integer.parseInt(hh)-1 ;
+			hm = ih.toString()+mm;
+		} else {
+			hm = hh+mm;
+		}
+
+		String url = "http://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EB%8F%84%EB%B4%89%EA%B5%AC%EB%82%A0%EC%94%A8";
+
+		Document doc = Jsoup.connect(url).get();
+
+		return doc.html();
+	}
+
+	@RequestMapping(value = "/interfaceDeviceData.do", method=RequestMethod.POST)
+	public void interfaceDeviceData(@RequestBody HashMap<String, Object> paramVO , HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> list = new ArrayList<>();
+			list = (List<?>) paramVO.get("sensorIoValue");
+
+			List<DeviceDataVO> dataVO = new ArrayList<>();
+
+
+			for(int i=0;i<list.size();i++) {
+				DeviceDataVO vo = new DeviceDataVO();
+				HashMap<String,Object> d =(HashMap<String, Object>) list.get(i);
+
+				String ioId = d.get("ioId").toString();
+
+				if(ioId.length()>2) {
+					if(ioId.substring(ioId.length()-2,ioId.length()).equals("_S")) {
+						vo.setCoId("-");
+						vo.setSensorId(ioId.substring(0,ioId.length()-2));
+						vo.setReadValue(d.get("readValue").toString());
+
+						vo.setReadDtm(d.get("readDtm").toString());
+						vo.setFcltsId(d.get("fcltsId").toString());
+						dataVO.add(vo);
+
+					}
+				}
+
+			}
+			int iResult = 0;
+			if(dataVO.size()>0) {
+
+				iResult = commonService.insertDeviceData(dataVO);
+			}
+
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", iResult);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		}
+		catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		}
+	}
+
+	@RequestMapping(value = "/insertFav.do", method=RequestMethod.POST)
+	public void insertFav(@ModelAttribute("menuVO") MenuVO paramVO, HttpServletResponse response, HttpSession session) throws Exception {
+		try {
+			AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+
+			paramVO.setSessionCoId(authInfo.getSessionCoId());
+			paramVO.setSessionUserId(authInfo.getSessionUserId());
+			int iResult = commonService.insertFav(paramVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", iResult);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+			List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
+			LoginMenuVO fav = new LoginMenuVO();
+			fav.setSrnUrl(paramVO.getSrnUrl());
+			fav.setMnuNm(paramVO.getMnuNm());
+			favList.add(fav);
+
+			authInfo.setFavList(favList);
+			session.setAttribute("authInfo", authInfo);
+
+		}
+		catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		}
+	}
+
+	@RequestMapping(value = "/deleteFav.do", method=RequestMethod.POST)
+	public void deleteFav(@ModelAttribute("menuVO") MenuVO paramVO, HttpServletResponse response, HttpSession session) throws Exception {
+		try {
+			AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+
+			paramVO.setSessionCoId(authInfo.getSessionCoId());
+			paramVO.setSessionUserId(authInfo.getSessionUserId());
+			int iResult = commonService.deleteFav(paramVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", iResult);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+			List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
+
+			int favcnt = 0;
+			int targetcnt = -1;
+			for(LoginMenuVO fav : favList) {
+				if(fav.getSrnUrl().equals(paramVO.getSrnUrl())) {
+					targetcnt = favcnt;
+				}
+				favcnt ++;
+			}
+			if(targetcnt>=0) {
+				favList.remove(targetcnt);
+			}
+
+			authInfo.setFavList(favList);
+			session.setAttribute("authInfo", authInfo);
+
+		}
+		catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		}
+	}
+
+	public void insertMenuConHist(MenuVO paramVO, HttpServletResponse response, HttpSession session) throws Exception {
+		try {
+			int iResult = commonService.insertMenuConHist(paramVO);
+
+		}
+		catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		}
+	}
+
+}

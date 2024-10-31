@@ -1,0 +1,60 @@
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+
+<tiles-definitions>
+
+<definition name="login" template="/WEB-INF/jsp/tiles/login.jsp">
+	<put-attribute name="header" value="" />
+	<put-attribute name="left" value="" />
+	<!-- <put-attribute name="footer" value="" /> -->
+</definition>
+
+<definition name="empty" template="/WEB-INF/jsp/tiles/layoutView.jsp">
+	<put-attribute name="header" value="" />
+	<put-attribute name="left" value="" />
+	<!-- <put-attribute name="footer" value="" /> -->
+</definition>
+
+<definition name="base" template="/WEB-INF/jsp/tiles/layout.jsp">
+	<put-attribute name="header" value="/WEB-INF/jsp/tiles/header.jsp" />
+	<put-attribute name="left" value="/WEB-INF/jsp/tiles/left.jsp" />
+	<!-- <put-attribute name="footer" value="/WEB-INF/jsp/tiles/footer.jsp" /> -->
+</definition>
+
+<definition name="base_main" template="/WEB-INF/jsp/tiles/layoutMain.jsp">
+	<put-attribute name="header" value="/WEB-INF/jsp/tiles/header.jsp" />
+	<put-attribute name="left" value="/WEB-INF/jsp/tiles/left.jsp" />
+	<!-- <put-attribute name="footer" value="/WEB-INF/jsp/tiles/footer.jsp" /> -->
+</definition>
+
+<definition name="/cmmn/success" extends="base">
+	<put-attribute name="content" value="/WEB-INF/jsp/cmmn/success.jsp" />
+</definition>
+
+
+
+<definition name="/login" extends="login">
+	<put-attribute name="content" value="/WEB-INF/jsp/tiles/login.jsp" />
+</definition>
+
+<definition name="/cmmn/*" extends="base">
+	<put-attribute name="content" value="/WEB-INF/jsp/cmmn/{1}.jsp" />
+</definition>
+
+<definition name="/sample/*" extends="base">
+	<put-attribute name="content" value="/WEB-INF/jsp/sample/{1}.jsp" />
+</definition>
+
+<definition name="/*/main" extends="base">
+	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+</definition>
+
+<definition name="/*/*" extends="base">
+	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+</definition>
+
+
+
+</tiles-definitions>

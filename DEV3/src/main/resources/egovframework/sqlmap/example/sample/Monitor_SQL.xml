@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="monitor">
+
+	<typeAlias  alias="monitorVO" type="egovframework.zieumtn.device.vo.MonitorVO"/>
+
+	<resultMap id="monitor" class="egovframework.zieumtn.device.vo.MonitorVO">
+		<result property="rowno" column="rowno"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+		<result property="fcltsNm" column="fcltsNm"/>
+		<result property="fcltsItlpcNm" column="fcltsItlpcNm"/>
+		<result property="fcltsItlpcNmDs" column="fcltsItlpcNmDs"/>
+		<result property="fcltsItlpcAddr" column="fcltsItlpcAddr"/>
+		<result property="fcltsItlpcLa" column="fcltsItlpcLa"/>
+		<result property="fcltsItlpcLo" column="fcltsItlpcLo"/>
+		<result property="tlphonNo" column="tlphonNo"/>
+		<result property="deviceStatus" column="deviceStatus"/>
+		<result property="deviceStatusDs" column="deviceStatusDs"/>
+	</resultMap>
+
+	<select id="monitorDAO.selectMonitorList" parameterClass="monitorVO" resultMap="monitor">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by a.fclts_uuid) as rowno
+				,a.fclts_uuid		  as fcltsUuid
+				,a.fclts_nm         as fcltsNm
+				,a.area_div   as fcltsItlpcNm
+				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd=a.area_div) as fcltsItlpcNmDs
+				,a.fclts_itlpc_addr as fcltsItlpcAddr
+				,a.fclts_itlpc_la   as fcltsItlpcLa
+				,a.fclts_itlpc_lo   as fcltsItlpcLo
+				,a.tlphon_no        as tlphonNo
+				,fn_getDeviceStatus(a.co_id,a.fclts_uuid) as deviceStatus
+				,case when count(b.device_value) > 0 then '1' else '0' end deviceStatus2
+				,case when count(b.device_value) > 0 then '' else '' end deviceStatusDs
+			FROM tb_fclts_info a
+			left outer join tb_device_data b
+			on a.fclts_uuid = b.device_id
+			and b.get_dtm > (select now() + '-5 MINUTE' INTERVAL)
+			where a.co_id = #sessionCoId#
+			and a.use_sttus = '1'
+			group by a.fclts_uuid,a.fclts_nm,a.area_div,a.fclts_itlpc_addr,a.fclts_itlpc_la,a.fclts_itlpc_lo,a.tlphon_no
+		]]>
+        order by fclts_uuid
+    </select>
+</sqlMap>

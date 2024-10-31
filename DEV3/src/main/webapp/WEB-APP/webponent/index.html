@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>webPonentⓒ</title>
+<link rel="stylesheet" href="./chart2.0/sample/layout/css/layout.css"/>
+<style>
+	body {
+		padding: 0; margin: 0;
+	}
+	
+	.wrapper {width: 960px; margin : 0 auto;}
+	.gnb {height: 93px; background: #f2f2f2;}
+	.gnb .cont {height: 89px; border-bottom: 1px solid #cecece; background: #fff;}
+	
+	.visual {margin-top: 16px;}
+	h1 {margin : 0; padding: 0; border: 0;}
+	h2 {margin : 40px 0 12px 0; padding: 0; clear: both; }
+	
+	.left {float: left;}
+	.right {float: right;}
+	.both {clear: both;}
+	
+	.footer {clear:both; margin-top: 100px; background: #f2f2f2; border-top: 1px solid #cecece; height: 73px; width: 100%;}
+	.footer p {padding-top: 30px; margin: 0;}
+</style>
+
+<script type="text/javascript">
+function isMobileDevice(){
+	var phoneArray = new Array('samsung-', 'sch-', 'shw-', 'sph-', 'sgh-', 'lg-', 'canu', 'im-', 'ev-', 'iphone', 'nokia', 'blackberry', 'lgtelecom', 'natebrowser', 'sonyericsson', 'mobile', 'android', 'ipad');
+	for(var i = 0; i < phoneArray.length; i++){
+		if(navigator.userAgent.toLowerCase().indexOf(phoneArray[i]) >  -1){
+			return true;
+		}
+	}
+	return false;
+}
+
+</script>
+</head>
+<body>
+<div class="gnb">
+	<div class="cont">
+		<div class="wrapper">
+			<h1><img src="./chart2.0/sample/layout/img/logo.png" alt="webPonentⓒ" /></h1>
+		</div>
+	</div>
+</div>
+<div class="wrapper">
+	<div class="visual"><img src="./chart2.0/sample/layout/img/main_visual.png" alt="webPonentⓒ 전반적인 설명글" /></div>
+	<h2><a href="./chart2.0/sample/chart/layout.html"><img src="./chart2.0/sample/layout/img/h2_chart.png" alt="webPonentⓒ Chart" /></a></h2>
+	<div class="left"><a href="./chart2.0/sample/chart/layout.html#./html/column_form_normal.html"><img src="./chart2.0/sample/layout/img/main_chart01.png" alt="차트 1번 설명글 입력" /></a></div>
+	<div class="right"><a href="./chart2.0/sample/chart/layout.html#./html/area_tick_updown.html"><img src="./chart2.0/sample/layout/img/main_chart02.png" alt="차트 2번 설명글 입력" /></a></div>
+	<div class="both"></div>
+	
+	<h2><a href="./chart2.0/sample/visual/layout.html"><img src="./chart2.0/sample/layout/img/h2_visual.png" alt="webPonentⓒ Visualization" /></a></h2>
+	<div class="left"><a href="./chart2.0/sample/visual/layout.html#./html/pie_form_lollipop.html"><img src="./chart2.0/sample/layout/img/main_visual01.png" alt="비주얼 1번 설명글 입력" /></a></div>
+	<div class="right"><a href="./chart2.0/sample/visual/layout.html#./html/treeMap_enterGroup_animate.html"><img src="./chart2.0/sample/layout/img/main_visual02.png" alt="비주얼 2번 설명글 입력" /></a></div>
+	<div class="both"></div>
+	
+	<h2><a href="./grid2.0/sample/grid/layout.html"><img src="./chart2.0/sample/layout/img/h2_grid.png" alt="webPonentⓒ Grid" /></a></h2>
+	<div class="left"><a href="./grid2.0/sample/grid/layout.html#./html/load_from_html.html"><img src="./chart2.0/sample/layout/img/main_grid01.png" alt="그리드 1번 설명글 입력" /></a></div>
+	<div class="right"><a href="./grid2.0/sample/grid/layout.html#./html/applications_getDetail.html"><img src="./chart2.0/sample/layout/img/main_grid02.png" alt="그리드 2번 설명글 입력" /></a></div>
+	<div class="both"></div>
+</div>
+<div class="footer">
+	<div class="wrapper">
+		<p>Copyrightⓒ2014. CyberImagination inc. All rights reserved</p>
+	</div>
+</div>
+</body>
+</html>

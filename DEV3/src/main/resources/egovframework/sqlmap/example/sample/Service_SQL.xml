@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="service">
+
+	<typeAlias alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="service" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="corpNo" column="corpNo"/>
+		<result property="estbDt" column="estbDt"/>
+		<result property="hpgAddr" column="hpgAddr"/>
+		<result property="roadzpNo" column="roadzpNo"/>
+		<result property="roadnmAddr" column="roadnmAddr"/>
+		<result property="roadnmdtlAddr" column="roadnmdtlAddr"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="rdrtrNm" column="rdrtrNm"/>
+		<result property="bztpNm" column="bztpNm"/>
+		<result property="bzcatNm" column="bzcatNm"/>
+		<result property="aprvYn" column="aprvYn"/>
+		<result property="telNo" column="telNo"/>
+		<result property="useYn" column="useYn"/>
+		<result property="coDiv" column="coDiv"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+		<result property="wtX" column="wtX"/>
+		<result property="wtY" column="wtY"/>
+		<result property="mapX" column="mapX"/>
+		<result property="mapY" column="mapY"/>
+		<result property="wtNm" column="wtNm"/>
+		<result property="confirmYn" column="confirmYn"/>
+		<result property="reqServiceList" column="reqServiceList"/>
+		<result property="hpNo" column="hpNo"/>
+		<result property="cdNa" column="cdNa"/>
+		<result property="nmNa" column="nmNa"/>
+		<result property="mapMinSize" column="mapMinSize"/>
+		<result property="mapMaxSize" column="mapMaxSize"/>
+		<result property="areaCodeLv1" column="areaCodeLv1"/>
+		<result property="areaCodeLv2" column="areaCodeLv2"/>
+	</resultMap>
+
+	<resultMap id="district" class="egovframework.zieumtn.system.vo.DistrictVO">
+		<result property="rowno" column="rowno"/>
+		<result property="districtId" column="districtId"/>
+		<result property="districtNm1" column="districtNm1"/>
+		<result property="districtNm2" column="districtNm2"/>
+		<result property="districtNm3" column="districtNm3"/>
+		<result property="districtX" column="districtX"/>
+		<result property="districtY" column="districtY"/>
+	</resultMap>
+
+	<resultMap id="station" class="egovframework.zieumtn.system.vo.StationVO">
+		<result property="rowno" column="rowno"/>
+		<result property="stationId" column="stationId"/>
+		<result property="stationNm" column="stationNm"/>
+		<result property="stationRegion" column="stationRegion"/>
+		<result property="stationAddr" column="stationAddr"/>
+	</resultMap>
+
+
+	<resultMap id="email" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="emailAddr" column="emailAddr"/>
+	</resultMap>
+
+	<select id="serviceDAO.selectServiceList" parameterClass="serviceVO" resultMap="service">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by co_id) as rowno
+				,co_id as coId
+				,co_nm as coNm
+				,corp_no as corpNo
+				,estb_dt as estbDt
+				,hpg_addr as hpgAddr
+				,roadzp_no as roadzpNo
+				,roadnm_addr as roadnmAddr
+				,roadnmdtl_addr as roadnmdtlAddr
+				,email_addr as emailAddr
+				,rdrtr_nm as rdrtrNm
+				,bztp_nm as bztpNm
+				,bzcat_nm as bzcatNm
+				,aprv_yn as aprvYn
+				,tel_no as telNo
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,co_div as coDiv
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+				,wt_x as wtX
+				,wt_y as wtY
+				,map_x as mapX
+				,map_y as mapY
+				,wt_nm as wtNm
+				,case confirm_yn when '1' then '승인' else '미승인' end as confirmYn
+				,req_service_list as reqServiceList
+				,hp_no as hpNo
+				,cd_na as cdNa
+				,(select cd_nm from tsys_code where co_id = #sessionCoId# and cd_id = cd_na) as nmNa
+				,map_min_size as mapMinSize
+				,map_max_size as mapMaxSize
+				,area_code_lv2 as areaCodeLv2
+				,area_code_lv1 as areaCodeLv1
+			from public.tsys_company
+			where co_nm ILIKE  concat('%',coalesce(#coNm#,''),'%')
+			order by co_id
+		]]>
+
+    </select>
+
+	<select id="serviceDAO.selectServiceManagerMail" parameterClass="serviceVO" resultMap = "email">
+        <![CDATA[
+			select
+				 email_addr as emailAddr
+			from public.tsys_company
+			where co_id = #coId#
+		]]>
+    </select>
+
+	<select id="serviceDAO.selectDistrictList" parameterClass="serviceVO" resultMap="district">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by district_id) as rowno
+				,district_id as districtId
+				, district_nm1 as districtNm1
+				, district_nm2 as districtNm2
+				, district_nm3 as districtNm3
+				, district_x as districtX
+				, district_y as districtY
+			from tb_district
+			where district_nm1 like concat('%'||coalesce(#wtNm#,'')||'%')
+			or district_nm2 like concat('%'||coalesce(#wtNm#,'')||'%')
+			or district_nm3 like concat('%'||coalesce(#wtNm#,'')||'%')
+			order by district_id
+		]]>
+    </select>
+
+	<select id="serviceDAO.selectStationList" parameterClass="serviceVO" resultMap="station">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by station_id) as rowno
+				,station_id as stationId
+				, station_nm as stationNm
+				, station_region as stationRegion
+				, station_addr as stationAddr
+			from tb_station
+			where station_nm like concat('%'||coalesce(#wtNm#,'')||'%')
+			order by station_id
+		]]>
+    </select>
+
+	<insert id="serviceDAO.insertService" parameterClass="serviceVO">
+		<selectKey keyProperty="coId" resultClass="String">
+			select concat('A',lpad(cast(cast(right(max(co_id),4) as integer)+1 as varchar),4,'0')) from tsys_company
+		</selectKey>
+		<![CDATA[
+			insert into tsys_company
+				(co_id
+				,co_nm
+				,corp_no
+				,estb_dt
+				,hpg_addr
+				,roadzp_no
+				,roadnm_addr
+				,roadnmdtl_addr
+				,email_addr
+				,rdrtr_nm
+				,bztp_nm
+				,bzcat_nm
+				,aprv_yn
+				,tel_no
+				,use_yn
+				,co_div
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,wt_x
+				,wt_y
+				,wt_nm
+				,map_x
+				,map_y
+				,map_min_size
+				,map_max_size
+				,area_code_lv2
+				,area_code_lv1)
+			VALUES
+				(
+				#coId#
+				,#coNm#
+				,#corpNo#
+				,#estbDt#
+				,#hpgAddr#
+				,#roadzpNo#
+				,#roadnmAddr#
+				,#roadnmdtlAddr#
+				,#emailAddr#
+				,#rdrtrNm#
+				,#bztpNm#
+				,#bzcatNm#
+				,#aprvYn#
+				,#telNo#
+				,#useYn#
+				,#coDiv#
+				,#rmksCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now()
+				,#wtX#
+				,#wtY#
+				,#wtNm#
+				,#mapX#
+				,#mapY#
+				,#mapMinSize#
+				,#mapMaxSize#
+				,#areaCodeLv2#
+				,#areaCodeLv1#)
+		]]>
+	</insert>
+
+	<insert id="serviceDAO.reqService" parameterClass="serviceVO">
+		<selectKey keyProperty="coId" resultClass="String">
+			select concat('A',lpad(cast(cast(right(max(co_id),4) as integer)+1 as varchar),4,'0')) from tsys_company
+		</selectKey>
+		<![CDATA[
+			insert into tsys_company
+				(co_id
+				,co_nm
+				,hpg_addr
+				,roadzp_no
+				,roadnm_addr
+				,roadnmdtl_addr
+				,email_addr
+				,rdrtr_nm
+				,bztp_nm
+				,bzcat_nm
+				,aprv_yn
+				,tel_no
+				,hp_no
+				,cd_na
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm
+				,req_service_list)
+			VALUES
+				(
+				#coId#
+				,#coNm#
+				,#hpgAddr#
+				,#roadzpNo#
+				,#roadnmAddr#
+				,#roadnmdtlAddr#
+				,#emailAddr#
+				,#rdrtrNm#
+				,#bztpNm#
+				,#bzcatNm#
+				,#aprvYn#
+				,#telNo#
+				,#hpNo#
+				,#cdNa#
+				,#rmksCts#
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+				,#reqServiceList#)
+		]]>
+	</insert>
+
+	<update id="serviceDAO.updateService" parameterClass="serviceVO">
+		<![CDATA[
+			update tsys_company
+			set
+				co_id		=#coId#
+				,co_nm		=#coNm#
+				,corp_no	=#corpNo#
+				,estb_dt	=#estbDt#
+				,hpg_addr	=#hpgAddr#
+				,roadzp_no	=#roadzpNo#
+				,roadnm_addr=#roadnmAddr#
+				,roadnmdtl_addr=#roadnmdtlAddr#
+				,email_addr	=#emailAddr#
+				,rdrtr_nm	=#rdrtrNm#
+				,bztp_nm	=#bztpNm#
+				,bzcat_nm	=#bzcatNm#
+				,aprv_yn	=#aprvYn#
+				,tel_no		=#telNo#
+				,use_yn		=#useYn#
+				,co_div		=#coDiv#
+				,rmks_cts	=#rmksCts#
+				,upd_id		=#sessionUserId#
+				,hp_no		=#hpNo#
+				,cd_na		=#cdNa#
+				,upd_dtm	=now()
+				,wt_x = #wtX#
+				,wt_y = #wtY#
+				,map_min_size = #mapMinSize#
+				,map_max_size = #mapMaxSize#
+				,wt_nm = #wtNm#
+				,map_x = #mapX#
+				,map_y = #mapY#
+				,area_code_lv2 = #areaCodeLv2#
+				,area_code_lv1 = #areaCodeLv1#
+			where co_id = #coId#
+		]]>
+	</update>
+
+	<update id="serviceDAO.confirmService" parameterClass="serviceVO">
+		<![CDATA[
+			update tsys_company
+			set
+				upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+				,confirm_yn = '1'
+			where co_id = #coId#
+		]]>
+	</update>
+	<delete id="serviceDAO.deleteService" parameterClass="serviceVO">
+		<![CDATA[
+			DELETE FROM tsys_company
+			where co_id = #coId#
+		]]>
+	</delete>
+</sqlMap>

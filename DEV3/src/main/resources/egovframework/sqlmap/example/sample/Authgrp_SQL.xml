@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="authgrp">
+
+	<typeAlias  alias="authgrpVO" type="egovframework.zieumtn.system.vo.AuthgrpVO"/>
+	<typeAlias  alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="authgrp" class="egovframework.zieumtn.system.vo.AuthgrpVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="authgrpId" column="authgrpId"/>
+		<result property="authgrpNm" column="authgrpNm"/>
+		<result property="authgrpCd" column="authgrpCd"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpDAO.selectAuthgrpList" parameterClass="authgrpVO" resultMap="authgrp">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by authgrp_id) as rowno
+				,co_id as coId
+				,(select co_nm from tsys_company where co_id = a.co_id) as coNm
+				,authgrp_id as authgrpId
+				,authgrp_nm as authgrpNm
+				,authgrp_cd as authgrpCd
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from public.tsys_author_group a
+			where co_id = #coId#
+			and authgrp_nm like concat('%'||coalesce(#authgrpNm#,'')||'%')
+			order by authgrp_id
+		]]>
+    </select>
+
+	<select id="authgrpDAO.selectAuthgrpCodeList" parameterClass="authgrpVO" resultMap="authgrp">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by authgrp_id) as rowno
+				,co_id as coId
+				,(select co_nm from tsys_company where co_id = a.co_id) as coNm
+				,authgrp_id as authgrpId
+				,authgrp_nm as authgrpNm
+				,authgrp_cd as authgrpCd
+				,use_yn as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from public.tsys_author_group a
+			where co_id = coalesce(#coId#, #sessionCoId#)
+			and use_yn = '1'
+			order by authgrp_id
+		]]>
+    </select>
+
+	<insert id="authgrpDAO.insertAuthgrp" parameterClass="authgrpVO">
+		<![CDATA[
+			insert into tsys_author_group
+				(co_id
+				,authgrp_id
+				,authgrp_nm
+				,authgrp_cd
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#sessionCoId#
+				,(select
+					 concat(
+						 #sessionCoId#
+						 ,'SAG'
+						 ,to_char(now(), 'YYYYMM')
+						 ,lpad(cast(cast(right(max(coalesce(
+							(select authgrp_id
+							 from tsys_author_group
+							 where co_id = #sessionCoId#
+							and substring(authgrp_id,9,6) = to_char(now(), 'YYYYMM')),'0')),6) as integer)+1 as varchar),6,'0'))
+				)
+				,#authgrpNm#
+				,#authgrpCd#
+				,#useYn#
+				,#rmksCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="authgrpDAO.updateAuthgrp" parameterClass="authgrpVO">
+		<![CDATA[
+			update tsys_author_group
+			set
+				authgrp_id	=#authgrpId#
+				,authgrp_nm	=#authgrpNm#
+				,authgrp_cd	=#authgrpCd#
+				,use_yn		=#useYn#
+				,rmks_cts	=#rmksCts#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id = #sessionCoId#
+			and authgrp_id =#authgrpId#
+		]]>
+	</update>
+
+	<delete id="authgrpDAO.deleteAuthgrp" parameterClass="authgrpVO">
+		<![CDATA[
+			DELETE FROM tsys_author_group
+			where co_id = #coId#
+			and authgrp_id =#authgrpId#
+		]]>
+	</delete>
+
+	<update id="authgrpDAO.copyAuthgrp" parameterClass="serviceVO">
+		<![CDATA[
+			insert into tsys_author_group
+				(co_id
+				,authgrp_id
+				,authgrp_nm
+				,authgrp_cd
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			select
+				#coId#
+				,concat(#coId#,substring(authgrp_id,6,15))
+				,authgrp_nm
+				,authgrp_cd
+				,use_yn
+				,rmks_cts
+				,'SYSTEM'
+				,now()
+				,'SYSTEM'
+				,now()
+			from tsys_author_group
+			where co_id = 'A0001'
+		]]>
+	</update>
+</sqlMap>

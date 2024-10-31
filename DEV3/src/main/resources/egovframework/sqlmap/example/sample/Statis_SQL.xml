@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="statis">
+
+	<typeAlias  alias="statisTimeVO" type="egovframework.zieumtn.statis.vo.StatisTimeVO"/>
+	<typeAlias  alias="statisMonthVO" type="egovframework.zieumtn.statis.vo.StatisMonthVO"/>
+	<typeAlias  alias="statisDayVO" type="egovframework.zieumtn.statis.vo.StatisDayVO"/>
+	<typeAlias  alias="statisPeriodVO" type="egovframework.zieumtn.statis.vo.StatisPeriodVO"/>
+	<typeAlias  alias="statisAreaVO" type="egovframework.zieumtn.statis.vo.StatisAreaVO"/>
+
+	<resultMap id="statisTime" class="egovframework.zieumtn.statis.vo.StatisTimeVO">
+		<result property="deviceIo" column="deviceIo"/>
+		<result property="deviceValue1" column="deviceValue1"/>
+		<result property="deviceValue2" column="deviceValue2"/>
+		<result property="deviceValue3" column="deviceValue3"/>
+		<result property="deviceValue4" column="deviceValue4"/>
+		<result property="deviceValue5" column="deviceValue5"/>
+		<result property="deviceValue6" column="deviceValue6"/>
+		<result property="deviceValue7" column="deviceValue7"/>
+		<result property="deviceValue8" column="deviceValue8"/>
+		<result property="deviceValue9" column="deviceValue9"/>
+		<result property="deviceValue10" column="deviceValue10"/>
+		<result property="deviceValue11" column="deviceValue11"/>
+		<result property="deviceValue12" column="deviceValue12"/>
+		<result property="deviceValue13" column="deviceValue13"/>
+		<result property="deviceValue14" column="deviceValue14"/>
+		<result property="deviceValue15" column="deviceValue15"/>
+		<result property="deviceValue16" column="deviceValue16"/>
+		<result property="deviceValue17" column="deviceValue17"/>
+		<result property="deviceValue18" column="deviceValue18"/>
+		<result property="deviceValue19" column="deviceValue19"/>
+		<result property="deviceValue20" column="deviceValue20"/>
+		<result property="deviceValue21" column="deviceValue21"/>
+		<result property="deviceValue22" column="deviceValue22"/>
+		<result property="deviceValue23" column="deviceValue23"/>
+		<result property="deviceValue24" column="deviceValue24"/>
+	</resultMap>
+
+	<resultMap id="statisMonth" class="egovframework.zieumtn.statis.vo.StatisMonthVO">
+		<result property="deviceIo" column="deviceIo"/>
+		<result property="deviceValue1" column="deviceValue1"/>
+		<result property="deviceValue2" column="deviceValue2"/>
+		<result property="deviceValue3" column="deviceValue3"/>
+		<result property="deviceValue4" column="deviceValue4"/>
+		<result property="deviceValue5" column="deviceValue5"/>
+		<result property="deviceValue6" column="deviceValue6"/>
+		<result property="deviceValue7" column="deviceValue7"/>
+		<result property="deviceValue8" column="deviceValue8"/>
+		<result property="deviceValue9" column="deviceValue9"/>
+		<result property="deviceValue10" column="deviceValue10"/>
+		<result property="deviceValue11" column="deviceValue11"/>
+		<result property="deviceValue12" column="deviceValue12"/>
+	</resultMap>
+
+	<resultMap id="statisDay" class="egovframework.zieumtn.statis.vo.StatisDayVO">
+		<result property="deviceIo" column="deviceIo"/>
+		<result property="deviceValue1" column="deviceValue1"/>
+		<result property="deviceValue2" column="deviceValue2"/>
+		<result property="deviceValue3" column="deviceValue3"/>
+		<result property="deviceValue4" column="deviceValue4"/>
+		<result property="deviceValue5" column="deviceValue5"/>
+		<result property="deviceValue6" column="deviceValue6"/>
+		<result property="deviceValue7" column="deviceValue7"/>
+		<result property="deviceValue8" column="deviceValue8"/>
+		<result property="deviceValue9" column="deviceValue9"/>
+		<result property="deviceValue10" column="deviceValue10"/>
+		<result property="deviceValue11" column="deviceValue11"/>
+		<result property="deviceValue12" column="deviceValue12"/>
+		<result property="deviceValue13" column="deviceValue13"/>
+		<result property="deviceValue14" column="deviceValue14"/>
+		<result property="deviceValue15" column="deviceValue15"/>
+		<result property="deviceValue16" column="deviceValue16"/>
+		<result property="deviceValue17" column="deviceValue17"/>
+		<result property="deviceValue18" column="deviceValue18"/>
+		<result property="deviceValue19" column="deviceValue19"/>
+		<result property="deviceValue20" column="deviceValue20"/>
+		<result property="deviceValue21" column="deviceValue21"/>
+		<result property="deviceValue22" column="deviceValue22"/>
+		<result property="deviceValue23" column="deviceValue23"/>
+		<result property="deviceValue24" column="deviceValue24"/>
+		<result property="deviceValue25" column="deviceValue25"/>
+		<result property="deviceValue26" column="deviceValue26"/>
+		<result property="deviceValue27" column="deviceValue27"/>
+		<result property="deviceValue28" column="deviceValue28"/>
+		<result property="deviceValue29" column="deviceValue29"/>
+		<result property="deviceValue30" column="deviceValue30"/>
+		<result property="deviceValue31" column="deviceValue31"/>
+	</resultMap>
+
+	<resultMap id="statisPeriod" class="egovframework.zieumtn.statis.vo.StatisPeriodVO">
+		<result property="getDt" column="getDt"/>
+		<result property="deviceValue1" column="deviceValue1"/>
+		<result property="deviceValue2" column="deviceValue2"/>
+		<result property="deviceValue3" column="deviceValue3"/>
+		<result property="deviceValue4" column="deviceValue4"/>
+		<result property="deviceValue5" column="deviceValue5"/>
+		<result property="deviceValue6" column="deviceValue6"/>
+		<result property="deviceValue7" column="deviceValue7"/>
+		<result property="deviceValue8" column="deviceValue8"/>
+		<result property="deviceValue9" column="deviceValue9"/>
+		<result property="deviceValue10" column="deviceValue10"/>
+		<result property="deviceValue11" column="deviceValue11"/>
+		<result property="deviceValue12" column="deviceValue12"/>
+		<result property="deviceValue13" column="deviceValue13"/>
+		<result property="deviceValue14" column="deviceValue14"/>
+		<result property="deviceValue15" column="deviceValue15"/>
+		<result property="deviceValue16" column="deviceValue16"/>
+		<result property="deviceValue17" column="deviceValue17"/>
+		<result property="deviceValue18" column="deviceValue18"/>
+		<result property="deviceValue19" column="deviceValue19"/>
+		<result property="deviceValue20" column="deviceValue20"/>
+		<result property="deviceValue21" column="deviceValue21"/>
+	</resultMap>
+
+	<resultMap id="statisArea" class="egovframework.zieumtn.statis.vo.StatisAreaVO">
+		<result property="getDt" column="getDt"/>
+		<result property="deviceNm" column="deviceNm"/>
+		<result property="deviceValue1" column="deviceValue1"/>
+		<result property="deviceValue2" column="deviceValue2"/>
+		<result property="deviceValue3" column="deviceValue3"/>
+		<result property="deviceValue4" column="deviceValue4"/>
+		<result property="deviceValue5" column="deviceValue5"/>
+		<result property="deviceValue6" column="deviceValue6"/>
+		<result property="deviceValue7" column="deviceValue7"/>
+		<result property="deviceValue8" column="deviceValue8"/>
+		<result property="deviceValue9" column="deviceValue9"/>
+		<result property="deviceValue10" column="deviceValue10"/>
+		<result property="deviceValue11" column="deviceValue11"/>
+		<result property="deviceValue12" column="deviceValue12"/>
+		<result property="deviceValue13" column="deviceValue13"/>
+		<result property="deviceValue14" column="deviceValue14"/>
+		<result property="deviceValue15" column="deviceValue15"/>
+		<result property="deviceValue16" column="deviceValue16"/>
+		<result property="deviceValue17" column="deviceValue17"/>
+		<result property="deviceValue18" column="deviceValue18"/>
+		<result property="deviceValue19" column="deviceValue19"/>
+		<result property="deviceValue20" column="deviceValue20"/>
+		<result property="deviceValue21" column="deviceValue21"/>
+	</resultMap>
+
+	<select id="statisDAO.selectStatisTimeList" parameterClass="statisTimeVO" resultMap="statisTime">
+        <![CDATA[
+        	select
+				cd_nm as deviceIo
+				,round(coalesce(sum(device_value) filter(where get_dt='00'),0)::numeric,2) as deviceValue1
+				,round(coalesce(sum(device_value) filter(where get_dt='01'),0)::numeric,2) as deviceValue2
+				,round(coalesce(sum(device_value) filter(where get_dt='02'),0)::numeric,2) as deviceValue3
+				,round(coalesce(sum(device_value) filter(where get_dt='03'),0)::numeric,2) as deviceValue4
+				,round(coalesce(sum(device_value) filter(where get_dt='04'),0)::numeric,2) as deviceValue5
+				,round(coalesce(sum(device_value) filter(where get_dt='05'),0)::numeric,2) as deviceValue6
+				,round(coalesce(sum(device_value) filter(where get_dt='06'),0)::numeric,2) as deviceValue7
+				,round(coalesce(sum(device_value) filter(where get_dt='07'),0)::numeric,2) as deviceValue8
+				,round(coalesce(sum(device_value) filter(where get_dt='08'),0)::numeric,2) as deviceValue9
+				,round(coalesce(sum(device_value) filter(where get_dt='09'),0)::numeric,2) as deviceValue10
+				,round(coalesce(sum(device_value) filter(where get_dt='10'),0)::numeric,2) as deviceValue11
+				,round(coalesce(sum(device_value) filter(where get_dt='11'),0)::numeric,2) as deviceValue12
+				,round(coalesce(sum(device_value) filter(where get_dt='12'),0)::numeric,2) as deviceValue13
+				,round(coalesce(sum(device_value) filter(where get_dt='13'),0)::numeric,2) as deviceValue14
+				,round(coalesce(sum(device_value) filter(where get_dt='14'),0)::numeric,2) as deviceValue15
+				,round(coalesce(sum(device_value) filter(where get_dt='15'),0)::numeric,2) as deviceValue16
+				,round(coalesce(sum(device_value) filter(where get_dt='16'),0)::numeric,2) as deviceValue17
+				,round(coalesce(sum(device_value) filter(where get_dt='17'),0)::numeric,2) as deviceValue18
+				,round(coalesce(sum(device_value) filter(where get_dt='18'),0)::numeric,2) as deviceValue19
+				,round(coalesce(sum(device_value) filter(where get_dt='19'),0)::numeric,2) as deviceValue20
+				,round(coalesce(sum(device_value) filter(where get_dt='20'),0)::numeric,2) as deviceValue21
+				,round(coalesce(sum(device_value) filter(where get_dt='21'),0)::numeric,2) as deviceValue22
+				,round(coalesce(sum(device_value) filter(where get_dt='22'),0)::numeric,2) as deviceValue23
+				,round(coalesce(sum(device_value) filter(where get_dt='23'),0)::numeric,2) as deviceValue24
+			from(
+				select
+					a.cd_nm
+					,a.srt_seq
+					,b.device_io
+					,to_char(b.get_dtm,'hh24') as get_dt
+					,avg(b.device_value) as device_value
+				from tsys_code a
+				left outer join tb_device_data b
+				on a.etc_2 = b.device_io
+				and b.device_id = #deviceId#
+				and b.get_dtm >= concat(#getDt#,' 00:00:00')::timestamp
+				and b.get_dtm < concat(#getDt#,' 00:00:00')::timestamp + '1 day'::interval
+				where a.co_id = #sessionCoId#
+				and a.cdgrp_id = 'BA'
+				group by a.cd_nm,a.srt_seq,b.device_io,get_dt
+				) a
+			group by cd_nm,srt_seq
+			order by srt_seq
+		]]>
+    </select>
+
+	<select id="statisDAO.selectStatisMonthList" parameterClass="statisMonthVO" resultMap="statisMonth">
+        <![CDATA[
+        	select
+				cd_nm as deviceIo
+				,round(coalesce(sum(device_value) filter(where get_dt='01'),0)::numeric,2) as deviceValue1
+				,round(coalesce(sum(device_value) filter(where get_dt='02'),0)::numeric,2) as deviceValue2
+				,round(coalesce(sum(device_value) filter(where get_dt='03'),0)::numeric,2) as deviceValue3
+				,round(coalesce(sum(device_value) filter(where get_dt='04'),0)::numeric,2) as deviceValue4
+				,round(coalesce(sum(device_value) filter(where get_dt='05'),0)::numeric,2) as deviceValue5
+				,round(coalesce(sum(device_value) filter(where get_dt='06'),0)::numeric,2) as deviceValue6
+				,round(coalesce(sum(device_value) filter(where get_dt='07'),0)::numeric,2) as deviceValue7
+				,round(coalesce(sum(device_value) filter(where get_dt='08'),0)::numeric,2) as deviceValue8
+				,round(coalesce(sum(device_value) filter(where get_dt='09'),0)::numeric,2) as deviceValue9
+				,round(coalesce(sum(device_value) filter(where get_dt='10'),0)::numeric,2) as deviceValue10
+				,round(coalesce(sum(device_value) filter(where get_dt='11'),0)::numeric,2) as deviceValue11
+				,round(coalesce(sum(device_value) filter(where get_dt='12'),0)::numeric,2) as deviceValue12
+			from(
+				select
+					a.cd_nm
+					,a.srt_seq
+					,b.device_io
+					,to_char(b.get_dtm,'mm') as get_dt
+					,avg(b.device_value) as device_value
+				from tsys_code a
+				left outer join tb_device_data b
+				on a.etc_2 = b.device_io
+				and b.device_id = #deviceId#
+				and b.get_dtm >= concat(#getYear#,'-01-01 00:00:00')::timestamp
+				and b.get_dtm < concat(#getYear#::integer+1,'-01-01 00:00:00')::timestamp
+				where a.co_id = #sessionCoId#
+				and a.cdgrp_id = 'BA'
+				group by a.cd_nm,a.srt_seq,b.device_io,get_dt
+				) a
+			group by cd_nm,srt_seq
+			order by srt_seq
+		]]>
+    </select>
+
+	<select id="statisDAO.selectStatisDayList" parameterClass="statisDayVO" resultMap="statisDay">
+        <![CDATA[
+        	select
+				cd_nm as deviceIo
+				,round(coalesce(sum(device_value) filter(where get_dt='01'),0)::numeric,2) as deviceValue1
+				,round(coalesce(sum(device_value) filter(where get_dt='02'),0)::numeric,2) as deviceValue2
+				,round(coalesce(sum(device_value) filter(where get_dt='03'),0)::numeric,2) as deviceValue3
+				,round(coalesce(sum(device_value) filter(where get_dt='04'),0)::numeric,2) as deviceValue4
+				,round(coalesce(sum(device_value) filter(where get_dt='05'),0)::numeric,2) as deviceValue5
+				,round(coalesce(sum(device_value) filter(where get_dt='06'),0)::numeric,2) as deviceValue6
+				,round(coalesce(sum(device_value) filter(where get_dt='07'),0)::numeric,2) as deviceValue7
+				,round(coalesce(sum(device_value) filter(where get_dt='08'),0)::numeric,2) as deviceValue8
+				,round(coalesce(sum(device_value) filter(where get_dt='09'),0)::numeric,2) as deviceValue9
+				,round(coalesce(sum(device_value) filter(where get_dt='10'),0)::numeric,2) as deviceValue10
+				,round(coalesce(sum(device_value) filter(where get_dt='11'),0)::numeric,2) as deviceValue11
+				,round(coalesce(sum(device_value) filter(where get_dt='12'),0)::numeric,2) as deviceValue12
+				,round(coalesce(sum(device_value) filter(where get_dt='13'),0)::numeric,2) as deviceValue13
+				,round(coalesce(sum(device_value) filter(where get_dt='14'),0)::numeric,2) as deviceValue14
+				,round(coalesce(sum(device_value) filter(where get_dt='15'),0)::numeric,2) as deviceValue15
+				,round(coalesce(sum(device_value) filter(where get_dt='16'),0)::numeric,2) as deviceValue16
+				,round(coalesce(sum(device_value) filter(where get_dt='17'),0)::numeric,2) as deviceValue17
+				,round(coalesce(sum(device_value) filter(where get_dt='18'),0)::numeric,2) as deviceValue18
+				,round(coalesce(sum(device_value) filter(where get_dt='19'),0)::numeric,2) as deviceValue19
+				,round(coalesce(sum(device_value) filter(where get_dt='20'),0)::numeric,2) as deviceValue20
+				,round(coalesce(sum(device_value) filter(where get_dt='21'),0)::numeric,2) as deviceValue21
+				,round(coalesce(sum(device_value) filter(where get_dt='22'),0)::numeric,2) as deviceValue22
+				,round(coalesce(sum(device_value) filter(where get_dt='23'),0)::numeric,2) as deviceValue23
+				,round(coalesce(sum(device_value) filter(where get_dt='24'),0)::numeric,2) as deviceValue24
+				,round(coalesce(sum(device_value) filter(where get_dt='25'),0)::numeric,2) as deviceValue25
+				,round(coalesce(sum(device_value) filter(where get_dt='26'),0)::numeric,2) as deviceValue26
+				,round(coalesce(sum(device_value) filter(where get_dt='27'),0)::numeric,2) as deviceValue27
+				,round(coalesce(sum(device_value) filter(where get_dt='28'),0)::numeric,2) as deviceValue28
+				,round(coalesce(sum(device_value) filter(where get_dt='29'),0)::numeric,2) as deviceValue29
+				,round(coalesce(sum(device_value) filter(where get_dt='30'),0)::numeric,2) as deviceValue30
+				,round(coalesce(sum(device_value) filter(where get_dt='31'),0)::numeric,2) as deviceValue31
+			from(
+				select
+					a.cd_nm
+					,a.srt_seq
+					,b.device_io
+					,to_char(b.get_dtm,'dd') as get_dt
+					,avg(b.device_value) as device_value
+				from tsys_code a
+				left outer join tb_device_data b
+				on a.etc_2 = b.device_io
+				and b.device_id = #deviceId#
+				and b.get_dtm >= concat(#getYear#,'-',#getMonth#,'-01 00:00:00')::timestamp
+				and b.get_dtm < concat(#getYear#,'-',#getMonth#,'-01 00:00:00')::timestamp + '1 month'::interval
+				where a.co_id = #sessionCoId#
+				and a.cdgrp_id = 'BA'
+				group by a.cd_nm,a.srt_seq,b.device_io,get_dt
+				) a
+			group by cd_nm,srt_seq
+			order by srt_seq
+		]]>
+    </select>
+
+    <select id="statisDAO.selectStatisPeriodList" parameterClass="statisPeriodVO" resultMap="statisPeriod">
+        <![CDATA[
+        	select
+				a.get_dt as getDt
+				,round(coalesce(sum(device_value) filter(where srt_seq=1),0)::numeric,2) as deviceValue1
+				,round(coalesce(sum(device_value) filter(where srt_seq=2),0)::numeric,2) as deviceValue2
+				,round(coalesce(sum(device_value) filter(where srt_seq=3),0)::numeric,2) as deviceValue3
+				,round(coalesce(sum(device_value) filter(where srt_seq=4),0)::numeric,2) as deviceValue4
+				,round(coalesce(sum(device_value) filter(where srt_seq=5),0)::numeric,2) as deviceValue5
+				,round(coalesce(sum(device_value) filter(where srt_seq=6),0)::numeric,2) as deviceValue6
+				,round(coalesce(sum(device_value) filter(where srt_seq=7),0)::numeric,2) as deviceValue7
+				,round(coalesce(sum(device_value) filter(where srt_seq=8),0)::numeric,2) as deviceValue8
+				,round(coalesce(sum(device_value) filter(where srt_seq=9),0)::numeric,2) as deviceValue9
+				,round(coalesce(sum(device_value) filter(where srt_seq=10),0)::numeric,2) as deviceValue10
+				,round(coalesce(sum(device_value) filter(where srt_seq=11),0)::numeric,2) as deviceValue11
+				,round(coalesce(sum(device_value) filter(where srt_seq=12),0)::numeric,2) as deviceValue12
+				,round(coalesce(sum(device_value) filter(where srt_seq=13),0)::numeric,2) as deviceValue13
+				,round(coalesce(sum(device_value) filter(where srt_seq=14),0)::numeric,2) as deviceValue14
+				,round(coalesce(sum(device_value) filter(where srt_seq=15),0)::numeric,2) as deviceValue15
+				,round(coalesce(sum(device_value) filter(where srt_seq=16),0)::numeric,2) as deviceValue16
+				,round(coalesce(sum(device_value) filter(where srt_seq=17),0)::numeric,2) as deviceValue17
+				,round(coalesce(sum(device_value) filter(where srt_seq=18),0)::numeric,2) as deviceValue18
+				,round(coalesce(sum(device_value) filter(where srt_seq=19),0)::numeric,2) as deviceValue19
+				,round(coalesce(sum(device_value) filter(where srt_seq=20),0)::numeric,2) as deviceValue20
+				,round(coalesce(sum(device_value) filter(where srt_seq=21),0)::numeric,2) as deviceValue21
+			from(
+				select
+					a.cd_nm
+					,a.srt_seq
+					,b.device_io
+					,to_char(b.get_dtm,'yyyy-mm-dd') as get_dt
+					,avg(b.device_value) as device_value
+				from tb_device_data b
+				left outer join tsys_code a
+				on a.etc_2 = b.device_io
+				and a.cdgrp_id = 'BA'
+				and a.co_id = #sessionCoId#
+				where b.device_id = #deviceId#
+				and b.get_dtm >= concat(#fromDt#,' 00:00:00')::timestamp
+				and b.get_dtm < concat(#toDt#,' 00:00:00')::timestamp + '1 day'::interval
+				group by a.cd_nm,a.srt_seq,b.device_io,get_dt
+				) a
+			group by a.get_dt
+			order by a.get_dt
+		]]>
+    </select>
+
+    <select id="statisDAO.selectStatisAreaList" parameterClass="statisAreaVO" resultMap="statisArea">
+        <![CDATA[
+        	select
+				a.get_dt::character varying as getDt
+				,a.device_nm as deviceNm
+				,round(coalesce(sum(device_value) filter(where srt_seq=1),0)::numeric,2) as deviceValue1
+				,round(coalesce(sum(device_value) filter(where srt_seq=2),0)::numeric,2) as deviceValue2
+				,round(coalesce(sum(device_value) filter(where srt_seq=3),0)::numeric,2) as deviceValue3
+				,round(coalesce(sum(device_value) filter(where srt_seq=4),0)::numeric,2) as deviceValue4
+				,round(coalesce(sum(device_value) filter(where srt_seq=5),0)::numeric,2) as deviceValue5
+				,round(coalesce(sum(device_value) filter(where srt_seq=6),0)::numeric,2) as deviceValue6
+				,round(coalesce(sum(device_value) filter(where srt_seq=7),0)::numeric,2) as deviceValue7
+				,round(coalesce(sum(device_value) filter(where srt_seq=8),0)::numeric,2) as deviceValue8
+				,round(coalesce(sum(device_value) filter(where srt_seq=9),0)::numeric,2) as deviceValue9
+				,round(coalesce(sum(device_value) filter(where srt_seq=10),0)::numeric,2) as deviceValue10
+				,round(coalesce(sum(device_value) filter(where srt_seq=11),0)::numeric,2) as deviceValue11
+				,round(coalesce(sum(device_value) filter(where srt_seq=12),0)::numeric,2) as deviceValue12
+				,round(coalesce(sum(device_value) filter(where srt_seq=13),0)::numeric,2) as deviceValue13
+				,round(coalesce(sum(device_value) filter(where srt_seq=14),0)::numeric,2) as deviceValue14
+				,round(coalesce(sum(device_value) filter(where srt_seq=15),0)::numeric,2) as deviceValue15
+				,round(coalesce(sum(device_value) filter(where srt_seq=16),0)::numeric,2) as deviceValue16
+				,round(coalesce(sum(device_value) filter(where srt_seq=17),0)::numeric,2) as deviceValue17
+				,round(coalesce(sum(device_value) filter(where srt_seq=18),0)::numeric,2) as deviceValue18
+				,round(coalesce(sum(device_value) filter(where srt_seq=19),0)::numeric,2) as deviceValue19
+				,round(coalesce(sum(device_value) filter(where srt_seq=20),0)::numeric,2) as deviceValue20
+				,round(coalesce(sum(device_value) filter(where srt_seq=21),0)::numeric,2) as deviceValue21
+			from(
+				select
+					a.cd_nm
+					,a.srt_seq
+					,b.device_id
+					,c.fclts_nm as device_nm
+					,b.device_io
+					,to_char(b.get_dtm,'yyyy-mm-dd') as get_dt
+					,avg(b.device_value) as device_value
+				from tb_device_data b
+				left outer join tsys_code a
+				on a.etc_2 = b.device_io
+				and a.cdgrp_id = 'BA'
+				and a.co_id = #sessionCoId#
+				inner join tb_fclts_info c
+				on b.device_id = c.fclts_uuid
+				and a.co_id = c.co_id
+				where b.get_dtm >= concat(#fromDt#,' 00:00:00')::timestamp
+				and b.get_dtm < concat(#toDt#,' 00:00:00')::timestamp + '1 day'::interval
+		]]>
+				<isNotEmpty property="areaDiv">
+					and b.device_id in (select fclts_uuid from tb_fclts_info
+					<iterate open="(" close=")" conjunction="," property="areaDiv" prepend="where area_div in">
+						#areaDiv[]#
+					</iterate>
+				)
+		        </isNotEmpty>
+
+		<![CDATA[
+				group by a.cd_nm,a.srt_seq,b.device_id,c.fclts_nm,b.device_io,get_dt
+				) a
+			group by a.device_id,a.device_nm,a.get_dt
+			order by a.device_id,a.get_dt
+		]]>
+    </select>
+</sqlMap>

@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="common">
+
+	<typeAlias  alias="pageVO" type="egovframework.zieumtn.system.vo.PageVO"/>
+	<typeAlias  alias="menuVO" type="egovframework.zieumtn.system.vo.MenuVO"/>
+	<typeAlias  alias="loginVO" type="egovframework.zieumtn.common.service.LoginVO"/>
+	<typeAlias  alias="authVO" type="egovframework.zieumtn.common.service.AuthVO"/>
+	<typeAlias  alias="mainDataVO" type="egovframework.zieumtn.common.service.MainDataVO"/>
+
+	<typeAlias  alias="deviceDataVO" type="egovframework.zieumtn.common.service.DeviceDataVO"/>
+
+
+	<resultMap id="login" class="egovframework.zieumtn.common.service.LoginVO">
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+		<result property="deptNm" column="deptNm"/>
+		<result property="cotelNo" column="cotelNo"/>
+		<result property="authgrpId" column="authgrpId"/>
+		<result property="wtX" column="wtX"/>
+		<result property="wtY" column="wtY"/>
+		<result property="wtNm" column="wtNm"/>
+		<result property="mapX" column="mapX"/>
+		<result property="mapY" column="mapY"/>
+		<result property="restApiUrl" column="restApiUrl"/>
+		<result property="restApiDistance" column="restApiDistance"/>
+		<result property="cdNa" column="cdNa"/>
+		<result property="mapMinSize" column="mapMinSize"/>
+		<result property="mapMaxSize" column="mapMaxSize"/>
+		<result property="areaCodeLv1" column="areaCodeLv1"/>
+		<result property="areaCodeLv2" column="areaCodeLv2"/>
+	</resultMap>
+
+	<resultMap id="loginchk" class="egovframework.zieumtn.common.service.LoginVO">
+		<result property="coId" column="coId"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+
+		<result property="statConfirm" column="statConfirm"/>
+		<result property="adminYn" column="adminYn"/>
+		<result property="useDt" column="useDt"/>
+		<result property="endDt" column="endDt"/>
+	</resultMap>
+
+	<resultMap id="loginmenu" class="egovframework.zieumtn.common.service.LoginMenuVO">
+		<result property="coId" column="coId"/>
+		<result property="mnuId" column="mnuId"/>
+		<result property="rauthYn" column="rauthYn"/>
+		<result property="sauthYn" column="sauthYn"/>
+		<result property="pauthYn" column="pauthYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="mnuLvl" column="mnuLvl"/>
+		<result property="hrnkmnuId" column="hrnkmnuId"/>
+		<result property="srnUrl" column="srnUrl"/>
+	</resultMap>
+
+
+	<resultMap id="message" class="egovframework.zieumtn.system.vo.MessageVO">
+		<result property="msgCts" column="msgCts"/>
+		<result property="msgId" column="msgId"/>
+	</resultMap>
+
+
+
+	<resultMap id="mainData" class="egovframework.zieumtn.common.service.MainDataVO">
+		<result property="deviceId" column="deviceId"/>
+		<result property="deviceNm" column="deviceNm"/>
+		<result property="getDtm" column="getDtm"/>
+		<result property="deviceValue" column="deviceValue"/>
+		<result property="rank" column="rank"/>
+	</resultMap>
+
+	<resultMap id="mainDetailData" class="egovframework.zieumtn.common.service.MainDataVO">
+		<result property="deviceId" column="deviceId"/>
+		<result property="getDtm" column="getDtm"/>
+		<result property="ioId" column="ioId"/>
+		<result property="ioNm" column="ioNm"/>
+		<result property="deviceValue" column="deviceValue"/>
+	</resultMap>
+
+	<resultMap id="getmenu" class="egovframework.zieumtn.system.vo.PageVO">
+		<result property="srnId" column="srnId"/>
+		<result property="srnNm" column="srnNm"/>
+	</resultMap>
+
+	<resultMap id="company" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+	</resultMap>
+
+    <resultMap id="region" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="cdNa" column="cdNa"/>
+	</resultMap>
+
+
+    <select id="loginDAO.selectById" resultMap="login">
+        <![CDATA[
+			SELECT
+					a.co_id as coId
+					,c.co_nm as coNm
+					,a.usr_id as usrId
+					,a.usr_nm as usrNm
+					,a.cotel_no as cotelNo
+					,a.regpsn_id as regId
+					,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+					,a.upd_id as updId
+					,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+					,a.dept_nm as deptNm
+					,b.authgrp_id as authgrpId
+					,a.stat_confirm as statConfirm
+					,b.use_dt as useDt
+					,b.end_dt as endDt
+					,c.wt_x as wtX
+					,c.wt_y as wtY
+					,c.wt_nm as wtNm
+					,c.map_x as mapX
+					,c.map_y as mapY
+					,d.cd_nm as restApiUrl
+					,e.cd_nm as restApiDistance
+					,c.cd_na as cdNa
+					,c.map_min_size as mapMinSize
+					,c.map_max_size as mapMaxSize
+					,c.area_code_lv2 as areaCodeLv2
+					,c.area_code_lv1 as areaCodeLv1
+			  FROM public.tsys_users a
+			left outer join tsys_author_group_user b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			left outer join tsys_company c
+			on a.co_id = c.co_id
+			left outer join tsys_code d on d.com_cd = 'ZAURL' and d.cd_id = 'URL' and d.co_id = (select co_id from tsys_users where usr_id  = #usrId#)
+			left outer join tsys_code e on e.com_cd = 'ZADIST' and e.cd_id = 'DIST' and e.co_id = (select co_id from tsys_users where usr_id  = #usrId#)
+			where a.usr_id = #usrId#
+			and a.sect_no = ENCODE(DIGEST(#usrPw#, 'sha256'), 'hex')
+			and a.stat_confirm = '1'
+			and b.use_dt::timestamp < now()
+			and b.end_dt::timestamp > now();
+        ]]>
+    </select>
+
+    <select id="loginDAO.checkPwd" resultMap="loginchk">
+        <![CDATA[
+			SELECT
+				a.co_id as coId
+				,a.usr_id as usrId
+				,a.usr_nm as usrNm
+				,a.stat_confirm as statConfirm
+				,a.admin_yn as adminYn
+				,b.use_dt as useDt
+				,b.end_dt as endDt
+			FROM public.tsys_users a
+			left outer join tsys_author_group_user b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			where a.usr_id = #usrId#
+			and a.sect_no = ENCODE(DIGEST(#usrPw#, 'sha256'), 'hex');
+        ]]>
+    </select>
+    <select id="loginDAO.selectByCoId" resultMap="login">
+        <![CDATA[
+			SELECT
+				a.co_id as coId
+				,a.co_nm as coNm
+				,null as usrId
+				,null as usrNm
+				,null as cotelNo
+				,null as regId
+				,null as regDt
+				,null as updId
+				,null as updDt
+				,null as deptNm
+				,null as authgrpId
+				,null as statConfirm
+				,null as useDt
+				,null as endDt
+				,a.wt_x as wtX
+				,a.wt_y as wtY
+				,a.wt_nm as wtNm
+				,a.map_x as mapX
+				,a.map_y as mapY
+			FROM tsys_company a
+			where a.co_id = #coId#;
+        ]]>
+    </select>
+
+    <select id="loginDAO.selectByGPKI" resultMap="login">
+        <![CDATA[
+			SELECT
+				a.co_id as coId
+				,c.co_nm as coNm
+				,a.usr_id as usrId
+				,a.usr_nm as usrNm
+				,a.cotel_no as cotelNo
+				,a.regpsn_id as regId
+				,to_char(a.reg_dtm, 'YYYY-MM-DD') as regDt
+				,a.upd_id as updId
+				,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
+				,a.dept_nm as deptNm
+				,b.authgrp_id as authgrpId
+				,a.stat_confirm as statConfirm
+				,b.use_dt as useDt
+				,b.end_dt as endDt
+				,c.wt_x as wtX
+				,c.wt_y as wtY
+				,c.wt_nm as wtNm
+				,c.map_x as mapX
+				,c.map_y as mapY
+			FROM public.tsys_users a
+			left outer join tsys_author_group_user b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			left outer join tsys_company c
+			on a.co_id = c.co_id
+			where a.gpki_yn = '1';
+        ]]>
+    </select>
+
+    <select id="loginDAO.selectMenuById" resultMap="loginmenu">
+       <![CDATA[
+			 select
+				a.co_id as coId
+				,a.authgrp_id as authgrpCd
+				,a.mnu_id as mnuId
+				,a.rauth_yn as rauthYn
+				,a.sauth_yn as sauthYn
+				,a.pauth_yn as pauthYn
+				,a.rmks_cts as rmksCts
+				,case #cdNa#
+				      when 'KR' then b.mnu_nm
+			          when 'US' then b.mnu_nm_eng
+			          when 'JP' then b.mnu_nm_jp
+				 end as mnuNm
+				,b.mnu_lvl as mnuLvl
+				,b.hrnkmnu_id as hrnkmnuId
+				,c.srn_url as srnUrl
+			 from tsys_author_group_menus a
+			 left outer join tsys_menus b
+			 on a.co_id = b.co_id
+			 and a.mnu_id = b.mnu_id
+			 left outer join tsys_screen c
+			 on b.srn_id = c.srn_id
+			 where a.authgrp_id = (
+			 	select authgrp_id
+			 	from tsys_author_group_user
+			 	where usr_id = #usrId#)
+			 and a.rauth_yn = '1'
+			 and b.use_yn = '1'
+			 and a.co_id = (select co_id from tsys_author_group_user where usr_id = #usrId#)
+			 order by b.mnu_lvl,b.srt_seq
+
+			 ]]>
+
+       <!--  <![CDATA[
+			select
+				a.co_id as coId
+				,a.authgrp_id as authgrpCd
+				,a.mnu_id as mnuId
+				,a.rauth_yn as rauthYn
+				,a.sauth_yn as sauthYn
+				,a.pauth_yn as pauthYn
+				,a.rmks_cts as rmksCts
+				,b.mnuNm as mnuNm
+				,b.mnu_lvl as mnuLvl
+				,b.hrnkmnu_id as hrnkmnuId
+				,c.srn_url as srnUrl
+			 from tsys_author_group_menus a
+			 left outer join tsys_menus b
+			 on a.co_id = b.co_id
+			 and a.mnu_id = b.mnu_id
+			 left outer join tsys_screen c
+			 on b.srn_id = c.srn_id
+			 where a.authgrp_id = (
+			 	select authgrp_id
+			 	from tsys_author_group_user
+			 	where usr_id = #usrId#)
+			 and a.rauth_yn = '1'
+			 and b.use_yn = '1'
+			 and a.co_id = (select co_id from tsys_author_group_user where usr_id = #usrId#)
+			 order by b.mnu_lvl,b.srt_seq
+        ]]>  -->
+    </select>
+    <select id="loginDAO.selectMenuByChangeCdNaAndId" resultMap="loginmenu">
+       <![CDATA[
+			 select
+				a.co_id as coId
+				,a.authgrp_id as authgrpCd
+				,a.mnu_id as mnuId
+				,a.rauth_yn as rauthYn
+				,a.sauth_yn as sauthYn
+				,a.pauth_yn as pauthYn
+				,a.rmks_cts as rmksCts
+				,case #changedCdNa#
+				      when 'KR' then b.mnu_nm
+			          when 'US' then b.mnu_nm_eng
+			          when 'JP' then b.mnu_nm_jp
+				 end as mnuNm
+				,b.mnu_lvl as mnuLvl
+				,b.hrnkmnu_id as hrnkmnuId
+				,c.srn_url as srnUrl
+			 from tsys_author_group_menus a
+			 left outer join tsys_menus b
+			 on a.co_id = b.co_id
+			 and a.mnu_id = b.mnu_id
+			 left outer join tsys_screen c
+			 on b.srn_id = c.srn_id
+			 where a.authgrp_id = (
+			 	select authgrp_id
+			 	from tsys_author_group_user
+			 	where usr_id = #usrId#)
+			 and a.rauth_yn = '1'
+			 and b.use_yn = '1'
+			 and a.co_id = (select co_id from tsys_author_group_user where usr_id = #usrId#)
+			 order by b.mnu_lvl,b.srt_seq
+
+			 ]]>
+	 </select>
+
+    <select id="loginDAO.selectFavMenuById" resultMap="loginmenu">
+        <![CDATA[
+			select
+				a.co_id as coId
+				,a.authgrp_id as authgrpCd
+				,a.mnu_id as mnuId
+				,a.rauth_yn as rauthYn
+				,a.sauth_yn as sauthYn
+				,a.pauth_yn as pauthYn
+				,a.rmks_cts as rmksCts
+				,case #cdNa#
+	              when 'KR' then b.mnu_nm
+	              when 'US' then b.mnu_nm_eng
+	              when 'JP' then b.mnu_nm_jp
+		         end as mnuNm
+				,b.mnu_lvl as mnuLvl
+				,b.hrnkmnu_id as hrnkmnuId
+				,c.srn_url as srnUrl
+			 from tsys_author_group_menus a
+			 inner join tsys_favorite_menu f
+			 on a.co_id = f.co_id
+			 and a.mnu_id = f.mnu_id
+			 left outer join tsys_menus b
+			 on a.co_id = b.co_id
+			 and a.mnu_id = b.mnu_id
+			 left outer join tsys_screen c
+			 on b.srn_id = c.srn_id
+			 where a.authgrp_id in (
+			 	select authgrp_id
+			 	from tsys_author_group_user
+			 	where usr_id = #usrId#)
+			 and a.rauth_yn = '1'
+			 and a.co_id = #coId#
+			 and f.usr_id = #usrId#
+			 order by b.mnu_lvl,b.srt_seq
+        ]]>
+    </select>
+
+    <select id="loginDAO.selectFavMenuByChangeCdNaAndId" resultMap="loginmenu">
+        <![CDATA[
+			select
+				a.co_id as coId
+				,a.authgrp_id as authgrpCd
+				,a.mnu_id as mnuId
+				,a.rauth_yn as rauthYn
+				,a.sauth_yn as sauthYn
+				,a.pauth_yn as pauthYn
+				,a.rmks_cts as rmksCts
+				,case #changedCdNa#
+	              when 'KR' then b.mnu_nm
+	              when 'US' then b.mnu_nm_eng
+	              when 'JP' then b.mnu_nm_jp
+		         end as mnuNm
+				,b.mnu_lvl as mnuLvl
+				,b.hrnkmnu_id as hrnkmnuId
+				,c.srn_url as srnUrl
+			 from tsys_author_group_menus a
+			 inner join tsys_favorite_menu f
+			 on a.co_id = f.co_id
+			 and a.mnu_id = f.mnu_id
+			 left outer join tsys_menus b
+			 on a.co_id = b.co_id
+			 and a.mnu_id = b.mnu_id
+			 left outer join tsys_screen c
+			 on b.srn_id = c.srn_id
+			 where a.authgrp_id in (
+			 	select authgrp_id
+			 	from tsys_author_group_user
+			 	where usr_id = #usrId#)
+			 and a.rauth_yn = '1'
+			 and a.co_id = #coId#
+			 and f.usr_id = #usrId#
+			 order by b.mnu_lvl,b.srt_seq
+        ]]>
+    </select>
+
+
+	<select id="commonDAO.selectBestDataMaster" resultMap="mainData">
+        <![CDATA[
+			select
+				a.fclts_uuid as deviceId
+				,a.fclts_nm as deviceNm
+				,b.get_dtm	as getDtm
+				,b.device_value as deviceValue
+				,ROW_NUMBER() OVER(order by b.device_value,a.fclts_uuid) as rank
+			from tb_fclts_info a
+			left outer join tb_device_data as b
+			on a.fclts_uuid = b.device_id
+			and a.last_dtm = b.get_dtm
+			and b.device_io = 'PM10'
+			where a.co_id = #sessionCoId#
+			and fn_getdevicestatus(#sessionCoId#,device_id) = '정상'
+			order by b.device_value,a.fclts_uuid
+			LIMIT 5
+        ]]>
+    </select>
+
+	<select id="commonDAO.selectWorstDataMaster" resultMap="mainData">
+        <![CDATA[
+			select
+				a.fclts_uuid as deviceId
+				,a.fclts_nm as deviceNm
+				,b.get_dtm	as getDtm
+				,b.device_value as deviceValue
+				,ROW_NUMBER() OVER(order by b.device_value desc,a.fclts_uuid) as rank
+			from tb_fclts_info a
+			left outer join tb_device_data as b
+			on a.fclts_uuid = b.device_id
+			and a.last_dtm = b.get_dtm
+			and b.device_io = 'PM10'
+			where a.co_id = #sessionCoId#
+			and fn_getdevicestatus(#sessionCoId#,device_id) = '정상'
+			order by b.device_value desc,a.fclts_uuid
+			LIMIT 5
+        ]]>
+    </select>
+    <select id="commonDAO.selectMainDataDetail" resultMap="mainDetailData">
+        <![CDATA[
+			select
+				a.device_id as deviceId
+				,a.get_dtm as getDtm
+				,a.device_value as deviceValue
+				,a.device_io as ioId
+				,b.cd_nm as ioNm
+			from (select * from tb_device_data where get_dtm = #getDtm#::timestamp) a
+			left outer join tsys_code b
+			on b.co_id = #sessionCoId#
+			and a.device_io = b.etc_2
+			where a.device_id = #deviceId#
+			order by b.cd_id
+        ]]>
+    </select>
+    <select id="commonDAO.getMenuByUrl" resultMap="getmenu">
+        <![CDATA[
+			 SELECT
+				s.srn_id as srnId
+				,case #mnuCdNa#
+	              when 'KR' then m.mnu_nm
+	              when 'JP' then m.mnu_nm_jp
+	              when 'US' then m.mnu_nm_eng
+		         end as srnNm
+			FROM tsys_screen s
+			LEFT OUTER JOIN tsys_menus m ON s.srn_id = m.srn_id
+			LEFT OUTER JOIN tsys_company c ON m.co_id = c.co_id
+			WHERE s.srn_url = #srnUrl#
+			and m.co_id = #sessionCoId#;
+        ]]>
+
+        <!--  SELECT
+				s.srn_id as srnId
+				,case c.cd_na
+	              when 'KR' then m.mnu_nm
+	              when 'JP' then m.mnu_nm_jp
+	              when 'US' then m.mnu_nm_us
+		         end as srnNm
+			FROM tsys_screen s
+			LEFT OUTER JOIN tsys_menus m ON s.srn_id = m.srn_id
+			LEFT OUTER JOIN tsys_company c ON m.co_id = c.co_id
+			WHERE s.srn_url = #srnUrl#
+			and m.co_id = #sessionCoId#; -->
+
+    </select>
+
+	<select id="commonDAO.selectCoList" resultMap="company">
+        <![CDATA[
+			SELECT
+				co_id as coId
+				,co_nm as coNm
+			FROM tsys_company
+			order by co_id
+        ]]>
+    </select>
+
+<!-- <select id="commonDAO.selectCdna" resultMap="region"> -->
+    <select id="commonDAO.selectCdna" resultMap="region">
+	       <![CDATA[
+	        SELECT
+	            cd_na  as cdNa
+	        FROM tsys_company
+	        WHERE co_id = #coId#
+	  	  ]]>
+    </select>
+
+	<insert id="commonDAO.insertFav" parameterClass="menuVO">
+		<![CDATA[
+			insert into tsys_favorite_menu(
+			  co_id
+			  ,mnu_id
+			  ,usr_id
+			  ,regpsn_id
+			  ,reg_dtm
+			  ,upd_id
+			  ,upd_dtm
+			  )
+			values(
+				#sessionCoId#
+				,(select mnu_id from tsys_menus where co_id = #sessionCoId#
+					and srn_id = (select srn_id from tsys_screen where srn_url = #srnUrl#))
+				,#sessionUserId#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now()
+			)
+		]]>
+	</insert>
+
+	<update id="commonDAO.insertMenuConHist" parameterClass="menuVO">
+		<![CDATA[
+			INSERT INTO tsys_menu_con_hist(
+				co_id
+				,mnu_id
+				,usr_id
+				,cnct_dtm)
+			select
+				co_id
+				,mnu_id
+				,#sessionUserId#
+				,now()
+			from tsys_menus
+			where co_id = #sessionCoId#
+			and srn_id = (select max(srn_id) from tsys_screen where srn_url = #srnUrl#)
+		]]>
+	</update>
+
+	<update id="commonDAO.insertLoginHist" parameterClass="authVO">
+		<![CDATA[
+			INSERT INTO tsys_login_hist(
+				co_id
+				,usr_id
+				,login_dt
+				,hst_seq
+				,login_dtm)
+			select
+				#sessionCoId#
+				,#sessionUserId#
+				,to_char(now(),'yyyy-mm-dd')
+				,COALESCE(max(hst_seq),0)+1
+				,now()
+			from tsys_login_hist
+			where co_id = #sessionCoId#
+			and usr_id = #sessionUserId#
+			and login_dt = to_char(now(),'yyyy-mm-dd')
+		]]>
+	</update>
+	<insert id="commonDAO.insertDeviceData" parameterClass="java.util.List">
+		INSERT INTO tb_device_data(
+			co_id, device_id, device_io, device_value, get_dtm
+		)
+		VALUES
+		<iterate conjunction=",">
+		(
+			#[].coId#,
+			#[].fcltsId#,
+			#[].sensorId#,
+			#[].readValue#::double precision,
+			to_timestamp(#[].readDtm#,'YYYYMMDDHH24MISSMS')
+		)
+		</iterate>
+	</insert>
+
+	<delete id="commonDAO.updateLastData" parameterClass="deviceDataVO">
+		<![CDATA[
+			update tb_fclts_info
+			set last_dtm = to_timestamp(#readDtm#,'YYYYMMDDHH24MISSMS')
+			where fclts_uuid = #fcltsId#
+		]]>
+	</delete>
+
+	<delete id="commonDAO.deleteFav" parameterClass="menuVO">
+		<![CDATA[
+			delete from tsys_favorite_menu
+			where co_id = #sessionCoId#
+			and mnu_id = (select mnu_id from tsys_menus where co_id = #sessionCoId#
+					and srn_id = (select srn_id from tsys_screen where srn_url = #srnUrl#))
+			and usr_id = #sessionUserId#
+		]]>
+	</delete>
+
+	<select id="commonDAO.getMsg" resultMap="message">
+		<![CDATA[
+			SELECT MSG_CTS AS msgCts
+			     , MSG_ID  AS msgID
+			  FROM PUBLIC.TSYS_MESSAGE
+			 WHERE MSG_ID = #msgId#
+			   AND USE_YN  = '1'
+		]]>
+	</select>
+
+	<update id="commonDAO.insertApikey" parameterClass="authVO">
+	<![CDATA[
+		UPDATE PUBLIC.TSYS_USERS
+		   SET API_KEY = #apiKey#
+		 WHERE CO_ID = #sessionCoId#
+		   AND USR_ID = #sessionUserId#
+	]]>
+	</update>
+
+	<update id="commonDAO.deleteApiKey" parameterClass="loginVO">
+        <![CDATA[
+			UPDATE PUBLIC.TSYS_USERS
+		   	   SET API_KEY = NULL
+		 	 WHERE CO_ID = #coId#
+		       AND USR_ID = #usrId#
+        ]]>
+    </update>
+
+
+</sqlMap>

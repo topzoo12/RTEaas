@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		<typeAlias alias="searchVO" type="egovframework.zieumtn.common.service.CommonDefaultVO"/>
+		<typeAlias alias="sampleVO" type="egovframework.zieumtn.common.service.CommonVO"/>
+		<typeAlias alias="loginVO" type="egovframework.zieumtn.common.service.LoginVO"/>
+    </typeAliases>
+</configuration>

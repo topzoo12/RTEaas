@@ -1,0 +1,57 @@
+# webPonent export
+
+## Install
+
+### Library 등록
+- webPonent-export.jar CLASSPATH 추가
+
+### Servlet 등록
+- web.xml에 아래 항목 추가
+
+```xml
+<servlet>
+    <servlet-name>ExportServlet</servlet-name>
+    <servlet-class>webponent.export.controller.ExportServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ExportServlet</servlet-name>
+    <url-pattern>/WEB-APP/export/*</url-pattern>
+</servlet-mapping>
+```
+### export.config.properties
+- 출력에 사용되는 설정파일
+- Path: /WEB-INF/webponent/export/export.config.properties
+
+### capture.js
+- PhantomJS Driver Script
+- PhantomJS 설치 (http://phantomjs.org/)
+- Path: /WEB-INF/webponent/export/js/capture.js
+- export.config.properties 파일에서 경로 및 driver file 수정 가능
+
+## Usage
+ 1. webponent.report.js 추가.
+ 2. 주석 참고하여 각 파일별 method 호출(ex : /WEB-APP/export/excel)
+
+### 확장
+
+##### File export
+ - ExcelParser ImgRenderer, PdfRender 확장 구현
+
+##### 후처리
+ - AfterProcessor Interface 구현
+
+***클래스 구현 후 export.config.properties 파일에 등록해야 정상적으로 사용 가능***
+
+
+## OS별 width px
+ - Linux: 842px
+ - Windows: 793px
+
+## Third Parties
+- Apache Batik: Apache License (https://xmlgraphics.apache.org/batik/)
+- jxl: GNU  (http://jexcelapi.sourceforge.net/)
+- Apache POI: Apache License (https://poi.apache.org/)
+- Mockito: MIT License (http://mockito.org/)
+- jQuery: MIT license
+- PhantomJS 2.0+ (http://phantomjs.org/)

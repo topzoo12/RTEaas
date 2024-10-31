@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="car">
+
+	<typeAlias  alias="runVO" type="egovframework.zieumtn.status.vo.StatusRunningVO"/>
+	<typeAlias  alias="carVO" type="egovframework.zieumtn.status.vo.StatusCarVO"/>
+
+	<resultMap id="run" class="egovframework.zieumtn.status.vo.StatusRunningVO">
+		<result property="runDate" column="runDate"/>
+		<result property="carNo" column="carNo"/>
+		<result property="runTp" column="runTp"/>
+		<result property="driverName" column="driverName"/>
+		<result property="runStart" column="runStart"/>
+		<result property="runFinish" column="runFinish"/>
+		<result property="runKm" column="runKm"/>
+		<result property="runState" column="runState"/>
+		<result property="clPartTaskId" column="clPartTaskId"/>
+	</resultMap>
+
+	<resultMap id="runDetail" class="egovframework.zieumtn.status.vo.StatusRunningVO">
+		<result property="deviceId" column="deviceId"/>
+		<result property="deviceNm" column="deviceNm"/>
+		<result property="beforeValue" column="beforeValue"/>
+		<result property="afterValue" column="afterValue"/>
+	</resultMap>
+
+	<resultMap id="car" class="egovframework.zieumtn.status.vo.StatusCarVO">
+		<result property="rowno" column="rowno"/>
+		<result property="carDiv" column="carDiv"/>
+		<result property="carDivNm" column="carDivNm"/>
+		<result property="carNo" column="carNo"/>
+		<result property="carSize" column="carSize"/>
+		<result property="carSizeNm" column="carSizeNm"/>
+		<result property="carSpec" column="carSpec"/>
+		<result property="itemCnt" column="itemCnt"/>
+		<result property="carId" column="carId"/>
+	</resultMap>
+
+	<resultMap id="carDetail" class="egovframework.zieumtn.status.vo.StatusCarVO">
+		<result property="rowno" column="rowno"/>
+		<result property="carNo" column="carNo"/>
+		<result property="manageDate" column="manageDate"/>
+		<result property="oilAmount" column="oilAmount"/>
+		<result property="cleanerAmount" column="cleanerAmount"/>
+		<result property="wiperChange" column="wiperChange"/>
+		<result property="tireChange" column="tireChange"/>
+	</resultMap>
+
+	<select id="carDAO.selectStatusRunningList" parameterClass="runVO" resultMap="run">
+        <![CDATA[
+			select
+				a.rre_run_date as runDate
+				,a.rre_car_number as carNo
+				,'' as runTp
+				,a.rre_driver_name as driverName
+				,a.rre_run_start as runStart
+				,a.rre_run_finish as runFinish
+				,case when coalesce(a.rre_after_km,0) != 0 then (a.rre_after_km - a.rre_before_km)::character varying else '' end as runKm
+				,case when coalesce(rre_run_finish,'') != '' then '청소대기' else '청소중' end as runState
+				,a.rre_cl_part_task_id as clPartTaskId
+			from tb_run_record a
+			inner join tb_car_mng b
+			on a.rre_car_number = b.car_no
+			and b.co_id = #sessionCoId#
+			where 1=1
+		]]>
+		<isNotEmpty property="fromDt">
+		<![CDATA[
+			and a.rre_run_date >= #fromDt#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="toDt">
+		<![CDATA[
+			and a.rre_run_date <= #toDt#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="carNo">
+			and a.rre_car_number like concat('%',#carNo#,'%')
+		</isNotEmpty>
+        order by a.rre_run_date desc
+    </select>
+
+	<select id="carDAO.selectStatusRunningDetailList" parameterClass="runVO" resultMap="runDetail">
+			select
+				a.device_id as deviceId
+				,(select fclts_nm from tb_fclts_info where fclts_uuid = a.device_id) as deviceNm
+		<isNotEmpty property="runStart">
+				,c.device_value as beforeValue
+		</isNotEmpty>
+		<isEmpty property="runStart">
+				,'' as beforeValue
+		</isEmpty>
+		<isNotEmpty property="runFinish">
+				,d.device_value as afterValue
+		</isNotEmpty>
+		<isEmpty property="runFinish">
+				,'' as afterValue
+		</isEmpty>
+			from tb_clean_target a
+			inner join tb_run_record b
+			on a.cl_part_task_id = b.rre_cl_part_task_id
+		<isNotEmpty property="runStart">
+			left outer join (select a1.* from tb_device_data a1
+							inner join (select device_id,max(get_dtm) get_dtm from tb_device_data where get_dtm <![CDATA[<=]]> concat(#runDate#,' ',#runStart#)::timestamp group by device_id) a2
+							on a1.device_id = a2.device_id
+							and a1.get_dtm = a2.get_dtm
+							) c
+			on a.device_id = c.device_id
+			and c.device_io = 'PM1.0'
+
+		</isNotEmpty>
+		<isNotEmpty property="runFinish">
+			left outer join (select a1.* from tb_device_data a1
+							inner join (select device_id,max(get_dtm) get_dtm from tb_device_data where get_dtm <![CDATA[<=]]> concat(#runDate#,' ',#runFinish#)::timestamp group by device_id) a2
+							on a1.device_id = a2.device_id
+							and a1.get_dtm = a2.get_dtm
+							) d
+			on a.device_id = d.device_id
+			and d.device_io = 'PM1.0'
+		</isNotEmpty>
+			where cl_part_task_id::character varying = #clPartTaskId#
+			group by a.device_id
+		<isNotEmpty property="runStart">
+			,c.device_value
+		</isNotEmpty>
+		<isNotEmpty property="runFinish">
+			,d.device_value
+		</isNotEmpty>
+    </select>
+
+	<select id="carDAO.selectStatusCarList" parameterClass="carVO" resultMap="car">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by a.car_no) as rowno
+				,a.car_div as carDiv
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'CA' and com_cd = a.car_div) as carDivNm
+				,a.car_no as carNo
+				,a.car_size as carSize
+				,(select cd_nm from tsys_code where co_id = a.co_id and cdgrp_id = 'CB' and com_cd = a.car_size) as carSizeNm
+				,a.car_spec as carSpec
+				,(select count(*) from tb_item_record where ire_car_number = a.car_no) as itemCnt
+				,a.car_id as carId
+			from tb_car_mng a
+			where a.co_id = #sessionCoId#
+		]]>
+		<isNotEmpty property="carDiv">
+			and a.car_div = #carDiv#
+		</isNotEmpty>
+		<isNotEmpty property="carNo">
+			and a.car_no = concat('%',#carNo#,'%')
+		</isNotEmpty>
+		order by a.car_no
+
+    </select>
+
+	<select id="carDAO.selectStatusCarDetailList" parameterClass="carVO" resultMap="carDetail">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by ire_manage_date desc) as rowno
+				,ire_car_number as carNo
+				,ire_manage_date as manageDate
+				,ire_e_oil_amount as oilAmount
+				,ire_cleaner_amount as cleanerAmount
+				,case when ire_wiper_change = true then '예' else '아니오' end as wiperChange
+				,case when ire_tire_change = true then '예' else '아니오' end as tireChange
+			from tb_item_record
+			where ire_car_number = #carNo#
+		]]>
+
+			order by ire_manage_date desc
+
+    </select>
+
+	<insert id="carDAO.insertCar" parameterClass="carVO">
+		<![CDATA[
+			INSERT INTO tb_car_mng
+			(
+				co_id
+				, car_id
+				, car_no
+				, car_div
+				, car_size
+				, car_spec
+				, regpsn_id
+				, reg_dtm
+				, upd_id
+				, upd_dtm
+			)
+			VALUES (
+				#sessionCoId#
+				, (select COALESCE(max(car_id)::integer,0)+1 from tb_car_mng)
+				, #carNo#
+				, #carDiv#
+				, #carSize#
+				, #carSpec#
+				, #sessionUserId#
+				, now()
+				, #sessionUserId#
+				, now()
+			)
+
+		]]>
+	</insert>
+
+	<update id="carDAO.updateCar" parameterClass="carVO">
+		<![CDATA[
+			update tb_car_mng
+			set
+				car_no	= #carNo#
+				, car_div = #carDiv#
+				, car_size = #carSize#
+				, car_spec = #carSpec#
+				, upd_id = #sessionUserId#
+				, upd_dtm = now()
+			where co_id = #sessionCoId#
+			and car_id = #carId#
+		]]>
+	</update>
+
+	<delete id="carDAO.deleteCar" parameterClass="carVO">
+		<![CDATA[
+			DELETE FROM tb_car_mng
+			WHERE co_id = #sessionCoId#
+			and car_id = #carId#
+		]]>
+	</delete>
+</sqlMap>

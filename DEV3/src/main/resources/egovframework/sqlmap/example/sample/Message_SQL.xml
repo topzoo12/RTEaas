@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="message">
+
+	<typeAlias  alias="messageVO" type="egovframework.zieumtn.system.vo.MessageVO"/>
+
+	<resultMap id="message" class="egovframework.zieumtn.system.vo.MessageVO">
+		<result property="rowno" column="rowno"/>
+		<result property="msgId" column="msgId"/>
+		<result property="taskdivCd" column="taskdivCd"/>
+		<result property="taskdivNm" column="taskdivNm"/>
+		<result property="msgdivCd" column="msgdivCd"/>
+		<result property="msgdivNm" column="msgdivNm"/>
+		<result property="msgCts" column="msgCts"/>
+ 		<result property="msgengCts" column="msgengCts"/>
+		<result property="msgjpCts" column="msgjpCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="messageDAO.selectMessageListTotCnt" parameterClass="messageVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_message
+			where msg_id like concat('%'||coalesce(#msgId#,'')||'%')
+		]]>
+        <isNotEmpty property="msgdivCd">
+        	<![CDATA[and msgdiv_cd = #msgdivCd#]]>
+        </isNotEmpty>
+		<isNotEmpty property="taskdivCd">
+        	<![CDATA[and taskdiv_cd = #taskdivCd#]]>
+        </isNotEmpty>
+	</select>
+
+	<select id="messageDAO.selectMessageList" parameterClass="messageVO" resultMap="message">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by msg_id) as rowno
+				,msg_id as msgId
+				,taskdiv_cd as taskdivCd
+				,(select cd_nm from tsys_code where co_id = #sessionCoId# and com_cd = taskdiv_cd) as taskdivNm
+				,msgdiv_cd as msgdivCd
+				,(select cd_nm from tsys_code where co_id = #sessionCoId# and com_cd = msgdiv_cd) as msgdivNm
+				,msg_cts as msgCts
+				,msg_cts_eng as msgengCts
+				,msg_cts_jp as msgjpCts
+				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,regpsn_id as regId
+				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
+				,upd_id as updId
+				,to_char(upd_dtm, 'YYYY-MM-DD') as updDt
+			from tsys_message
+			where (msg_id like concat('%'||coalesce(#msgId#,'')||'%') or msg_cts like concat('%'||coalesce(#msgId#,'')||'%'))
+        ]]>
+        <isNotEmpty property="msgdivCd">
+        	<![CDATA[and msgdiv_cd = #msgdivCd#]]>
+        </isNotEmpty>
+		<isNotEmpty property="taskdivCd">
+        	<![CDATA[and taskdiv_cd = #taskdivCd#]]>
+        </isNotEmpty>
+			order by msg_id
+    </select>
+
+
+	<insert id="messageDAO.insertMessage" parameterClass="messageVO">
+		<![CDATA[
+			insert into tsys_message
+				(msg_id
+				,taskdiv_cd
+				,msgdiv_cd
+				,msg_cts
+				,msg_cts_eng
+				,msg_cts_jp
+				,use_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#msgId#
+				,#taskdivCd#
+				,#msgdivCd#
+				,#msgCts#
+				,#msgengCts#
+				,#msgjpCts#
+				,#useYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+
+		]]>
+	</insert>
+
+	<update id="messageDAO.updateMessage" parameterClass="messageVO">
+		<![CDATA[
+			update tsys_message
+			set
+				msg_id		=#msgId#
+				,taskdiv_cd	=#taskdivCd#
+				,msgdiv_cd	=#msgdivCd#
+				,msg_cts	=#msgCts#
+				,msg_cts_eng=#msgengCts#
+				,msg_cts_jp	=#msgjpCts#
+				,use_yn		=#useYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where msg_id = #msgId#
+		]]>
+	</update>
+
+	<!-- <delete id="messageDAO.deleteMessage" parameterClass="messageVO">
+		<![CDATA[
+			DELETE FROM tsys_message
+			where msg_id = #msgId#
+		]]>
+	</delete> -->
+
+</sqlMap>

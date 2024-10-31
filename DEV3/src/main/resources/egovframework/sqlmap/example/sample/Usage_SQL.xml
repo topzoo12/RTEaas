@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="usage">
+
+	<typeAlias  alias="usageSearchVO" type="egovframework.zieumtn.system.vo.UsageSearchVO"/>
+
+	<resultMap id="menu" class="egovframework.zieumtn.system.vo.MenuVO">
+		<result property="rowno" column="rowno"/>
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="srnId" column="srnId"/>
+		<result property="usageCnt" column="usageCnt"/>
+	</resultMap>
+
+	<resultMap id="user" class="egovframework.zieumtn.system.vo.UsageUserVO">
+		<result property="rowno" column="rowno"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+		<result property="cnctDtm" column="cnctDtm"/>
+	</resultMap>
+
+	<resultMap id="login" class="egovframework.zieumtn.system.vo.UsageLoginVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+		<result property="loginDtm" column="loginDtm"/>
+	</resultMap>
+
+	<resultMap id="data" class="egovframework.zieumtn.system.vo.UsageDataVO">
+		<result property="rowno" column="rowno"/>
+		<result property="fcltsUuid" column="fcltsUuid"/>
+		<result property="fcltsNm" column="fcltsNm"/>
+		<result property="fcltsItlpcNmDs" column="fcltsItlpcNmDs"/>
+		<result property="fcltsItlpcAddr" column="fcltsItlpcAddr"/>
+		<result property="fcltsItlpcLa" column="fcltsItlpcLa"/>
+		<result property="fcltsItlpcLo" column="fcltsItlpcLo"/>
+		<result property="usageCnt" column="usageCnt"/>
+	</resultMap>
+
+    <select id="usageMenuDAO.selectUsageMenuList" parameterClass="usageSearchVO" resultMap="menu">
+        <![CDATA[
+        	SELECT
+				ROW_NUMBER() OVER (order by h.srt_seq,a.srt_seq) as rowno
+				,a.mnu_id as mnuId
+				,a.mnu_nm as mnuNm
+				,a.srn_id as srnId
+				,count(b.mnu_id) usageCnt
+			FROM tsys_menus a
+			left outer join tsys_menus h
+			on a.co_id = h.co_id
+			and a.hrnkmnu_id = h.mnu_id
+			left outer join tsys_menu_con_hist b
+			on a.co_id = b.co_id
+			and a.mnu_id = b.mnu_id
+			and b.cnct_dtm >= concat(#fromDt#,' 00:00:00')::timestamp
+			and b.cnct_dtm < concat(#toDt#,' 00:00:00')::timestamp + '1 day'::interval
+			where a.co_id = #sessionCoId#
+			and a.mnu_lvl = 2
+			group by a.mnu_id
+			,a.mnu_nm
+			,a.srn_id
+			,h.srt_seq
+			,a.srt_seq
+			order by h.srt_seq,a.srt_seq
+        ]]>
+    </select>
+
+    <select id="usageMenuDAO.selectUsageMenuUserList" parameterClass="usageSearchVO" resultMap="user">
+        <![CDATA[
+			SELECT
+				ROW_NUMBER() OVER (order by a.cnct_dtm desc) as rowno
+				,a.usr_id as usrId
+				,b.usr_nm as usrNm
+				,to_char(a.cnct_dtm,'yyyy-mm-dd hh24:mi:ss') as cnctDtm
+			FROM tsys_menu_con_hist a
+			left outer join tsys_users b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			where a.co_id = #sessionCoId#
+			and a.mnu_id = #mnuId#
+			and a.cnct_dtm >= concat(#fromDt#,' 00:00:00')::timestamp
+			and a.cnct_dtm < concat(#toDt#,' 00:00:00')::timestamp + '1 day'::interval
+			order by a.cnct_dtm desc
+        ]]>
+    </select>
+
+    <select id="usageLoginDAO.selectUsageLoginList" parameterClass="usageSearchVO" resultMap="login">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by a.login_dtm desc,a.hst_seq) as rowno
+				,a.co_id as coId
+				,b.co_nm as coNm
+				,a.usr_id as usrId
+				,c.usr_nm as usrNm
+				,a.login_dt as loginDt
+				,to_char(a.login_dtm,'yyyy-mm-dd hh24:mi:ss') as loginDtm
+			from tsys_login_hist a
+			left outer join tsys_company b
+			on a.co_id = b.co_id
+			left outer join tsys_users c
+			on a.co_id = c.co_id
+			and a.usr_id = c.usr_id
+			where a.login_dt >= #fromDt#
+			and a.login_dt <= #toDt#
+			and b.co_nm like concat('%',COALESCE(#coNm#,''),'%')
+			and a.co_id = #sessionCoId#
+			order by a.login_dtm desc,a.hst_seq
+        ]]>
+    </select>
+
+    <select id="usageDataDAO.selectUsageDataList" parameterClass="usageSearchVO" resultMap="data">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by count(b.device_id) desc) as rowno
+				,a.fclts_uuid as fcltsUuid
+				,a.fclts_nm as fcltsNm
+				,aa.cd_nm as fcltsItlpcNmDs
+				,a.fclts_itlpc_addr as fcltsItlpcAddr
+				,a.fclts_itlpc_addr as fcltsItlpcAddr
+				,a.fclts_itlpc_la as fcltsItlpcLa
+				,a.fclts_itlpc_lo as fcltsItlpcLo
+				,count(b.device_id) as usageCnt
+			from tb_fclts_info a
+			left outer join tsys_code aa
+			on a.area_div = aa.com_cd
+			and aa.co_id = #sessionCoId#
+			left outer join tb_device_data b
+			on a.fclts_uuid = b.device_id
+			and b.get_dtm >= concat(#fromDt#,' 00:00:00')::timestamp
+			and b.get_dtm < concat(#toDt#,' 00:00:00')::timestamp + '1 day'::interval
+			where a.co_id = #coId#
+			group by a.fclts_uuid
+				,a.fclts_nm
+				,aa.cd_nm
+				,a.fclts_itlpc_addr
+				,a.fclts_itlpc_la
+				,a.fclts_itlpc_lo
+			order by usageCnt desc
+        ]]>
+    </select>
+</sqlMap>

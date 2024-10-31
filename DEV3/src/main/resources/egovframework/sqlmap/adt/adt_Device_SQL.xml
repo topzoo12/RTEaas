@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="adt_device">
+	<typeAlias  alias="fcltsInfoVO" type="egovframework.zieumtn.device.vo.FcltsInfoVO"/>
+	<typeAlias  alias="sensorInfoVO" type="egovframework.zieumtn.device.vo.SensorInfoVO"/>
+
+    <insert id="adt_deviceDAO.insertDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			insert into icdp.tb_fclts_info
+				(co_id
+				,fclts_uuid
+				, fclts_cl_uuid
+				, fclts_nm
+				, area_div
+				, fclts_itlpc_addr
+				, fclts_itlpc_la
+				, fclts_itlpc_lo
+				, fclts_typ
+				, fclts_typ_dtl
+				, data_aqst_mth
+				, ip_addr
+				, port
+				, cctv_login_id
+				, cctv_login_pwd
+				, cctv_stream_url
+				, cctv_auth_type
+				, instl_de
+				, use_sttus
+				, reason
+				, vms_id
+				, tlphon_no
+				, creat_dtm
+				, creat_user
+				, updt_dtm
+				, updt_user
+				, fw_no)
+			VALUES
+				(#sessionCoId#
+				,#fcltsUuid#
+				, #fcltsClUuid#
+				, #fcltsNm#
+				, #fcltsItlpcNm#
+				, #fcltsItlpcAddr#
+				, #fcltsItlpcLa#
+				, #fcltsItlpcLo#
+				, coalesce(#fcltsTyp#,'01')
+				, #fcltsTypDtl#
+				, coalesce(#dataAqstMth#,'01')
+				, #ipAddr#
+				, #port#
+				, #cctvLoginId#
+				, #cctvLoginPwd#
+				, #cctvStreamUrl#
+				, coalesce(#cctvAuthType#,'Digest')
+				, #instlDe#
+				, #useSttus#
+				, #reason#
+				, #vmsId#
+				, #tlphonNo#
+				, to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, #sessionUserId#
+				, to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, #sessionUserId#
+				, #fwNo#)
+		]]>
+	</insert>
+
+	<update id="adt_deviceDAO.updateDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			update icdp.tb_fclts_info
+			set
+				fclts_cl_uuid      =#fcltsClUuid#
+				, fclts_nm         =#fcltsNm#
+				, area_div   =#fcltsItlpcNm#
+				, fclts_itlpc_addr =#fcltsItlpcAddr#
+				, fclts_itlpc_la   =#fcltsItlpcLa#
+				, fclts_itlpc_lo   =#fcltsItlpcLo#
+				, fclts_typ        =coalesce(#fcltsTyp#,'01')
+				, fclts_typ_dtl    =#fcltsTypDtl#
+				, data_aqst_mth    =#dataAqstMth#
+				, ip_addr          =#ipAddr#
+				, port             =#port#
+				, cctv_login_id    =#cctvLoginId#
+				, cctv_login_pwd   =#cctvLoginPwd#
+				, cctv_stream_url  =#cctvStreamUrl#
+				, cctv_auth_type   =#cctvAuthType#
+				, instl_de         =#instlDe#
+				, use_sttus        =#useSttus#
+				, reason           =#reason#
+				, vms_id           =#vmsId#
+				, tlphon_no        =#tlphonNo#
+				, updt_dtm         =to_char(now(), 'YYYY-MM-DD hh24:mi')
+				, updt_user        =#sessionUserId#
+				, fw_no            =#fwNo#
+			where fclts_uuid = #fcltsUuid#
+			and co_id = #sessionCoId#
+
+		]]>
+	</update>
+</sqlMap>

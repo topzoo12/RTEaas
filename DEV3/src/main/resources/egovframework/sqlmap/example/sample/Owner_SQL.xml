@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="message">
+
+	<typeAlias  alias="ownerVO" type="egovframework.zieumtn.system.vo.OwnerVO"/>
+
+	<resultMap id="owner" class="egovframework.zieumtn.system.vo.OwnerVO">
+		<result property="rowno" column="rowno"/>
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="mnuDesc" column="mnuDesc"/>
+		<result property="ownCoId" column="ownCoId"/>
+		<result property="ownCoNm" column="ownCoNm"/>
+		<result property="openYn" column="openYn"/>
+	</resultMap>
+
+	<select id="ownerDAO.selectOwnerList" parameterClass="ownerVO" resultMap="owner">
+        <![CDATA[
+        	select
+        		ROW_NUMBER() OVER (order by srt_seq) as rowno
+				,mnu_id as mnuId
+				,mnu_nm as mnuNm
+				,mnu_desc as mnuDesc
+				,own_co_id as ownCoId
+				,(select co_nm from tsys_company where co_id = a.own_co_id) as ownCoNm
+				,open_yn as openYn
+			from tsys_menus a
+			where co_id = 'A0001'
+			and mnu_lvl = 1
+			and mnu_id not in ('A0001SMS202102000015','A0001SMS201603000006','A0001SMS202102000007')
+			order by srt_seq
+        ]]>
+    </select>
+
+	<select id="ownerDAO.getOpenList" parameterClass="ownerVO" resultMap="owner">
+        <![CDATA[
+        	select
+        		ROW_NUMBER() OVER (order by srt_seq) as rowno
+				,mnu_id as mnuId
+				,mnu_nm as mnuNm
+				,mnu_desc as mnuDesc
+				,own_co_id as ownCoId
+				,(select co_nm from tsys_company where co_id = a.own_co_id) as ownCoNm
+				,open_yn as openYn
+			from tsys_menus a
+			where co_id = 'A0001'
+			and mnu_lvl = 1
+			and open_yn = '1'
+			and mnu_id not in ('A0001SMS202102000015','A0001SMS201603000006','A0001SMS202102000007')
+			order by srt_seq
+        ]]>
+    </select>
+
+	<update id="ownerDAO.updateOwner" parameterClass="ownerVO">
+		<![CDATA[
+			update tsys_menus
+			set
+				open_yn		=#openYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where co_id = 'A0001'
+			and mnu_lvl = 1
+			and mnu_id = #mnuId#
+		]]>
+	</update>
+
+</sqlMap>

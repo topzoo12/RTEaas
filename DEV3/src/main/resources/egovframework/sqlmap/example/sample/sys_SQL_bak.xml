@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="xxx">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="searchVO" type="egovframework.zieumtn.common.service.CommonDefaultVO"/>
+	<typeAlias  alias="pageVO" type="egovframework.zieumtn.system.vo.PageVO"/>
+	<typeAlias  alias="menuVO" type="egovframework.zieumtn.system.vo.MenuVO"/>
+
+	<resultMap id="page" class="egovframework.zieumtn.system.vo.PageVO">
+		<result property="rowno" column="rowno"/>
+		<result property="srnId" column="srnId"/>
+		<result property="srnNm" column="srnNm"/>
+		<result property="srnUrl" column="srnUrl"/>
+		<result property="srntpCd" column="srntpCd"/>
+		<result property="opntpCd" column="opntpCd"/>
+		<result property="authgrpCd" column="authgrpCd"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="mpYn" column="mpYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<resultMap id="menu" class="egovframework.zieumtn.system.vo.MenuVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="mnuLvl" column="mnuLvl"/>
+		<result property="hrnkmnuId" column="hrnkmnuId"/>
+		<result property="srtSeq" column="srtSeq"/>
+		<result property="srnId" column="srnId"/>
+		<result property="argVal" column="argVal"/>
+		<result property="markYn" column="markYn"/>
+		<result property="useYn" column="useYn"/>
+		<result property="mnuDesc" column="mnuDesc"/>
+		<result property="mpYn" column="mpYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="pageDAO.selectPageListTotCnt" parameterClass="pageVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_screen
+			where srn_nm like concat('%'||coalesce(#srnNm#,'')||'%')
+	</select>
+
+    <select id="pageDAO.selectPageList" parameterClass="pageVO" resultMap="page">
+        <![CDATA[
+            select
+				ROW_NUMBER() OVER (order by srn_id) as rowno
+				,srn_id as srnId
+				,srn_nm as srnNm
+				,srn_url as srnUrl
+				,srntp_cd as srntpCd
+				,opntp_cd as opntpCd
+				,authgrp_cd as authgrpCd
+				,rmks_cts as rmksCts
+				,use_yn as useYn
+				,mp_yn as mpYn
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_screen
+			where srn_nm like concat('%'||coalesce(#srnNm#,'')||'%')
+			order by srn_id
+        ]]>
+    </select>
+
+	<select id="menuDAO.selectMenuListTotCnt" parameterClass="menuVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_menus
+			where co_id = coalesce(#sessionCoId#,'A0001')
+	</select>
+
+    <select id="menuDAO.selectMenuList" parameterClass="menuVO" resultMap="menu">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by mnu_id) as rowno
+				,co_id as coId
+				,mnu_id as mnuId
+				,mnu_nm as mnuNm
+				,mnu_lvl as mnuLvl
+				,hrnkmnu_id as hrnkmnuId
+				,srt_seq as srtSeq
+				,srn_id as srnId
+				,arg_val as argVal
+				,mark_yn as markYn
+				,use_yn as useYn
+				,mnu_desc as mnuDesc
+				,mp_yn as mpYn
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_menus
+			where co_id like concat('%'||coalesce(#sessionCoId#,'A0001')||'%')
+            order by mnu_id
+        ]]>
+    </select>
+
+	<typeAlias alias="codeVO" type="egovframework.zieumtn.system.vo.CodeVO"/>
+
+	<resultMap id="codegroup" class="egovframework.zieumtn.system.vo.CodeVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="sysId" column="sysId"/>
+		<result property="cdgrpId" column="cdgrpId"/>
+		<result property="cdgrpNm" column="cdgrpNm"/>
+		<result property="taskDiv" column="taskDiv"/>
+		<result property="taskDivNm" column="taskDivNm"/>
+		<result property="cdgrpDesc" column="cdgrpDesc"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="codeDAO.selectCodeGroupListTotCnt" parameterClass="codeVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_code_group
+			where task_div like concat('%'||coalesce(#taskDiv#,'')||'%')
+			and (cdgrp_id like concat('%'||coalesce(#cdgrpId#,'')||'%') or cdgrp_nm like concat('%'||coalesce(#cdgrpNm#,'')||'%'))
+	</select>
+
+	<select id="codeDAO.selectCodeGroupList" parameterClass="codeVO" resultMap="codegroup">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id) as rowno
+				,co_id as coId
+				,sys_id as sysId
+				,cdgrp_id as cdgrpId
+				,cdgrp_nm as cdgrpNm
+				,task_div as taskDiv
+				,(select cd_nm from tsys_code where com_cd = task_div) as taskDivNm
+				,cdgrp_desc as cdgrpDesc
+				,use_yn as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_code_group
+			where task_div like concat('%'||coalesce(#taskDiv#,'')||'%')
+			and (cdgrp_id like concat('%'||coalesce(#cdgrpId#,'')||'%') or cdgrp_nm like concat('%'||coalesce(#cdgrpId#,'')||'%'))
+			order by cdgrp_id
+        ]]>
+    </select>
+
+	<insert id="codeDAO.insertCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			insert into tsys_code_group
+				(co_id
+				,sys_id
+				,cdgrp_id
+				,cdgrp_nm
+				,task_div
+				,cdgrp_desc
+				,use_yn
+				,rmks_cts
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#sessionCoId#
+				,#sysId#
+				,#cdgrpId#
+				,#cdgrpNm#
+				,#taskDiv#
+				,#cdgrpDesc#
+				,#useYn#
+				,#rmksCts#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="codeDAO.updateCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			update tsys_code_group
+			set
+				co_id		=#sessionCoId#
+				,sys_id		=#sysId#
+				,cdgrp_id	=#cdgrpId#
+				,cdgrp_nm	=#cdgrpNm#
+				,task_div	=#taskDiv#
+				,cdgrp_desc	=#cdgrpDesc#
+				,use_yn		=#useYn#
+				,rmks_cts	=#rmksCts#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where cdgrp_id = #cdgrpId#
+		]]>
+	</update>
+
+	<delete id="codeDAO.deleteCodeGroup" parameterClass="codeVO">
+		<![CDATA[
+			DELETE FROM tsys_code_group
+			WHERE cdgrp_id=#cdgrpId#
+		]]>
+	</delete>
+
+	<resultMap id="code" class="egovframework.zieumtn.system.vo.CodeVO">
+		<result property="rowno" column="rowno"/>
+		<result property="comCd" column="comCd"/>
+		<result property="sysId" column="sysId"/>
+		<result property="cdgrpId" column="cdgrpId"/>
+		<result property="cdId" column="cdId"/>
+		<result property="cdNm" column="cdNm"/>
+		<result property="cdDesc" column="cdDesc"/>
+		<result property="srtSeq" column="srtSeq"/>
+		<result property="hrnkcomCd" column="hrnkcomCd"/>
+		<result property="etc1" column="etc1"/>
+		<result property="etc2" column="etc2"/>
+		<result property="etc3" column="etc3"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="codeDAO.selectCodeListTotCnt" parameterClass="codeVO" resultClass="int">
+			select count(*) totcnt
+			from tsys_code
+			where cdgrp_id = #cdgrpId#
+	</select>
+
+	<select id="codeDAO.selectCodeList" parameterClass="codeVO" resultMap="code">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id,cd_id) as rowno
+				,co_id as coId
+				,com_cd as comCd
+				,sys_id as sysId
+				,cdgrp_id as cdgrpId
+				,cd_id as cdId
+				,cd_nm as cdNm
+				,cd_desc as cdDesc
+				,srt_seq as srtSeq
+				,hrnkcom_cd as hrnkcomCd
+				,etc_1 as etc1
+				,etc_2 as etc2
+				,etc_3 as etc3
+				,rmks_cts as rmksCts
+				,use_yn as useYn
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_code
+			where cdgrp_id = #cdgrpId#
+			order by cdgrp_id,cd_id
+        ]]>
+    </select>
+
+	<select id="codeDAO.selectCommCodeList" parameterClass="codeVO" resultMap="code">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by cdgrp_id,cd_id) as rowno
+				,co_id as coId
+				,com_cd as comCd
+				,sys_id as sysId
+				,cdgrp_id as cdgrpId
+				,cd_id as cdId
+				,cd_nm as cdNm
+				,cd_desc as cdDesc
+				,srt_seq as srtSeq
+				,hrnkcom_cd as hrnkcomCd
+				,etc_1 as etc1
+				,etc_2 as etc2
+				,etc_3 as etc3
+				,rmks_cts as rmksCts
+				,use_yn as useYn
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_code
+			where cdgrp_id = #cdgrpId#
+			order by srt_seq
+        ]]>
+    </select>
+
+	<insert id="codeDAO.insertCode" parameterClass="codeVO">
+		<![CDATA[
+			insert into tsys_code
+				(cdgrp_id
+				,co_id
+				,com_cd
+				,sys_id
+				,cd_id
+				,cd_nm
+				,cd_desc
+				,srt_seq
+				,hrnkcom_cd
+				,etc_1
+				,etc_2
+				,etc_3
+				,rmks_cts
+				,use_yn
+				,regpsn_id
+				,reg_dtm
+				,upd_id
+				,upd_dtm)
+			VALUES
+				(#cdgrpId#
+				,#sessionCoId#
+				,concat(#sysId#||#cdgrpId#||#cdId#)
+				,#sysId#
+				,#cdId#
+				,#cdNm#
+				,#cdDesc#
+				,#srtSeq#
+				,#hrnkcomCd#
+				,#etc1#
+				,#etc2#
+				,#etc3#
+				,#rmksCts#
+				,#useYn#
+				,#sessionUserId#
+				,now()
+				,#sessionUserId#
+				,now())
+		]]>
+	</insert>
+
+	<update id="codeDAO.updateCode" parameterClass="codeVO">
+		<![CDATA[
+			update tsys_code
+			set
+				cd_nm		=#cdNm#
+				,cd_desc	=#cdDesc#
+				,srt_seq	=#srtSeq#
+				,hrnkcom_cd	=#hrnkcomCd#
+				,etc_1		=#etc1#
+				,etc_2		=#etc2#
+				,etc_3		=#etc3#
+				,rmks_cts	=#rmksCts#
+				,use_yn		=#useYn#
+				,upd_id		=#sessionUserId#
+				,upd_dtm	=now()
+			where com_cd = #comCd#
+		]]>
+	</update>
+
+	<delete id="codeDAO.deleteCode" parameterClass="codeVO">
+		<![CDATA[
+			DELETE FROM tsys_code
+			WHERE com_cd=#comCd#
+		]]>
+	</delete>
+
+
+	<typeAlias  alias="messageVO" type="egovframework.zieumtn.system.vo.MessageVO"/>
+
+	<resultMap id="message" class="egovframework.zieumtn.system.vo.MessageVO">
+		<result property="rowno" column="rowno"/>
+		<result property="msgId" column="msgId"/>
+		<result property="taskdivCd" column="taskdivCd"/>
+		<result property="msgdivCd" column="msgdivCd"/>
+		<result property="msgCts" column="msgCts"/>
+		<result property="msgengCts" column="msgengCts"/>
+		<result property="useYn" column="useYn"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="messageDAO.selectMessageListTotCnt" parameterClass="messageVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_message
+			where msgdiv_cd like concat('%'||coalesce(#msgdivCd#,'')||'%')
+			and msg_id like concat('%'||coalesce(#msgId#,'')||'%')
+		]]>
+        <isNotEmpty property="regDtBegin">
+        	<![CDATA[and reg_dtm >= coalesce(#regDtBegin#,'00000000')]]>
+        </isNotEmpty>
+		<isNotEmpty property="regDtEnd">
+			<![CDATA[and reg_dtm <= coalesce(#regDtEnd#,'99991231')]]>
+        </isNotEmpty>
+	</select>
+
+	<select id="messageDAO.selectMessageList" parameterClass="messageVO" resultMap="message">
+        <![CDATA[
+	        select
+				ROW_NUMBER() OVER (order by msg_id) as rowno
+				,msg_id as msgId
+				,taskdiv_cd as taskdivCd
+				,msgdiv_cd as msgdivCd
+				,msg_cts as msgCts
+				,msgeng_cts as msgengCts
+				,use_yn as useYn
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from tsys_message
+			where msgdiv_cd like concat('%'||coalesce(#msgdivCd#,'')||'%')
+			and msg_id like concat('%'||coalesce(#msgId#,'')||'%')
+        ]]>
+        <isNotEmpty property="regDtBegin">
+        	<![CDATA[and reg_dtm >= coalesce(#regDtBegin#,'00000000')]]>
+        </isNotEmpty>
+		<isNotEmpty property="regDtEnd">
+			<![CDATA[and reg_dtm <= coalesce(#regDtEnd#,'99991231')]]>
+        </isNotEmpty>
+			order by msg_id
+
+    </select>
+
+	<typeAlias alias="serviceVO" type="egovframework.zieumtn.system.vo.ServiceVO"/>
+
+	<resultMap id="service" class="egovframework.zieumtn.system.vo.ServiceVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="coNm" column="coNm"/>
+		<result property="corpNo" column="corpNo"/>
+		<result property="estbDt" column="estbDt"/>
+		<result property="hpgAddr" column="hpgAddr"/>
+		<result property="roadzpNo" column="roadzpNo"/>
+		<result property="roadnmAddr" column="roadnmAddr"/>
+		<result property="roadnmdtlAddr" column="roadnmdtlAddr"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="rdrtrNm" column="rdrtrNm"/>
+		<result property="bztpNm" column="bztpNm"/>
+		<result property="bzcatNm" column="bzcatNm"/>
+		<result property="aprvYn" column="aprvYn"/>
+		<result property="telNo" column="telNo"/>
+		<result property="useYn" column="useYn"/>
+		<result property="coDiv" column="coDiv"/>
+		<result property="rmksCts" column="rmksCts"/>
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="serviceDAO.selectServiceListTotCnt" parameterClass="serviceVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from public.tsys_company
+			where co_nm like concat('%'||coalesce(#coNm#,'')||'%')
+		]]>
+	</select>
+
+	<select id="serviceDAO.selectServiceList" parameterClass="serviceVO" resultMap="service">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by co_id) as rowno
+				,co_id as coId
+				,co_nm as coNm
+				,corp_no as corpNo
+				,estb_dt as estbDt
+				,hpg_addr as hpgAddr
+				,roadzp_no as roadzpNo
+				,roadnm_addr as roadnmAddr
+				,roadnmdtl_addr as roadnmdtlAddr
+				,email_addr as emailAddr
+				,rdrtr_nm as rdrtrNm
+				,bztp_nm as bztpNm
+				,bzcat_nm as bzcatNm
+				,aprv_yn as aprvYn
+				,tel_no as telNo
+				,use_yn as useYn
+				,co_div as coDiv
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from public.tsys_company
+			where co_nm like concat('%'||coalesce(#coNm#,'')||'%')
+			order by co_id
+		]]>
+
+    </select>
+
+
+	<typeAlias  alias="userVO" type="egovframework.zieumtn.system.vo.UserVO"/>
+
+	<resultMap id="user" class="egovframework.zieumtn.system.vo.UserVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="usrId" column="usrId"/>
+		<result property="usrNm" column="usrNm"/>
+		<result property="sectNo" column="sectNo"/>
+		<result property="authgrpCd" column="authgrpCd"/>
+		<result property="cotelNo" column="cotelNo"/>
+		<result property="mpNo" column="mpNo"/>
+		<result property="emailAddr" column="emailAddr"/>
+		<result property="deptCd" column="deptCd"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="userDAO.selectUserListTotCnt" parameterClass="userVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from public.tsys_users
+			where dept_cd like concat('%'||coalesce(#deptCd#,'')||'%')
+			and usr_id like concat('%'||coalesce(#usrId#,'')||'%')
+			and authgrp_cd like concat('%'||coalesce(#authgrpCd#,'')||'%')
+		]]>
+	</select>
+
+	<select id="userDAO.selectUserList" parameterClass="userVO" resultMap="user">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by usr_id) as rowno
+				,co_id as coId
+				,usr_id as usrId
+				,usr_nm as usrNm
+				,sect_no as sectNo
+				,authgrp_cd as authgrpCd
+				,cotel_no as cotelNo
+				,mp_no as mpNo
+				,email_addr as emailAddr
+				,dept_cd as deptCd
+				,use_yn as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from public.tsys_users
+			where dept_cd like concat('%'||coalesce(#deptCd#,'')||'%')
+			and usr_id like concat('%'||coalesce(#usrId#,'')||'%')
+			and authgrp_cd like concat('%'||coalesce(#authgrpCd#,'')||'%')
+			order by usr_id
+		]]>
+    </select>
+
+
+	<typeAlias  alias="authgrpVO" type="egovframework.zieumtn.system.vo.AuthgrpVO"/>
+
+	<resultMap id="authgrp" class="egovframework.zieumtn.system.vo.AuthgrpVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="authgrpId" column="authgrpId"/>
+		<result property="authgrpNm" column="authgrpNm"/>
+		<result property="authgrpCd" column="authgrpCd"/>
+		<result property="useYn" column="useYn"/>
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpDAO.selectAuthgrpListTotCnt" parameterClass="authgrpVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from public.tsys_author_group
+			where authgrp_nm like concat('%'||coalesce(#authgrpNm#,'')||'%')
+		]]>
+	</select>
+
+	<select id="authgrpDAO.selectAuthgrpList" parameterClass="authgrpVO" resultMap="authgrp">
+        <![CDATA[
+			select
+				ROW_NUMBER() OVER (order by authgrp_id) as rowno
+				,co_id as coId
+				,authgrp_id as authgrpId
+				,authgrp_nm as authgrpNm
+				,authgrp_cd as authgrpCd
+				,use_yn as useYn
+				,rmks_cts as rmksCts
+				,regpsn_id as regId
+				,reg_dtm as regDt
+				,upd_id as updId
+				,upd_dtm as updDt
+			from public.tsys_author_group
+			where authgrp_nm like concat('%'||coalesce(#authgrpNm#,'')||'%')
+			order by authgrp_id
+		]]>
+    </select>
+
+
+	<typeAlias  alias="authgrpMenuVO" type="egovframework.zieumtn.system.vo.AuthgrpMenuVO"/>
+
+	<resultMap id="authgrpMenu" class="egovframework.zieumtn.system.vo.AuthgrpMenuVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="authgrpId" column="authgrpId"/>
+
+		<result property="mnuId" column="mnuId"/>
+		<result property="mnuNm" column="mnuNm"/>
+		<result property="rauthYn" column="rauthYn"/>
+		<result property="cauthYn" column="cauthYn"/>
+		<result property="uauthYn" column="uauthYn"/>
+		<result property="dauthYn" column="dauthYn"/>
+		<result property="sauthYn" column="sauthYn"/>
+		<result property="optauthYn" column="optauthYn"/>
+		<result property="pauthYn" column="pauthYn"/>
+		<result property="eauthYn" column="eauthYn"/>
+		<result property="fauthYn" column="fauthYn"/>
+
+		<result property="rmksCts" column="rmksCts"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpMenuDAO.selectAuthgrpMenuListTotCnt" parameterClass="authgrpMenuVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from public.tsys_author_group_menus
+			where authgrp_id = #authgrpId#
+		]]>
+	</select>
+
+	<select id="authgrpMenuDAO.selectAuthgrpMenuList" parameterClass="authgrpMenuVO" resultMap="authgrpMenu">
+        <![CDATA[
+        	SELECT
+        		ROW_NUMBER() OVER (order by a.authgrp_id,a.mnu_id) as rowno
+        		,a.co_id as coId
+        		,a.authgrp_id as authgrpId
+        		,a.mnu_id as mnuId
+        		,b.mnu_nm as mnuNm
+        		,a.rauth_yn as rauthYn
+        		,a.cauth_yn as cauthYn
+        		,a.uauth_yn as uauthYn
+        		,a.dauth_yn as dauthYn
+        		,a.sauth_yn as sauthYn
+        		,a.optauth_yn as optauthYn
+        		,a.pauth_yn as pauthYn
+        		,a.eauth_yn as eauthYn
+        		,a.fauth_yn as fauthYn
+        		,a.rmks_cts as rmksCts
+        		,a.regpsn_id as regId
+        		,a.reg_dtm as regDt
+        		,a.upd_id as updId
+        		,a.upd_dtm as updDt
+			from public.tsys_author_group_menus a
+			left outer join public.tsys_menus b
+			on a.co_id = b.co_id
+			and a.mnu_id = b.mnu_id
+			where a.authgrp_id = #authgrpId#
+			order by a.authgrp_id,a.mnu_id
+		]]>
+    </select>
+
+
+	<typeAlias  alias="authgrpUserVO" type="egovframework.zieumtn.system.vo.AuthgrpUserVO"/>
+
+	<resultMap id="authgrpUser" class="egovframework.zieumtn.system.vo.AuthgrpUserVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="authgrpId" column="authgrpId"/>
+
+		<result property="usrId" column="usrId"/>
+		<result property="useYn" column="useYn"/>
+		<result property="useDt" column="useDt"/>
+		<result property="endDt" column="endDt"/>
+
+		<result property="regId" column="regId"/>
+		<result property="regDt" column="regDt"/>
+		<result property="updId" column="updId"/>
+		<result property="updDt" column="updDt"/>
+	</resultMap>
+
+	<select id="authgrpUserDAO.selectAuthgrpUserListTotCnt" parameterClass="authgrpUserVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			FROM public.tsys_author_group_user
+			where authgrp_id = #authgrpId#
+		]]>
+	</select>
+
+
+	<select id="authgrpUserDAO.selectAuthgrpUserList" parameterClass="authgrpUserVO" resultMap="authgrpUser">
+        <![CDATA[
+        	SELECT
+				ROW_NUMBER() OVER (order by a.authgrp_id,a.usr_id) as rowno
+        		,a.co_id as coId
+				,a.authgrp_id as authgrpId
+				,a.usr_id as usrId
+				,a.use_yn as useYn
+				,a.rmks_cts as rmksCts
+				,a.use_dt as useDt
+				,a.end_dt as endDt
+				,a.regpsn_id as regId
+				,a.reg_dtm  as regDt
+				,a.upd_id as updId
+				,a.upd_dtm as updDt
+				,b.usr_nm as usrNm
+				,b.cotel_no as cotelNo
+				,b.email_addr as emailAddr
+				,b.mp_no as mpNo
+			FROM public.tsys_author_group_user a
+			left outer join public.tsys_users b
+			on a.co_id = b.co_id
+			and a.usr_id = b.usr_id
+			where a.authgrp_id = #authgrpId#
+			order by a.authgrp_id,a.usr_id
+		]]>
+    </select>
+
+</sqlMap>

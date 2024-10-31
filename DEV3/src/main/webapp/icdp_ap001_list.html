@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1">
+    <title>ICDP : Integrated City Data Platform</title>
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+	<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+	<script  src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="./js/script.js"></script>
+
+	<!--달력-->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+				<a href="./list_type02.html"><img src="./img/t_logo.png"></a>
+            </div>
+            <div class="member">
+                <span class="name"><span>도봉구청</span> 구봉도 계장</span>
+                <span class="logout"><a href="#"></a></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+		<section class="container">
+            <div class="left item">
+
+				<div class="sub menu">
+					<div class="sub_box" id="menu">
+						<ul class="subtitle">
+							Menu
+							<a href="#" class="btn_favorites favorites"></a>
+							<button class="menu_bar"></button>
+							<button class="menu_bar_close"></button>
+						</ul>
+						<ul class="submenu">
+							<li class="on">
+								<a href="#">시설정보관리</a>
+								<ul>
+									<li class="on"><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+									<li><a href="#">시설정보관리</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">품질관리</a>
+								<ul>
+									<li class="on"><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+									<li><a href="#">품질관리</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">시스템관리</a>
+								<ul>
+									<li class="on"><a href="#">화면관리</a></li>
+									<li><a href="#">메뉴관리</a></li>
+									<li><a href="#">코드관리</a></li>
+									<li><a href="#">메시지관리</a></li>
+									<li><a href="#">회사관리</a></li>
+									<li><a href="#">사용자관리</a></li>
+									<li><a href="#">권한그룹관리</a></li>
+									<li><a href="#">그룹별메뉴관리</a></li>
+									<li><a href="#">그룹별사용자관리</a></li>
+									<li><a href="#">공지사항관리</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="sub_box" id="favorites">
+						<ul class="subtitle">
+							Favorites
+							<a href="#" class="btn_menu menu"></a>
+							<button class="menu_bar"></button>
+							<button class="menu_bar_close"></button>
+						</ul>
+						<ul class="submenu">
+							<li class="on">
+								<a href="#">시설정보관리</a>
+							</li>
+							<li>
+								<a href="#">점검관리</a>
+							</li>
+							<li>
+								<a href="#">화면관리</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+            </div>
+
+            <div class="contents_box item">
+				<p class="title">측정 데이터 활용관리</p>
+
+				<ul class="search_box">
+					<li>
+						<span class="stl">구역(동)<span class="remark2"></span></span>
+						<span class="selectBox bottom">
+						  <button class="label">전체</button>
+						  <ul class="optionList">
+							<li class="optionItem">쌍문1동</li>
+							<li class="optionItem">도봉1동</li>
+						  </ul>
+						</span>
+					</li>
+					<li>
+						<button class="btn_search">Search</button>
+					</li>
+				</ul>
+
+				<ul class="contents">
+					<li class="view">
+						<div class="stitle">
+							<p class="tl">총 <strong>40</strong> 건</p>
+						</div>
+						
+	
+						<table class="table">
+							<colgroup>
+								<col style="width: ">
+								<col style="width: 250px">
+								<col style="width: 250px">
+								<col style="width: 250px">
+								<col style="width: 300px">
+							</colgroup>
+							<thead>
+								<tr>
+								<th>구역(동)</th>
+								<th>측정장치번호</th>
+								<th>측정소명</th>
+								<th>측정소구분</th>
+								<th>외부 공개 여부</th>
+								</tr>
+							</thead>
+						</table>
+						<div class="tbody">
+						<table class="table">
+							<colgroup>
+								<col style="width:">
+								<col style="width: 250px">
+								<col style="width: 250px">
+								<col style="width: 250px">
+								<col style="width: calc(300px - 17px)">
+							</colgroup>
+							<tbody>
+								<tr class="on">
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+								<tr>
+								<td>쌍문1동</td>
+								<td>A001</td>
+								<td>AAA</td>
+								<td>공사장</td>
+								<td>
+									<span class="radiobox mr15">
+									<label class="checkbox"><input type="radio" name="open" value="1" checked><span class="icon"></span></label> 공개
+									</span>
+									
+									<span class="radiobox">
+									<label class="checkbox"><input type="radio" name="open" value=""><span class="icon"></span></label> 비공개
+									</span>
+								</td>
+								</tr>
+							</tbody>
+						</table>
+						</div>
+
+					</li>
+				</ul>
+
+            </div>
+
+        </section>
+	</main>
+	<footer class="footer">
+		<div class="container">
+			Copyright(C) 2020 Dobong-Gu All Rights Reserved.
+		</div>
+	</footer>
+</body>
+</html>

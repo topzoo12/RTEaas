@@ -1,0 +1,16 @@
+webPonent GRID - Libraries License:
+	
+	# jquery (http://www.jquery.com/)
+	  License: MIT (https://jquery.org/license/)
+	  
+	# jquery.ui.touch-punch.min.js (http://touchpunch.furf.com/)
+	  License: Dual licensed under the MIT or GPL Version 2 licenses.
+
+	# underscore.js (http://underscorejs.org/)
+	  License: Underscore may be freely distributed under the MIT license.
+
+    # lz-string.js (Pieroxy <pieroxy@pieroxy.net>)
+      License : WTFPL Ver 2.0
+
+
+
