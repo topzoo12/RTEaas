@@ -287,7 +287,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 map.on('click', onMapClick);
-
+//
 map.on('zoomend', function() {
 /*     var zoomLevel = map.getZoom();
     console.log('Zoom level changed to:', zoomLevel);
