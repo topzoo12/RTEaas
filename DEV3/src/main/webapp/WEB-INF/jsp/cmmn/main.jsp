@@ -89,8 +89,6 @@
 							<div class="selectOpt">
 								<c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
 									<input type="checkbox" id="${cracklist.etc1}" class="crack" name="crack" value="${cracklist.etc2}" checked><label for="${cracklist.etc1}">
-									<%-- <fmt:message key="${cracklist.cdNm}" bundle="${bundle}"/> --%>
-
 									<c:choose>
 										<c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
 										<c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
@@ -110,8 +108,6 @@
 							<div class="selectOpt">
 								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
 									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-									<%-- <fmt:message key="${statuslist.cdNm}" bundle="${bundle}"/> --%>
-
 										<c:choose>
 											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
 											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
@@ -294,6 +290,9 @@ map.on('zoomend', function() {
     } else {
         console.log("Low zoom level, reset cluster behavior...");
     } */
+    markerIconCheck();
+    onMapClick(map);
+	map.closePopup();
 });
 
 
@@ -1015,6 +1014,7 @@ function detail(id, clusterChk){
 
 	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
 
+	markerIconCheck();
 	markerCluster.eachLayer(function(layer) {
 		if (layer.options.id === id) {
 			layer.setIcon(redIcon);
@@ -1221,7 +1221,7 @@ function onMapClick(e) {
 
 	if(searchOpt.style.display === 'block') {
 		searchOpt.style.display = 'none';
-	}
+	};
 
 	$("#info").hide();
 
