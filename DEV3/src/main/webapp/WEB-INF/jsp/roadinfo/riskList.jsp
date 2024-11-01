@@ -911,7 +911,6 @@
 		        return;
 		    }
 		};
-
 		document.querySelector('.gallery-thumb-swiper').addEventListener('transitionEnd', handleTransitionEnd);
  */
 		/////////
