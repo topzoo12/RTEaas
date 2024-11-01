@@ -53,7 +53,7 @@
 						~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2"readonly>
 						<button class="search_calender" id="search_calender"></button>
 					</span>
-					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
+					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/> 버튼</button>
 				</li>
 				<li>
 					<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
