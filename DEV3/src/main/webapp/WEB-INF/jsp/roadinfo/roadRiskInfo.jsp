@@ -90,8 +90,6 @@
 							<div class="selectOpt">
 								<c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
 									<input type="checkbox" id="${cracklist.etc1}" class="crack" name="crack" value="${cracklist.etc2}" checked><label for="${cracklist.etc1}">
-									<%-- <fmt:message key="${cracklist.cdNm}" bundle="${bundle}"/> --%>
-
 									<c:choose>
 										<c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
 										<c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
@@ -111,8 +109,6 @@
 							<div class="selectOpt">
 								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
 									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-									<%-- <fmt:message key="${statuslist.cdNm}" bundle="${bundle}"/> --%>
-
 										<c:choose>
 											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
 											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
@@ -256,6 +252,8 @@ var chkAreaCodeLv2 = '${authInfo.areaCodeLv2}';
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
 
+console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
+
 var allData = [];
 var markers = [];
 var markerList = [];
@@ -276,13 +274,10 @@ L.control.scale({
 }).addTo(map);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	//minZoom: 14,
-	//maxZoom: 19,
 	minZoom: '${authInfo.mapMinSize}',
 	maxZoom: '${authInfo.mapMaxSize}',
 	attribution: '© OpenStreetMap',
 	stylers:[{visibility:'off'}]
-    //stylers:[{visibility:'off'}]
 }).addTo(map);
 
 map.on('click', onMapClick);
@@ -296,6 +291,9 @@ map.on('zoomend', function() {
     } else {
         console.log("Low zoom level, reset cluster behavior...");
     } */
+    markerIconCheck();
+    onMapClick(map);
+	map.closePopup();
 });
 
 
@@ -475,7 +473,6 @@ $(".btn_infoWrap").click(function(){
         $('.infoWrap').addClass('off');
     	$('.infoDetailWrap').css('display', 'none');
     	$('.infoListWrap').css('display', 'none');
-    	//$(".infoListWrap p").text("")
     	$(".infoListWrap p").css('display', 'hidden');
     	$('.infoListWrapNoData').css('display', 'none');
 
@@ -506,7 +503,6 @@ $(".btn_infoWrap").click(function(){
         // 펼침
         $('.infoWrap').addClass('on');
         $('.infoListWrap').css('display', 'block');
-    	//$(".infoListWrap p").text("총  건")
     	if($('.infoListItem').length < 1) {
     		$('.infoListWrapNoData').css('display', 'block')
     	}
@@ -555,10 +551,8 @@ $('.infoList').on('scroll', function(){
 
 		for (var i = startNum; i < infoList.length; i++) {
 			if (i == (startNum + 10)) {
-				//console.log("멈추기")
 				break;
 			}else {
-				//console.log("더하기")
 				$(".infoList").append(infoList[i]);
 			}
 		}
@@ -957,6 +951,9 @@ function reSearch() {
 					var cluster = event.layer;
 					var childMarkers = cluster.getAllChildMarkers();
 
+					markerIconCheck();
+					onMapClick(map);
+
 					// 팝업 내용 생성
 					var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
 
@@ -979,7 +976,6 @@ function reSearch() {
 				infoList.push("<li><a class='infoListItem'>"
 						+ "<div class='info'><div class='tit'>"
 						+ "<span class='badge sm " + className + "'>" + name + "</span>"
-						//+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', ' " + deviceNm + "', '" + deviceId + "', '" + addrPoLocality + "', '" + cTime + "', '" + item.point['latitude'] + "', '" + item.point['longitude'] + "', 'Y')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
 						+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
 						+ "<ul class='infoContents'>"
 						+ "<li> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + "</li>"
@@ -1019,6 +1015,7 @@ function detail(id, clusterChk){
 
 	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
 
+	markerIconCheck();
 	markerCluster.eachLayer(function(layer) {
 		if (layer.options.id === id) {
 			layer.setIcon(redIcon);
@@ -1225,7 +1222,7 @@ function onMapClick(e) {
 
 	if(searchOpt.style.display === 'block') {
 		searchOpt.style.display = 'none';
-	}
+	};
 
 	$("#info").hide();
 
@@ -1367,12 +1364,9 @@ function setLevelList(level, id){
 
 	            node.innerHTML = html;
 
-
 			}
 
 		})
-
-
 
 	} else if(level == 2) {
 
@@ -1471,7 +1465,7 @@ function setLevelList(level, id){
 		var lat = $(this).data('lat');
 		var lng = $(this).data('lng');
 
-		if(!value)value='';
+		if(!value)value = '';
 		//tmpSelectBox.find(".label").data('code',value);
 		$(this).parent().parent().find(".label").data('code',value);
 		$(this).parent().parent().find(".label").data('lat',lat);
