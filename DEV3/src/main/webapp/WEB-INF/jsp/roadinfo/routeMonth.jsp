@@ -133,19 +133,13 @@
 		monthColorKeyValue.push({'code':'${monthColor.cdId}', 'codeName':'${monthColor.cdNm}', 'color':'${monthColor.etc1}', })
 	</c:forEach>
 
-	var potholeCnt;
-	var potholeListData;
-	var markerId = [];
-
-	markerOnOff = "";
-
 	var img_id;
 
 
 	markerList = [];
 	markersTemp = [];
 
-	testlines = [];
+	lineList = [];
 
 	window.initMap = function () {
 
@@ -237,396 +231,161 @@ $(document).ready(function() {
 
 	// swagger.js
 	//mapInfo(map);
-	ttt();
+	drawline();
 
-	map.on("moveend", function(){
+map.on("moveend", function(){
 
-		/* console.log(
-			"north_west:latitude : " + map.getBounds().getNorthWest().lat + " / longitude : " + map.getBounds().getNorthWest().lng + "\n" +
-			"north_east:latitude : " + map.getBounds().getNorthEast().lat + " / longitude : " + map.getBounds().getNorthEast().lng + "\n" +
-			"south_west:latitude : " + map.getBounds().getSouthWest().lat + " / longitude : " + map.getBounds().getSouthWest().lng + "\n" +
-			"south_east:latitude : " + map.getBounds().getSouthEast().lat + " / longitude : " + map.getBounds().getSouthEast().lng + "\n"
-		) */
-		/* console.log(
-			"north_west:latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
-			"north_east:latitude:" + (map.getBounds().getNorthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
-			"south_west:latitude:" + (map.getBounds().getSouthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
-			"south_east:latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-		) */
+	drawline();
 
-		reSearchYn = false;
+	map.closePopup();
 
-		//$('.infoList li').remove()
-		//$('.infoList div').remove()
-
-		//optionReset();
-		//const searchOpt = document.getElementById('re-search-container');
-
-		//if(searchOpt.style.display === 'block') {
-			//searchOpt.style.display = 'none';
-		//}
-
-		ttt();
-
-		map.closePopup();
-
-		//$('.infoDetailWrap').css('display', 'none')
-		//$('.infoListWrap').css('display', 'block')
-
-		//mapInfo(map);
-	})
+})
 
 
+function removeLine() {
+	map.removeLayer(firstpolyline);
+	map.removeLayer(map._layers);
+}
 
-	function removeLine() {
-
- 		map.removeLayer(firstpolyline)
- 		map.removeLayer(map._layers)
- 	}
-
-///////////////////// Level 매칭
-	function getLevelText(text) {
-
-		var result ='' ;
-		switch (text) {
-		  case '양호':
-			result = '<fmt:message key="양호" bundle="${bundle}"/>';
-		    break;
-
-		  case '주의':
-			result = '<fmt:message key="주의" bundle="${bundle}"/>';
-		    break;
-
-		  case '위험':
-			result = '<fmt:message key="위험" bundle="${bundle}"/>';
-			break;
-
-		  case '심각':
-			 result = '<fmt:message key="심각" bundle="${bundle}"/>';
-			 break;
-
-		}
-
-		return result;
-	}
-
-	//-----------------------------------------------------------------------------------------------------------------------
-	//-----------------------------------------------------------------------------------------------------------------------
-
-	var lines = []
+var lines = [];
 
 
 })
-function wayMarkerList(response , wayname) {
 
-
-	if ( $('.menu_bar_close').css('display') == 'block' ) {
-		$('.level_list').css('width', 'calc(100% - 400px)');
-    	$('.re-search-container').css('width', 'calc(100% - 400px)');
-	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-		$('.level_list').css('width', 'calc(100% - 180px)');
-    	$('.re-search-container').css('width', 'calc(100% - 180px)');
-	}
-
-	 $('.btn_infoWrap').removeClass("off");
-
-	markerList = [];
-	markerInRoute = [];
-
-	for ( var i = 0 ; i < response.data.length ; i++ ) {
-		if (response.data[i].way.name == wayname) {
-			console.log(response.data[i]);
-			markerInRoute.push(i);
-		}
-	}
-
-
-}
-
-
-
-
-	$(function() {
-		//날짜선택
-		$('#search_calender').daterangepicker({
-			"locale" : {
-				"format" : "YYYY-MM-DD",
-				"separator" : " - ",
-				"applyLabel" : "<fmt:message key="CONFIRM" bundle="${bundle}"/>",
-				"cancelLabel" : "<fmt:message key="CANCEL" bundle="${bundle}"/>",
-				"fromLabel" : "From",
-				"toLabel" : "~",
-				"customRangeLabel" : "Custom",
-				"weekLabel" : "W",
-				"daysOfWeek" : [
-						"<fmt:message key="SUNDAY" bundle="${bundle}"/>",
-						"<fmt:message key="MONDAY" bundle="${bundle}"/>",
-						"<fmt:message key="TUESDAY" bundle="${bundle}"/>",
-						"<fmt:message key="WEDNESDAY" bundle="${bundle}"/>",
-						"<fmt:message key="THURSDAY" bundle="${bundle}"/>",
-						"<fmt:message key="FRIDAY" bundle="${bundle}"/>",
-						"<fmt:message key="SATURDAY" bundle="${bundle}"/>" ],
-				"monthNames" : [
-						"<fmt:message key="JANUARY" bundle="${bundle}"/>",
-						"<fmt:message key="FEBRUARY" bundle="${bundle}"/>",
-						"<fmt:message key="MARCH" bundle="${bundle}"/>",
-						"<fmt:message key="APRIL" bundle="${bundle}"/>",
-						"<fmt:message key="MAY" bundle="${bundle}"/>",
-						"<fmt:message key="JUNE" bundle="${bundle}"/>",
-						"<fmt:message key="JULY" bundle="${bundle}"/>",
-						"<fmt:message key="AUGUST" bundle="${bundle}"/>",
-						"<fmt:message key="SEPTEMBER" bundle="${bundle}"/>",
-						"<fmt:message key="OCTOBER" bundle="${bundle}"/>",
-						"<fmt:message key="NOVEMBER" bundle="${bundle}"/>",
-						"<fmt:message key="DECEMBER" bundle="${bundle}"/>" ],
-				"firstDay" : 0
-			}
-		}, function(start, end, label) {
-			$("#fromDt").val(start.format('YYYY-MM-DD'));
-			$("#toDt").val(end.format('YYYY-MM-DD'));
-
-		});
-	});
-
-
-
-	function abc() {
-
-		/**************************************************************************************************************************************/
-		//north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
-		//north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
-		//south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
-		//south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng - 0.0025),
-
-		//var dd1 = [map.getBounds().getNorthWest().lat-0.0125, map.getBounds().getNorthEast().lat-0.0125, map.getBounds().getSouthWest().lat+0.0125, map.getBounds().getSouthEast().lat-0.0125, map.getBounds().getNorthWest().lat-0.0125];
-		//var dd2 = [map.getBounds().getNorthWest().lng+0.0125, map.getBounds().getNorthEast().lng-0.0125, map.getBounds().getSouthWest().lng+0.0125, map.getBounds().getSouthEast().lng+0.0125, map.getBounds().getNorthWest().lng+0.0125];
-
-		var dd1 = [map.getBounds().getNorthWest().lat, map.getBounds().getNorthEast().lat, map.getBounds().getSouthEast().lat, map.getBounds().getSouthWest().lat, map.getBounds().getNorthWest().lat];
-		var dd2 = [map.getBounds().getNorthWest().lng, map.getBounds().getNorthEast().lng, map.getBounds().getSouthEast().lng, map.getBounds().getSouthWest().lng, map.getBounds().getNorthWest().lng];
-
-		var cc1 = [map.getBounds().getNorthWest().lat+0.0025, map.getBounds().getNorthEast().lat+0.0025, map.getBounds().getSouthEast().lat-0.0025, map.getBounds().getSouthWest().lat-0.0025, map.getBounds().getNorthWest().lat+0.0025];
-		var cc2 = [map.getBounds().getNorthWest().lng-0.0025, map.getBounds().getNorthEast().lng+0.0025, map.getBounds().getSouthEast().lng+0.0025, map.getBounds().getSouthWest().lng-0.0025, map.getBounds().getNorthWest().lng-0.0025];
-
-		var tlines = []
-
-		for (var a = 0 ; a < dd1.length-1 ; a++ ) {
-
-			var pointA = new L.LatLng(dd1[a], dd2[a]);
-			var pointB = new L.LatLng(dd1[a+1], dd2[a+1]);
-
-			var pointList = [ pointA, pointB ];
-
-			var riskLvColor = ""
-
-			var linesize = 13
-
-			var firstpolyline11 = new L.Polyline(pointList, {
-			    //color: 'red',
-			    color: 'red',
-			    //weight: 15,
-			    weight: linesize,
-			    //opacity: 0.1,
-			    smoothFactor: 1
-
-			    })//.on('click', function(e) {
-			    	//alert('Polyline clicked at ' + e.latlng);
-		            // You can also handle other actions here
-		            //wayMarkerList(response ,wayname)
-
-		        //});;
-
-			map.addLayer(firstpolyline11);
-
-			tlines.push(firstpolyline11);
-		}
-
-		for (var aa = 0 ; aa < cc1.length-1 ; aa++ ) {
-
-			var pointA = new L.LatLng(cc1[aa], cc2[aa]);
-			var pointB = new L.LatLng(cc1[aa+1], cc2[aa+1]);
-
-			var pointList = [ pointA, pointB ];
-
-			var riskLvColor = ""
-
-			var linesize = 13
-
-			var firstpolyline22 = new L.Polyline(pointList, {
-			    //color: 'red',
-			    color: 'blue',
-			    //weight: 15,
-			    weight: linesize,
-			    //opacity: 0.1,
-			    smoothFactor: 1
-
-			    })//.on('click', function(e) {
-			    	//alert('Polyline clicked at ' + e.latlng);
-		            // You can also handle other actions here
-		            //wayMarkerList(response ,wayname)
-
-		        //});;
-
-			map.addLayer(firstpolyline22);
-
-			tlines.push(firstpolyline22);
-		}
-
-	/**************************************************************************************************************************************/
-	}
-
-	function ttt() {
-
-		//console.log("=========================================================================================================")
-		//console.log($("#searchYearMonth").data('code'))
-		//console.log("=========================================================================================================")
-
-
-		testlines.forEach(function(polyline) {
-	        polyline.remove();  // 각 polyline 객체를 맵에서 제거
-	    });
-		//map.remove(map)
-		//map.removeLayer(map._layers)
-
-
-		$.ajax({
-			type: "GET",
-			//url: "${authInfo.restApiUrl}/detected-road" ,
-			url: "${authInfo.restApiUrl}/detected-road-by-date",
-			//url: "http://localhost:8081/detected-road",
-			data: {
-				on_way:false,
-				north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
-				north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
-				south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
-				south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-				searchMonth:$("#searchYearMonth").data('code'),
-				region:"${authInfo.cdNa}"
-			},
-			success: function(resp) {
-				datas = resp.data
-	            console.log('탐지도로 데이터 확인--->>', datas);
-
-				// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
-				var date1 = new Date();
-				//$('#toDt').val(fnDateFormat(date1, 'select'))
-				var date2 = new Date(date1.setDate(date1.getDate() - 30));
-				// $('#fromDt').val(dateFormat(date2, 'select'))
-				//$('#fromDt').val('2023-10-01')
-
-				var now11 = new Date();
-				//console.log("현재 : ", now11);
-
-				var oneMonthAgo = new Date(now11.setMonth(now11.getMonth() - 1)); // 한달
-				var twoMonthAgo = new Date(now11.setMonth(now11.getMonth() - 2)); // 두달
-				var threeMonthAgo = new Date(now11.setMonth(now11.getMonth() - 3)); // 세달
-				var fourMonthAgo = new Date(now11.setMonth(now11.getMonth() - 4)); // 네달
-
-				color = 'gray';
-
-				for (var i = 0; i < datas.length; i++) {
-
-					const givenDate = new Date(datas[i].detectedRoadDate);
-
-					// 현재 날짜
-					const now = new Date();
-
-					// 두 날짜 간의 차이 계산 (밀리초 차이 -> 일수로 변환)
-					const diffInMilliseconds = now - givenDate;
-					const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
-
-					// 30일, 30~60일, 60~90일, 그 이상으로 구분
-					if (diffInDays <= 30) {
-					    // color = 'green';
-					    color = (monthColorKeyValue.find(item => item.code === 'one')).color;
-					} else if (diffInDays > 30 && diffInDays <= 60) {
-					    // color = 'blue';
-					    color = (monthColorKeyValue.find(item => item.code === 'two')).color;
-					} else if (diffInDays > 60 && diffInDays <= 90) {
-					    // color = 'red';
-					    color = (monthColorKeyValue.find(item => item.code === 'thre')).color;
-					} else {
-					    // color = 'gray';
-					    color = (monthColorKeyValue.find(item => item.code === 'else')).color;
-					}
-
-					//console.log(`${givenDate}는 현재와 ${diffInDays}일 차이입니다.`);
-
-					/*********************************************************************************************************************/
-					/* if (datas[i].detectedRoadDate == "2024-01-20") {
-						//detectedRoadDate:"2024-01-20"
-						color = 'green';
-					} else if ( datas[i].detectedRoadDate == "2024-01-21" ) {
-						color = 'blue';
-					} else if ( datas[i].detectedRoadDate == "2024-01-22" ) {
-						color = 'red';
-					} else if ( datas[i].detectedRoadDate == "2024-01-23" ) {
-						color = 'skyblue';
-					} else {
-						color = 'gray';
-					} */
-
-					var positionDatas = datas[i].detectedRoadInfo;
-
-					for (var x = 1; x < positionDatas.length; x++) {
-
-						var pointA = new L.LatLng(positionDatas[x-1].latitude, positionDatas[x-1].longitude);
-						var pointB = new L.LatLng(positionDatas[x].latitude, positionDatas[x].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'red',
-						    //color: 'gray',
-						    color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })//.on('click', function(e) {
-					            //wayMarkerList(response ,wayname)
-
-					        //});;
-
-				        var pointATime = new Date( positionDatas[x-1].timestamp );
-				        var pointBTime = new Date( positionDatas[x].timestamp );
-
-				        //var date2 = new Date(date1.setDate(date1.getDate() - 30));
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-				        	//console.log( pointATime + " / " + pointBTime )
-				        	//console.log( (pointBTime - pointATime) / 1000 )
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-						testlines.push(firstpolyline);
-					}
+function drawline() {
+
+	//console.log($("#searchYearMonth").data('code'))
+
+	lineList.forEach(function(polyline) {
+        polyline.remove();  // 각 polyline 객체를 맵에서 제거
+    });
+
+	$.ajax({
+		type: "GET",
+		//url: "${authInfo.restApiUrl}/detected-road" ,
+		url: "${authInfo.restApiUrl}/detected-road-by-date",
+		//url: "http://localhost:8081/detected-road",
+		data: {
+			on_way:false,
+			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+			south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+			searchMonth:$("#searchYearMonth").data('code'),
+			region:"${authInfo.cdNa}"
+		},
+		success: function(resp) {
+			datas = resp.data
+            console.log('탐지도로 데이터 확인--->>', datas);
+
+			// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
+			var date1 = new Date();
+			//$('#toDt').val(fnDateFormat(date1, 'select'))
+			var date2 = new Date(date1.setDate(date1.getDate() - 30));
+			// $('#fromDt').val(dateFormat(date2, 'select'))
+			//$('#fromDt').val('2023-10-01')
+
+			var nowDate = new Date();
+
+			var oneMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 1)); // 한달
+			var twoMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 2)); // 두달
+			var threeMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 3)); // 세달
+			var fourMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 4)); // 네달
+
+			color = 'gray';
+
+			for (var i = 0; i < datas.length; i++) {
+
+				const givenDate = new Date(datas[i].detectedRoadDate);
+
+				// 현재 날짜
+				const now = new Date();
+
+				// 두 날짜 간의 차이 계산 (밀리초 차이 -> 일수로 변환)
+				const diffInMilliseconds = now - givenDate;
+				const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
+
+				// 30일, 30~60일, 60~90일, 그 이상으로 구분
+				if (diffInDays <= 30) {
+				    color = (monthColorKeyValue.find(item => item.code === 'one')).color;
+				} else if (diffInDays > 30 && diffInDays <= 60) {
+				    color = (monthColorKeyValue.find(item => item.code === 'two')).color;
+				} else if (diffInDays > 60 && diffInDays <= 90) {
+				    color = (monthColorKeyValue.find(item => item.code === 'thre')).color;
+				} else {
+				    color = (monthColorKeyValue.find(item => item.code === 'else')).color;
 				}
 
-				//console.log("====================================================================================================")
-				//console.log("====================================================================================================")
-			},
-			error: function(request,status,error){
+				//console.log(`${givenDate}는 현재와 ${diffInDays}일 차이입니다.`);
 
-				//console.log("request.status = " + request.status)dddddddddddddddddddddddddd
+				/*********************************************************************************************************************/
+				/* if (datas[i].detectedRoadDate == "2024-01-20") {
+					//detectedRoadDate:"2024-01-20"
+					color = 'green';
+				} else if ( datas[i].detectedRoadDate == "2024-01-21" ) {
+					color = 'blue';
+				} else if ( datas[i].detectedRoadDate == "2024-01-22" ) {
+					color = 'red';
+				} else if ( datas[i].detectedRoadDate == "2024-01-23" ) {
+					color = 'skyblue';
+				} else {
+					color = 'gray';
+				} */
 
-			},
-			beforeSend:function(){
-				$('#circularG').css('display','block');
-			},
-			complete : function(data) {
-				//  실패했어도 완료가 되었을 때 처리
-				$('#circularG').css('display','none');
+				var positionDatas = datas[i].detectedRoadInfo;
 
+				for (var x = 1; x < positionDatas.length; x++) {
+
+					var pointA = new L.LatLng(positionDatas[x-1].latitude, positionDatas[x-1].longitude);
+					var pointB = new L.LatLng(positionDatas[x].latitude, positionDatas[x].longitude);
+
+					var pointList = [ pointA, pointB ];
+
+					var linesize = map.getZoom()-7
+
+					var firstpolyline = new L.Polyline(pointList, {
+					    color: color,
+					    //weight: 15,
+					    weight: linesize,
+					    //opacity: 0.1,
+					    smoothFactor: 1
+
+					    })
+
+			        var pointATime = new Date( positionDatas[x-1].timestamp );
+			        var pointBTime = new Date( positionDatas[x].timestamp );
+
+			        //var date2 = new Date(date1.setDate(date1.getDate() - 30));
+
+			        var BAsecond = (pointBTime - pointATime) / 1000;
+
+			        	//console.log( pointATime + " / " + pointBTime )
+			        	//console.log( (pointBTime - pointATime) / 1000 )
+
+					if (BAsecond < 10) {
+				        map.addLayer(firstpolyline);
+					}
+
+					lineList.push(firstpolyline);
+				}
 			}
-		})
-	}
+
+		},
+		error: function(request,status,error){
+
+			//console.log("request.status = " + request.status);
+
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block');
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none');
+
+		}
+	})
+}
 
 </script>
 <script>
