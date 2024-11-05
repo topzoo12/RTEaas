@@ -848,6 +848,9 @@ function reSearch() {
 	$('.infoDetailWrap').css('display', 'none');
 	$('.infoListWrap').css('display', 'block');
 
+	$('#sort').data('data-code', 'desc');
+	$('#sort').text("최신순");
+
 	$('.infoList li').remove();
 
 
