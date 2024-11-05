@@ -292,8 +292,11 @@ map.on('zoomend', function() {
     } else {
         console.log("Low zoom level, reset cluster behavior...");
     } */
+    $('.infoDetailWrap').css('display', 'none');
+	$('.infoListWrap').css('display', 'block');
+
     markerIconCheck();
-    onMapClick(map);
+
 	map.closePopup();
 });
 
@@ -849,11 +852,7 @@ function reSearch() {
 	$('.infoDetailWrap').css('display', 'none');
 	$('.infoListWrap').css('display', 'block');
 
-	$('#sort').data('data-code', 'desc');
-	$('#sort').text("최신순");
-
 	$('.infoList li').remove();
-
 
 	for ( var i = 0; i < allData.length; i++ ) {
 		var boolRisk = false;
@@ -1011,7 +1010,11 @@ function reSearch() {
 		$('.infoListWrapNoData').css('display', 'none');
 	}
 
-	$(".infoListWrap p").text("<fmt:message key="TOTAL" bundle="${bundle}"/> "+ infoList.length + " <fmt:message key="COUNT2" bundle="${bundle}"/>")
+	$(".infoListWrap p").text("<fmt:message key="TOTAL" bundle="${bundle}"/> "+ infoList.length + " <fmt:message key="COUNT2" bundle="${bundle}"/>");
+
+	if ($('#sort').data('code') == 'asc') {
+		$('#sortchk .sorting').click();
+	}
 
 }
 
@@ -1064,6 +1067,8 @@ function detail(id, clusterChk){
 		$('.level_list').css('width', 'calc(100% - 180px)');
     	$('.re-search-container').css('width', 'calc(100% - 180px)');
 	} */
+
+	$('.btn_infoWrap').removeClass("off");
 
 	$(".infoWrap").addClass("on");
  	$(".infoListWrap p").css('display', 'block');
@@ -1129,10 +1134,6 @@ function detail(id, clusterChk){
  */
 
 }
-
-
-
-
 
 function statusName(code) {
 	var statusNameByCdna = getCdNa('${authInfo.changedCdNa}', '${authInfo.cdNa}');
@@ -1236,6 +1237,7 @@ function onMapClick(e) {
 
 	if ( $('.infoDetailWrap').css('display') == 'block' ) {
 		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
 	}
 }
 
