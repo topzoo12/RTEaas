@@ -197,7 +197,7 @@
             <!-- e:상세설명 -->
 
             <!-- 검색목록 -->
-            <div class="infoListWrap" style="overflow-y:scroll;">
+            <div class="infoListWrap" style="overflow-y:auto;">
                 <div class="infoListTop">
                     <h2 class="hidden">검색목록</h2>
                     <div class="array-container">

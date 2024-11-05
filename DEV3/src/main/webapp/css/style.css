@@ -1,4 +1,4 @@
-@charset "UTF-8";
+\@charset "UTF-8";
 
 .riskInfopopup {
 	position: absolute;
@@ -1479,7 +1479,7 @@ input:checked + .slider:before {
 .infoListWrap ul.infoList{
 	margin: 0 0 0 24px;
 	border-top: 1px solid var(--light-border);
-	height: calc(100% - 72px);
+	height: calc(100% - 64px);
 	overflow-y: auto;
 }
 *::-webkit-scrollbar {
