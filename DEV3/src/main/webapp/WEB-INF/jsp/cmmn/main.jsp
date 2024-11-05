@@ -56,7 +56,7 @@
 					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
 				</li>
 				<li>
-					<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/>11</button>
+					<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 				</li>
 			</ul>
 			<!-- 결과내재검색패널 -->
