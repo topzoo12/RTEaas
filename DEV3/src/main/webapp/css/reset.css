@@ -628,6 +628,7 @@ input:-ms-input-placeholder {
 #btn_re-search_move {
 	position: absolute;
 	display: inline-block;
+	width: 120px;
 	height: 40px;
 	left: -130px;
 	top: 12px;

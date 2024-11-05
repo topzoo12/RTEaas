@@ -270,18 +270,18 @@ function markerIconCheck() {
 						+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addr_po_locality + " (" + lat + ", " + lng + ")<br>"
 						+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
 
-		var txtposition = 0.000030;
+		/* var txtposition = 0.000030;
 		var max = map.getMaxZoom()+1;
 		var zoom = map.getZoom();
 		var no = 2;
 
 		for (var i=0; i<(max-zoom); i++) {
 			txtposition = txtposition * no;
-		}
+		} */
 
 		//lat = Number(lat) + Number(0.00004)
-		lat = Number(lat) + Number(txtposition)
-		lng = Number(lng)
+		lat = Number(lat);
+		lng = Number(lng);
 
 		var position = [lat, lng];
 
@@ -1089,17 +1089,17 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 						+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addr_po_locality + " (" + lat + ", " + lng + ")<br>"
 						+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
 
-		var txtposition = 0.000030;
+/* 		var txtposition = 0.000030;
 		var max = map.getMaxZoom()+1;
 		var zoom = map.getZoom();
 		var no = 2;
 
 		for (var i=0; i<(max-zoom); i++) {
 			txtposition = txtposition * no;
-		}
+		} */
 
 		//var lat = Number(lat) + Number(0.00004)
-		var lat = Number(lat) + Number(txtposition)
+		var lat = Number(lat)// + Number(txtposition)
 		var lng = Number(lng)
 
 		var position = [lat, lng];
