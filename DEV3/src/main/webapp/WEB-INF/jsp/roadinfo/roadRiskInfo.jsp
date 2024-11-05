@@ -28,7 +28,7 @@
 			<!-- ******************************************************************************************************************* -->
 			<!-- Level List 부분 start -->
 			<!-- ******************************************************************************************************************* -->
-			<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px; width: calc(100% - 400px);">
+			<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px;">
 				<li>
 					<span class="selectBox resp bottom" id="msgdivCd_span">
 						<button class="label" id="level1" data-code="" data-lat="" data-lng="">Level1</button>
@@ -56,9 +56,9 @@
 					</span>
 					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
 				</li>
-				<li>
+				<%-- <li>
 					<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-				</li>
+				</li> --%>
 			</ul>
 			<!-- 결과내재검색패널 -->
 			<div class="re-search-container" id="re-search-container" style="display: none; width: calc(100% - 400px);">
@@ -147,6 +147,7 @@
 
 	</div>
 	<div class="infoWrap on">
+		<button id="btn_re-search_move" class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 		<button type="button" class="btn_infoWrap"></button>
             <!-- 상세설명 -->
             <div class="infoDetailWrap" style="display: none;">
@@ -198,7 +199,7 @@
             <!-- e:상세설명 -->
 
             <!-- 검색목록 -->
-            <div class="infoListWrap" style="overflow-y:scroll;">
+            <div class="infoListWrap" style="overflow-y:auto;">
                 <div class="infoListTop">
                     <h2 class="hidden">검색목록</h2>
                     <div class="array-container">
@@ -476,13 +477,13 @@ $(".btn_infoWrap").click(function(){
     	$(".infoListWrap p").css('display', 'hidden');
     	$('.infoListWrapNoData').css('display', 'none');
 
-		if ( $('.menu_bar_close').css('display') == 'block' ) {
+		/* if ( $('.menu_bar_close').css('display') == 'block' ) {
 			$('.level_list').css('width', 'calc(100% - 40px)');
-        	$('.re-search-container').css('width', 'calc(100% - 40px)');
+        	//$('.re-search-container').css('width', 'calc(100% - 40px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
 			$('.level_list').css('width', 'calc(100% - 40px)');
-        	$('.re-search-container').css('width', 'calc(100% - 40px)');
-		}
+        	//$('.re-search-container').css('width', 'calc(100% - 40px)');
+		} */
 
         $('.btn_infoWrap').addClass("off");
 
@@ -490,13 +491,13 @@ $(".btn_infoWrap").click(function(){
     	markerIconCheck();
     } else{
 
-		if ( $('.menu_bar_close').css('display') == 'block' ) {
+ 		/* if ( $('.menu_bar_close').css('display') == 'block' ) {
 			$('.level_list').css('width', 'calc(100% - 400px)');
-        	$('.re-search-container').css('width', 'calc(100% - 400px)');
+        	//$('.re-search-container').css('width', 'calc(100% - 400px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
 			$('.level_list').css('width', 'calc(100% - 180px)');
-        	$('.re-search-container').css('width', 'calc(100% - 180px)');
-		}
+        	//$('.re-search-container').css('width', 'calc(100% - 180px)');
+		} */
 
         $('.btn_infoWrap').removeClass("off");
 
@@ -516,13 +517,13 @@ $(".btn_infoWrap").click(function(){
 // 좌측 메뉴바 동작
 $(".menu_bar_close").click(function(){
 
-	if ( $('.infoListWrap').css('display') == 'block' ) {
+/* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1485px');
         $('.re-search-container').css('width', '1485px');
 	} else if ( $('.infoListWrap').css('display') == 'none' ) {
 		$('.level_list').css('width', '1845px');
         $('.re-search-container').css('width', '1845px');
-	}
+	} */
 
 });
 
@@ -530,13 +531,13 @@ $(".menu_bar_close").click(function(){
 // 좌측 메뉴바 동작
 $(".menu_bar").click(function(){
 
-	if ( $('.infoListWrap').css('display') == 'block' ) {
+/* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1285px');
         $('.re-search-container').css('width', '1285px');
 	} else if ( $('.infoListWrap').css('display') == 'none' ) {
 		$('.level_list').css('width', '1645px');
         $('.re-search-container').css('width', '1645px');
-	}
+	} */
 });
 
 $('.infoList').on('scroll', function(){
@@ -1054,7 +1055,7 @@ function detail(id, clusterChk){
 			.openOn(map);
 	}
 
-    if ( $('.menu_bar_close').css('display') == 'block' ) {
+/*     if ( $('.menu_bar_close').css('display') == 'block' ) {
 		$('.level_list').css('width', 'calc(100% - 400px)');
     	$('.re-search-container').css('width', 'calc(100% - 400px)');
     	$('.btn_infoWrap').removeClass("off");
@@ -1062,7 +1063,7 @@ function detail(id, clusterChk){
 	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
 		$('.level_list').css('width', 'calc(100% - 180px)');
     	$('.re-search-container').css('width', 'calc(100% - 180px)');
-	}
+	} */
 
 	$(".infoWrap").addClass("on");
  	$(".infoListWrap p").css('display', 'block');
