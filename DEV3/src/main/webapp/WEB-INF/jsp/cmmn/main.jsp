@@ -519,6 +519,7 @@ $(".btn_infoWrap").click(function(){
 // 좌측 메뉴바 동작
 $(".menu_bar_close").click(function(){
 
+	map.invalidateSize();
 /* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1485px');
         $('.re-search-container').css('width', '1485px');
