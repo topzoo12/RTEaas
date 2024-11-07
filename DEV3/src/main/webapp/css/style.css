@@ -1007,7 +1007,7 @@ input:checked + .slider:before {
 	justify-content: space-between;
 	font-size: 1.2rem;
 	margin-top: 24px;
-	z-index: 100;
+	/* z-index: 100; */
 	overflow: hidden;
 }
 
