@@ -292,7 +292,7 @@ map.on('zoomend', function() {
         console.log("Low zoom level, reset cluster behavior...");
     } */
     $('.infoDetailWrap').css('display', 'none');
-	$('.infoListWrap').css('display', 'block');
+	$('.infoListWrap').css('display', 'none');
 
     markerIconCheck();
 
@@ -356,6 +356,11 @@ var markerCluster = L.markerClusterGroup({
 //검색버튼 클릭 이벤트
 $('.btn_search').on("click", function(){
 
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	}
+	//btn_infoWrap
+	//$(".btn_infoWrap").click();
 	map.eachLayer(function (layer) {
 	    if (!(layer instanceof L.TileLayer)) {
 	        map.removeLayer(layer);
@@ -479,13 +484,13 @@ $(".btn_infoWrap").click(function(){
     	$(".infoListWrap p").css('display', 'hidden');
     	$('.infoListWrapNoData').css('display', 'none');
 
-		/* if ( $('.menu_bar_close').css('display') == 'block' ) {
-			$('.level_list').css('width', 'calc(100% - 40px)');
-        	//$('.re-search-container').css('width', 'calc(100% - 40px)');
+		if ( $('.menu_bar_close').css('display') == 'block' ) {
+			//$('.level_list').css('width', 'calc(100% - 40px)');
+        	$('.re-search-container').css('width', 'calc(100% - 40px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-			$('.level_list').css('width', 'calc(100% - 40px)');
-        	//$('.re-search-container').css('width', 'calc(100% - 40px)');
-		} */
+			//$('.level_list').css('width', 'calc(100% - 40px)');
+        	$('.re-search-container').css('width', 'calc(100% - 40px)');
+		}
 
         $('.btn_infoWrap').addClass("off");
 
@@ -493,13 +498,13 @@ $(".btn_infoWrap").click(function(){
     	markerIconCheck();
     } else{
 
- 		/* if ( $('.menu_bar_close').css('display') == 'block' ) {
-			$('.level_list').css('width', 'calc(100% - 400px)');
-        	//$('.re-search-container').css('width', 'calc(100% - 400px)');
+ 		if ( $('.menu_bar_close').css('display') == 'block' ) {
+			//$('.level_list').css('width', 'calc(100% - 400px)');
+        	$('.re-search-container').css('width', 'calc(100% - 400px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-			$('.level_list').css('width', 'calc(100% - 180px)');
-        	//$('.re-search-container').css('width', 'calc(100% - 180px)');
-		} */
+			//$('.level_list').css('width', 'calc(100% - 180px)');
+        	$('.re-search-container').css('width', 'calc(100% - 400px)');
+		}
 
         $('.btn_infoWrap').removeClass("off");
 
@@ -519,6 +524,9 @@ $(".btn_infoWrap").click(function(){
 // 좌측 메뉴바 동작
 $(".menu_bar_close").click(function(){
 
+	 //sleep(300);
+	//map.invalidateSize();
+	setTimeout(() => map.invalidateSize(), 5000);
 /* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1485px');
         $('.re-search-container').css('width', '1485px');
@@ -1267,7 +1275,7 @@ function onMarkerClick(e) {
 
 	// 현재 클릭된 마커를 추적
     //activeMarker = this;
-    detail(e.target.options.id, 'N')
+    detail(e.target.options.id, 'N');
 
 	/* detail(e.target.options.id
 			, e.target.options.deviceName
