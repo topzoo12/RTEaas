@@ -77,7 +77,7 @@ $(function() {
 	        $(".menu_bar_close").css("display", "none");
 	        $(".menu_bar").css("display", "block");
 	        $(".sub .submenu").css("display", "none");
-	        $(".main .container .contents_box.contents_layout").removeClass("on").css("width", "calc(100% - 30px)");
+	        $(".main .container .contents_box.contents_layout").removeClass("on").css("width", "calc(100% - 45px)");
 
 	        // 마지막으로 열린 메뉴 항목을 저장
 	        lastActiveMenu = $(".submenu > li.on").get(0);
