@@ -1078,15 +1078,13 @@ function detail(id, clusterChk){
 			.openOn(map);
 	}
 
-/*     if ( $('.menu_bar_close').css('display') == 'block' ) {
-		$('.level_list').css('width', 'calc(100% - 400px)');
+	if ( $('.menu_bar_close').css('display') == 'block' ) {
     	$('.re-search-container').css('width', 'calc(100% - 400px)');
     	$('.btn_infoWrap').removeClass("off");
     	$('.btn_infoWrap').addClass("on");
 	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-		$('.level_list').css('width', 'calc(100% - 180px)');
-    	$('.re-search-container').css('width', 'calc(100% - 180px)');
-	} */
+    	$('.re-search-container').css('width', 'calc(100% - 400px)');
+	}
 
 	$('.btn_infoWrap').removeClass("off");
 
