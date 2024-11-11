@@ -291,8 +291,14 @@ map.on('zoomend', function() {
     } else {
         console.log("Low zoom level, reset cluster behavior...");
     } */
-    $('.infoDetailWrap').css('display', 'none');
-	$('.infoListWrap').css('display', 'none');
+    //$('.infoDetailWrap').css('display', 'none');
+	//$('.infoListWrap').css('display', 'block');
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	} else if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "block") {
+		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
+	}
 
     markerIconCheck();
 
@@ -823,6 +829,13 @@ function mapClosePopup() {
 
 function reSearch() {
 
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	} else if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "block") {
+		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
+	}
+
 	console.log(allData);
 	sortDataList = [];
 	infoList = [];
@@ -980,7 +993,7 @@ function reSearch() {
 
 					var popupLatLng = cluster.getLatLng();
 
-					var popup = L.popup().setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+					popup = L.popup().setLatLng(popupLatLng).setContent(popupContent).openOn(map);
 				});
 
 				infoList.push("<li><a class='infoListItem'>"
@@ -1065,15 +1078,13 @@ function detail(id, clusterChk){
 			.openOn(map);
 	}
 
-/*     if ( $('.menu_bar_close').css('display') == 'block' ) {
-		$('.level_list').css('width', 'calc(100% - 400px)');
+	if ( $('.menu_bar_close').css('display') == 'block' ) {
     	$('.re-search-container').css('width', 'calc(100% - 400px)');
     	$('.btn_infoWrap').removeClass("off");
     	$('.btn_infoWrap').addClass("on");
 	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-		$('.level_list').css('width', 'calc(100% - 180px)');
-    	$('.re-search-container').css('width', 'calc(100% - 180px)');
-	} */
+    	$('.re-search-container').css('width', 'calc(100% - 400px)');
+	}
 
 	$('.btn_infoWrap').removeClass("off");
 
