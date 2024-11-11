@@ -147,39 +147,129 @@
    <div id="circularG_8" class="circularG map"></div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLlGOOgY5Y88zXjRQq_gIHJabQI5eXG1U&callback=initMap"></script>
 <script>
 
-redIconId = "";
+var potholeCnt;
+var potholeListData;
+var img_id;
 
-redIcon = L.icon({
-	//iconUrl: '/img/marker_1.png',
+let activeMarker = null;
+let searchLv;
+
+var deviceIdList = "";
+var markerOnOff = "";
+
+var markers = [];
+
+var lines = [];
+var markerId = [];
+
+var markerList = [];
+var markersTemp = [];
+
+var testlines = [];
+
+var allData = [];
+
+window.initMap = function () {
+
+};
+
+var popup = L.popup({autoPan:false});
+
+
+old_id = "";
+
+map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 12);
+
+L.control.scale({
+	imperial: true, metric: true
+}).addTo(map);
+
+//L.tileLayer('https://mt0.google.com/vt/lyrs=m&h1=kr{z}&x={x}&y={y}&z={z}', {
+//L.tileLayer('https://tiles.osm.kr/hot/{z}/{x}/{y}.png', {
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	minZoom: '${authInfo.mapMinSize}',
+	maxZoom: '${authInfo.mapMaxSize}',
+	attribution: '© OpenStreetMap',
+	stylers:[{visibility:'off'}]
+}).addTo(map);
+
+var redIcon = L.icon({
 	iconUrl: '/img/pin_select.png',
-	//iconUrl: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-
-	//iconSize:     [38, 42], 	// size of the icon
 	iconSize:     [32, 32], 	// size of the icon
-	//iconAnchor:   [0, 42], 	// point of the icon which will correspond to marker's location
 	iconAnchor:   [16, 32], 	// point of the icon which will correspond to marker's location
 });
 
-blueIcon = L.icon({
-	//iconUrl: '/img/marker.png',
+var blueIcon = L.icon({
 	iconUrl: '/img/pin_default.png',
-	//iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-
-	//shadowUrl: 'leaf-shadow.png',
-	//markerColor: 'red'
-
-	//iconSize:     [38, 42], 	// size of the icon
 	iconSize:     [32, 32], 	// size of the icon
-	//shadowSize:   [50, 64], 	// size of the shadow
-	//iconAnchor:   [13, 42], 	// point of the icon which will correspond to marker's location
 	iconAnchor:   [16, 32], 	// point of the icon which will correspond to marker's location
-	//shadowAnchor: [4, 62],  	// the same for the shadow
-	//popupAnchor:  [-30, -76] 	// point from which the popup should open relative to the iconAnchor
 });
+
+var markerCluster = L.markerClusterGroup({
+	disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
+	maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
+	iconCreateFunction: function(cluster) {
+		var count = cluster.getChildCount();
+		return L.divIcon({
+			html: '<div>' + count + '</div>',
+			className: 'mycluster',
+			iconSize: L.point(40, 40)
+		});
+	},
+	spiderfyOnMaxZoom: false,
+	zoomToBoundsOnClick: false,
+	showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+});
+
+map.on('click', onMapClick);
+
+map.on("moveend", function(){
+
+	// 접음
+	$('.infoWrap').removeClass('on');
+	$('.infoWrap').addClass('off');
+   	$('.infoDetailWrap').css('display', 'none');
+   	$('.infoListWrap').css('display', 'none');
+   	//$(".infoListWrap p").text("")
+   	$(".infoListWrap p").css('display', 'hidden');
+   	$('.infoListWrapNoData').css('display', 'none');
+
+	$('.btn_infoWrap').addClass("off");
+
+	mapInfo(map);
+	//ttt();
+
+	map.closePopup();
+
+})
+
+var deviceKeyValue = [];
+
+<c:forEach var="deList" items="${deviceList}" varStatus="status">
+	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
+
+	if (deviceIdList == "" ) {
+	      	deviceIdList += '${deList.macAddr}'
+	} else {
+		deviceIdList += ',${deList.macAddr}'
+	}
+</c:forEach>
+
+var lvColorKeyValue = [];
+
+<c:forEach var="lvList" items="${levelList}" varStatus="status">
+	lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}'})
+</c:forEach>
+
+var statusKeyValue = [];
+
+<c:forEach var="statusList" items="${codeListSd}" varStatus="status">
+	statusKeyValue.push({'code':'${statusList.cdId}', 'codeName':'${statusList.cdNm}', 'codeNameEng':'${statusList.cdNmEng}', 'codeNameJP':'${statusList.cdNmJp}', 'codeClass':'${statusList.etc1}', })
+</c:forEach>
 
 var monthColorKeyValue = [];
 
@@ -187,112 +277,68 @@ var monthColorKeyValue = [];
 	monthColorKeyValue.push({'code':'${monthColor.cdId}', 'codeName':'${monthColor.cdNm}', 'color':'${monthColor.etc1}', })
 </c:forEach>
 
-var potholeCnt;
-var potholeListData;
-var markerId = [];
 
-markerOnOff = "";
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-var img_id;
+const lorem = document.querySelector(".infoList");
 
+var scrollT = $(this).scrollTop(); //스크롤바의 상단위치
+var scrollH = $(this).height(); //스크롤바를 갖는 div의 높이
 
-markerList = [];
-markersTemp = [];
+ //console.log("scrollT = " + scrollT + "  /  scrollH = " + scrollH )
+$('.infoList').on('scroll', function(){
+	var scrol_position = document.querySelector('.infoList').scrollTop;
+	var scrol_height = document.querySelector('.infoList').scrollHeight;
+	var scrol_h = document.querySelector('.infoList').clientHeight;
 
-testlines = [];
+	if (scrol_position + scrol_h > scrol_height - 10) {
 
-allData = [];
+		var startNum = $('.infoListItem').length
 
-let activeMarker = null;
-
-let searchLv;
-
-window.initMap = function () {
-
-};
-
-var popup = L.popup();
-
-function removeLine(e) {
-	map.removeLayer(firstpolyline)
-}
-
-
-function markerIconCheck() {
-	markerCluster.eachLayer(function(layer) {
-		//if (layer.options.id === id) {
-		// 마커를 찾았으면 아이콘 변경
-			//layer.setIcon(redIcon);
-		//}
-		//console.log(layer.options.iconChanged)
-
-		if (layer.options.iconChanged) {
-			layer.setIcon(blueIcon);
+		for (var i=startNum;i<markerList.length;i++) {
+			if (i == (startNum + 10)) {
+				//console.log("멈추기")
+				break;
+			}else {
+				//console.log("더하기")
+				$(".infoList").append(markerList[i])
+			}
 		}
+	}
+});
 
-	});
-}
 
- 	function onMapClick(e) {
-		/* popup.setLatLng(e.latlng)
-		    .setContent("이곳의 좌표는" + e.latlng.toString() + "  \\ncenter = " + map.getCenter())
-		    .openOn(map); */
+$(".btn_iconTXT, #btn_Back").click(function(){
+	map.closePopup();
 
-		//optionReset();
-		//const searchOpt = document.getElementById('re-search-container');
+	markerIconCheck();
 
-		//if(searchOpt.style.display === 'block') {
-			//searchOpt.style.display = 'none';
-		//}
-		markerIconCheck()
-		// 접음
-        $('.infoWrap').removeClass('on');
-        $('.infoWrap').addClass('off');
-    	$('.infoDetailWrap').css('display', 'none');
-    	$('.infoListWrap').css('display', 'none');
-    	//$(".infoListWrap p").text("")
-    	$(".infoListWrap p").css('display', 'hidden');
-    	$('.infoListWrapNoData').css('display', 'none');
+	$('.infoDetailWrap').css('display', 'none')
+	$('.infoListWrap').css('display', 'block')
 
-        $('.btn_infoWrap').addClass("off");
+	$('.infoWrap').removeClass('on');
+	$('.infoWrap').addClass('off');
+	$('.infoDetailWrap').css('display', 'none');
+	$('.infoListWrap').css('display', 'none');
+	//$(".infoListWrap p").text("")
+	$(".infoListWrap p").css('display', 'hidden');
+	$('.infoListWrapNoData').css('display', 'none');
 
-		$("#info").hide();
-		$('.infoListWrap').css('display', 'block')
-		$('.infoDetailWrap').css('display', 'none')
-
+	if ( $('.menu_bar_close').css('display') == 'block' ) {
+		$('.level_list').css('width', 'calc(100% - 40px)');
+		$('.re-search-container').css('width', 'calc(100% - 40px)');
+	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
+		$('.level_list').css('width', 'calc(100% - 40px)');
+		$('.re-search-container').css('width', 'calc(100% - 40px)');
 	}
 
- 	function openPopup(id, deviceNm, deviceId, addr_po_locality, dateFormat, lat, lng) {
+	$('.btn_infoWrap').addClass("off");
+	//$(".btn_infoWrap").click();
 
- 		//openPopup(id, device_name, device_id, addr_po_locality, dateFormat, lat, lng)
+});
 
- 		var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
-						+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addr_po_locality + " (" + lat + ", " + lng + ")<br>"
-						+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
-
-		var txtposition = 0.000030;
-		var max = map.getMaxZoom()+1;
-		var zoom = map.getZoom();
-		var no = 2;
-
-		for (var i=0; i<(max-zoom); i++) {
-			txtposition = txtposition * no;
-		}
-
-		//lat = Number(lat) + Number(0.00004)
-		lat = Number(lat) + Number(txtposition)
-		lng = Number(lng)
-
-		var position = [lat, lng];
-
-		popup.setLatLng(position)
-			.setContent(popuptxt)
-			.openOn(map);
-
- 	}
-
-//  우측 패널 펼치기
-   $(".btn_infoWrap").click(function(){
+//우측 패널 펼치기
+$(".btn_infoWrap").click(function(){
    	//infoDetailWrap
 
    	if ($('.infoDetailWrap').css('display') != "none") {
@@ -325,36 +371,30 @@ function markerIconCheck() {
 });
 
 
-function onClick(e) {
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// 이전에 클릭된 마커가 있으면 원래 아이콘(blueIcon)으로 변경
-    if (activeMarker) {
-        activeMarker.setIcon(blueIcon);
-    }
+function removeLine() {
 
-	this.setIcon(redIcon);
+	map.removeLayer(firstpolyline)
+	map.removeLayer(map._layers)
+}
 
-	// 현재 클릭된 마커를 추적
-    activeMarker = this;
+	//var markers = []
 
-	detail(e.target.options.id
-		, e.target.options.deviceName
-		, e.target.options.deviceId
-		, e.target.options.addrName
-		, e.target.options.ctime
-		, e.latlng.lat
-		, e.latlng.lng
-		, 'N'
-	);
+function nodata(map) {
+
+	//$("div").show(); //display :none 일떄
+	$('.infoListWrapNoData').css('display', 'block')
+	$('.infoListWrap').css('display', 'none')
 
 }
 
-	//////////// Level 관련
+//////////// Level 관련
 function getLevelText(level){
 
 	var zerolv = "0" + level;
 
-	console.log('lvColorKeyValue 확인', lvColorKeyValue);
+	//console.log('lvColorKeyValue 확인', lvColorKeyValue);
 	var result = lvColorKeyValue.find(item => item.lv === zerolv);
 
 	switch ('${nowCdNa}') {
@@ -366,320 +406,6 @@ function getLevelText(level){
         	return result.riskNmJp;
 	}
 }
-
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
-<script>
-
-function mapInfo(map) {
-
-	var lat = map.getCenter().lat;
-	var lng = map.getCenter().lng;
-
-	markerList = [];
-
-	map.eachLayer(function (layer) {
-	    if (!(layer instanceof L.TileLayer)) {
-	        map.removeLayer(layer);
-	    }
-	});
-
-	$.ajax({
-		type: "GET",
-		//url: "${authInfo.restApiUrl}/pothole",
-		url: "${authInfo.restApiUrl}/potholeInArea",
-		data: {
-			on_way:false,
-			//administrative_id: areaCode,
-			//administrative_id: "2409180", //성남시
-			north_west:"latitude:" + map.getBounds().getNorthWest().lat + ",longitude:" + map.getBounds().getNorthWest().lng,
-			north_east:"latitude:" + map.getBounds().getNorthEast().lat + ",longitude:" + map.getBounds().getNorthEast().lng,
-			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
-			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
-			region:"${authInfo.cdNa}",
-			devices:deviceIdList
-		},
-		success: drawLine,
-		error: function(request,status,error){
-
-			//console.log("request.status = " + request.status)
-
-		},
-		beforeSend:function(){
-			$('#circularG').css('display','block')
-		},
-		complete : function(data) {
-			//  실패했어도 완료가 되었을 때 처리
-			$('#circularG').css('display','none');
-			ttt();
-
-		}
-	})
-
-}
-	var lines = []
-
-//777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-	function drawLine(response) {
-
-		$("#info").hide();
-		//$('.infoListWrap').css('display', 'block')
-		$('.infoDetailWrap').css('display', 'none')
-		map.closePopup();
-
-		console.log("abc => ", response)
-		allData = response.data;
-
-		sumMarkerSort = [];
-
-		for (var i = 0; i < lines.length; i++) {
-			map.removeLayer(lines[i])
-		}
-
-		for (var i = 0; i < markers.length; i++) {
-			map.removeLayer(markers[i])
-		}
-
-		markers = []
-
-		lines = []
-		markerId = []
-
-		point = []
-
-		var lvColorKeyValue = [];
-		var riskText = '';
-
-		// riskLv1
-		//obj.css("color","색상");
-		for (var i = 1; i <= lvColorKeyValue.length; i++) {
-			$('#riskbgcolorLv'+ i).css("background-color", lvColorKeyValue[i-1].color)
-			//$('#riskLv'+i).text(lvColorKeyValue[i-1].lvNm)
-			$('#riskLv'+i).text(lvColorKeyValue[i].lvNm)
-			// $('#riskLv'+ i).css("font-weight", "bold")
-		}
-
-			// MarkerCluster 그룹 생성
-			markerCluster = L.markerClusterGroup({
-	        disableClusteringAtZoom: 20, // 줌 레벨 15 이상에서 클러스터 해제
-	        maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
-	        iconCreateFunction: function(cluster) {
-	            var count = cluster.getChildCount();
-				return L.divIcon({
-	                //html: '<div style="background-color:black; color:white"><b>테에스으트으</b></div>',
-					html: '<div>' + count + '</div>',
-	                className: 'mycluster',
-	                iconSize: L.point(40, 40)
-	            });
-	        },
-			/* iconCreateFunction: function(cluster) {
-	            return L.divIcon({
-	                html: '<b>' + cluster.getChildCount() + '</b>',
-	                className: 'mycluster',
-	                iconSize: L.point(40, 40)
-	            });
-	        },*/
-	        spiderfyOnMaxZoom: false,
-	        zoomToBoundsOnClick: false,
-			showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
-	    });
-
-	 	for (var i = 0 ; i < response.data.length ; i++) {
-
-	 		var markerdate = new Date(response.data[i].timestamp);
-
-
-		// --------------------------------------------------------------------------------------------------------------------------------
-		// 마커 생성 부분
-		// --------------------------------------------------------------------------------------------------------------------------------
-
-		//if ((ss < markerdate && ee > markerdate)) {
-
-			//if (selectedValue == "on") {
-
-		 		var item = response.data[i];
-
-				var deviceId = fn_device_id(item['device-id'])
-				var deviceNm = fn_device_name(item['device-id'])
-
-				var lat = item.point['latitude'];
-				var lng = item.point['longitude'];
-
-				//var c_time = fn_create_time(item['created-at'])
-				var date = new Date(item['timestamp'])
-				//var date = new Date(response.data[index]['timestamp'])
-
-				var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
-								+ date.getDate() + ' '
-								+ date.getHours() + ':' + date.getMinutes() ;
-
-				var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
-				var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
-				var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
-				var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-				var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
-
-				dateFormat  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec
-
-				var addr_po_locality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name
-
-				var t = L.marker([item.point.latitude, item.point.longitude], {
-						id: item['id'],
-						lat: lat,
-						lng: lng,
-						ctime: dateFormat,
-						deviceId: deviceId,
-						deviceName: deviceNm,
-						addrName: addr_po_locality,
-						icon: blueIcon,
-						//icon:redIcon
-					})//.addTo(map)
-						.on('click', onClick);
-
-				markerCluster.addLayer(t);
-				markers.push(t);
-				markerId.push(item['id']);
-			//} else {
-				/* map.eachLayer(function(layer) {
-					if (layer instanceof L.Marker) {
-						map.removeLayer(layer);
-					}
-				}); */
-				map.removeLayer(markerCluster);
-			//}
-		//}
-		// --------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------
-		map.addLayer(markerCluster);
-
-		// 마커 클러스터 그룹에 클릭 이벤트 추가
-		markerCluster.on('clusterclick', function(event) {
-			var cluster = event.layer;
-			var childMarkers = cluster.getAllChildMarkers();
-
-			// 팝업 내용 생성
-			var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-			//console.log('childMarkers -- ', childMarkers)
-			childMarkers.forEach(function(marker, index) {
-
-				console.log(marker.options.id + "\n"
-							+ marker.options.deviceName + "\n"
-							+ marker.options.deviceId + "\n"
-							+ marker.options.addrName + "\n"
-							+ marker.options.ctime + "\n"
-				)
-				var item = marker.options;
-				//popupContent += 'Marker ' + (index + 1) + ' : ' + marker.getLatLng().toString() + '<br>';
-
-				const currentTheme = document.documentElement.getAttribute('data-theme');
-
-				var mouseoverTxt, mouseoutTxt;
-
-				if (currentTheme == "light") {
-					mouseoverTxt = "onmouseover=\"this.style.color='blue'; this.style.cursor='pointer'\""
-					mouseoutTxt = "onmouseout=\"this.style.color='black'\" "
-				} else if (currentTheme == "dark") {
-					mouseoverTxt = "onmouseover=\"this.style.color='orange'; this.style.cursor='pointer'\""
-					mouseoutTxt = "onmouseout=\"this.style.color='white'\" "
-				}
-
-				popupContent += "Marker " + (index + 1) + " : <b id='" + marker.options.id + "'"
-														//+ "onmouseover=\"this.style.color='blue'; this.style.cursor='pointer'\""
-														//+ "onmouseout=\"this.style.color='black'\" "
-														+ mouseoverTxt
-														+ mouseoutTxt
-														+ "onClick=\"detail('" + item.id + "', '" + item.deviceName + "', '" + item.deviceId + "', '" +  item.addrName + "', '" + item.ctime + "', '" + item.lat + "', '" + item.lng + "', 'Y')\">" + marker.getLatLng().toString() + "</b><br>";
-
-			});
-
-			//console.log('markerCluster >>> ', markerCluster);
-			// 첫 번째 마커의 위치를 팝업 위치로 사용
-			//var popupLatLng = childMarkers[0].getLatLng();
-			var popupLatLng = cluster.getLatLng();
-
-			// 팝업 생성 및 오픈
-			//cluster.bindPopup(popupContent).openPopup();
-
-			var popup = L.popup()
-								.setLatLng(popupLatLng)  // 팝업 위치 설정
-								.setContent(popupContent)
-								.openOn(map);
-		});
-
-
-		}
-
-	 // 마커 클러스터 그룹에 클릭 이벤트 추가
-		markerCluster.on('clusterclick', function(event) {
-			var cluster = event.layer;
-			var childMarkers = cluster.getAllChildMarkers();
-
-			// 팝업 내용 생성
-			var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-			//console.log('childMarkers -- ', childMarkers)
-			childMarkers.forEach(function(marker, index) {
-
-				console.log(marker.options.id + "\n"
-							+ marker.options.deviceName + "\n"
-							+ marker.options.deviceId + "\n"
-							+ marker.options.addrName + "\n"
-							+ marker.options.ctime + "\n"
-				)
-				var item = marker.options;
-				//popupContent += 'Marker ' + (index + 1) + ' : ' + marker.getLatLng().toString() + '<br>';
-
-				const currentTheme = document.documentElement.getAttribute('data-theme');
-
-				var mouseoverTxt, mouseoutTxt;
-
-				if (currentTheme == "light") {
-					mouseoverTxt = "onmouseover=\"this.style.color='blue'; this.style.cursor='pointer'\""
-					mouseoutTxt = "onmouseout=\"this.style.color='black'\" "
-				} else if (currentTheme == "dark") {
-					mouseoverTxt = "onmouseover=\"this.style.color='orange'; this.style.cursor='pointer'\""
-					mouseoutTxt = "onmouseout=\"this.style.color='white'\" "
-				}
-
-				popupContent += "Marker " + (index + 1) + " : <b id='" + marker.options.id + "'"
-														//+ "onmouseover=\"this.style.color='blue'; this.style.cursor='pointer'\""
-														//+ "onmouseout=\"this.style.color='black'\" "
-														+ mouseoverTxt
-														+ mouseoutTxt
-														+ "onClick=\"detail('" + item.id + "', '" + item.deviceName + "', '" + item.deviceId + "', '" +  item.addrName + "', '" + item.ctime + "', '" + item.lat + "', '" + item.lng + "', 'Y')\">" + marker.getLatLng().toString() + "</b><br>";
-
-			});
-
-			//console.log('markerCluster >>> ', markerCluster);
-			// 첫 번째 마커의 위치를 팝업 위치로 사용
-			//var popupLatLng = childMarkers[0].getLatLng();
-			var popupLatLng = cluster.getLatLng();
-
-			// 팝업 생성 및 오픈
-			//cluster.bindPopup(popupContent).openPopup();
-
-			var popup = L.popup()
-								.setLatLng(popupLatLng)  // 팝업 위치 설정
-								.setContent(popupContent)
-								.openOn(map);
-		});
-
-	 	$('.infoList li').remove()
-		$('.infoList div').remove()
-
-
-
-	// ------------------------------------------------------------------------------------------------------------------
-	//  마커 end
-	// ------------------------------------------------------------------------------------------------------------------
-
-		potholeCnt = response.data.length;
-		potholeListData = response.data;
-
-	}
-//777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-
-
 
 function fn_device_id (id) {
 
@@ -712,78 +438,6 @@ function fn_device_name (id) {
 
 	return device_name;
 }
-
-const lorem = document.querySelector(".infoList");
-
-var scrollT = $(this).scrollTop(); //스크롤바의 상단위치
-var scrollH = $(this).height(); //스크롤바를 갖는 div의 높이
-
- //console.log("scrollT = " + scrollT + "  /  scrollH = " + scrollH )
-$('.infoList').on('scroll', function(){
-	var scrol_position = document.querySelector('.infoList').scrollTop;
-	var scrol_height = document.querySelector('.infoList').scrollHeight;
-	var scrol_h = document.querySelector('.infoList').clientHeight;
-
-	if (scrol_position + scrol_h > scrol_height - 10) {
-
-		var startNum = $('.infoListItem').length
-
-		for (var i=startNum;i<markerList.length;i++) {
-			if (i == (startNum + 10)) {
-				//console.log("멈추기")
-				break;
-			}else {
-				//console.log("더하기")
-				$(".infoList").append(markerList[i])
-			}
-		}
-	}
-});
-
-
-$(document).ready(function() {
-
-	//console.log("##################>>>> - ${codeListMc}" );
-
-	let now1 = new Date('2023-03-30');
-	//console.log("현재 : ", now1);
-
-	let oneMonthAgo = new Date(now1.setMonth(now1.getMonth() - 1)); // 한달
-	//console.log("한달 전 : ", oneMonthAgo);
-
-	let now2 = new Date('2023-12-22');
-	//console.log("현재 : ", now2);
-
-	let oneMonthLater = new Date(now2.setMonth(now2.getMonth() + 1));
-	//console.log("한달 후 : ", oneMonthLater)
-
-	//0.0025
-
-
-	//var fromDt = '';
-	//var toDt = '';
-
-
-	//fromDt = $('#fromDt').val().replaceAll('-', '');
-	//toDt = $('#toDt').val().replaceAll('-', '');
-
-	// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
-	var date1 = new Date();
-	//$('#toDt').val(fnDateFormat(date1, 'select'))
-	var date2 = new Date(date1.setDate(date1.getDate() - 30));
-	// $('#fromDt').val(dateFormat(date2, 'select'))
-	//$('#fromDt').val('2023-10-01')
-
-
-	lvColorKeyValue = [];
-
-	<c:forEach var="lvList" items="${levelList}" varStatus="status">
-
-		lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}'})
-
-	</c:forEach>
-
-
 
 ///////////////////// 날짜관련
 function fnDateFormat(date, format) {
@@ -818,57 +472,116 @@ function fnDateFormat(date, format) {
 	return dateString;
 }
 
-filterYN = "N";
-markers = [];
+function statusName(code) {
+	var statusNameByCdna = getCdNa('${authInfo.changedCdNa}', '${authInfo.cdNa}');
 
-//setLevelList(1, '');
-region = "${authInfo.cdNa}";
+	const result = statusKeyValue.find(item => item.code === code);
 
-deviceKeyValue = [];
-deviceIdList = "";
+	if (result) {
+	    switch (statusNameByCdna) {
+        case 'KR':
+            return result.codeName;
+        case 'US':
+            return result.codeNameEng;
+        case 'JP':
+        	return result.codeNameJP;
+		}
 
-<c:forEach var="deList" items="${deviceList}" varStatus="status">
-
-	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
-
-	if (deviceIdList == "" ) {
-          	deviceIdList += '${deList.macAddr}'
 	} else {
-		deviceIdList += ',${deList.macAddr}'
+		switch (statusNameByCdna) {
+        case 'KR':
+            return '미분류';
+        case 'US':
+            return '(us)미분류';
+        case 'JP':
+            return '(jp)미분류';
+		}
 	}
+}
 
-</c:forEach>
+function statusClassName(code) {
+	const result = statusKeyValue.find(item => item.code === code);
 
-old_id = "";
+	if (result) {
+	    return result.codeClass;
+	} else {
+		return "badge_warning"
+	}
+}
 
-	//map = L.map('map').setView({lat:37.470613, lng:127.126118}, 14);
-	//map = L.map('map').setView({lat:37.412079, lng:127.135001}, 18);
-	map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 12);
+function getCdNa(selectedCnda, authCdNa){
+	var changedCdNa = selectedCnda;
+	var cdNa = authCdNa;
 
-	L.control.scale({
-		imperial: true, metric: true
-	}).addTo(map);
+	if(changedCdNa.length > 0) {
+		return changedCdNa;
+	} else {
+		return cdNa;
+	}
+}
+function originalimg(id) {
 
-//L.tileLayer('https://mt0.google.com/vt/lyrs=m&h1=kr{z}&x={x}&y={y}&z={z}', {
-//L.tileLayer('https://tiles.osm.kr/hot/{z}/{x}/{y}.png', {
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	//minZoom: 14,
-	//maxZoom: 19,
-	minZoom: '${authInfo.mapMinSize}',
-	maxZoom: '${authInfo.mapMaxSize}',
-    attribution: '© OpenStreetMap'
-    //stylers:[{visibility:'off'}]
-}).addTo(map);
+	var popupimg = document.getElementById("pop_wrap");
 
-// swagger.js
-mapInfo(map);
+	var modalImg = document.getElementById("pop_img");
 
-map.on('click', onMapClick);
+	$('#pop_riskPopImg').css('display', 'block')
+	$("#pop_img").attr("src", "${authInfo.restApiUrl}/pothole/" + id + "/image");
+
+}
+
+function onMarkerClick(e) {
+
+	// 이전에 클릭된 마커가 있으면 원래 아이콘(blueIcon)으로 변경
+    if (activeMarker) {
+        activeMarker.setIcon(blueIcon);
+    }
+
+	this.setIcon(redIcon);
+
+	// 현재 클릭된 마커를 추적
+    activeMarker = this;
+
+    detail(e.target.options.id, 'N');
+
+	/* detail(e.target.options.id
+		, e.target.options.deviceName
+		, e.target.options.deviceId
+		, e.target.options.addrName
+		, e.target.options.ctime
+		, e.latlng.lat
+		, e.latlng.lng
+		, 'N'
+	); */
+
+}
+
+function removeLine(e) {
+	map.removeLayer(firstpolyline)
+}
 
 
+function markerIconCheck() {
+	markerCluster.eachLayer(function(layer) {
+		//if (layer.options.id === id) {
+		// 마커를 찾았으면 아이콘 변경
+			//layer.setIcon(redIcon);
+		//}
+		//console.log(layer.options.iconChanged)
 
-map.on("moveend", function(){
+		if (layer.options.iconChanged) {
+			layer.setIcon(blueIcon);
+		}
 
+	});
+}
+
+function onMapClick(e) {
+	/* popup.setLatLng(e.latlng)
+	    .setContent("이곳의 좌표는" + e.latlng.toString() + "  \\ncenter = " + map.getCenter())
+	    .openOn(map); */
+
+	markerIconCheck()
 	// 접음
 	$('.infoWrap').removeClass('on');
 	$('.infoWrap').addClass('off');
@@ -880,191 +593,236 @@ map.on("moveend", function(){
 
 	$('.btn_infoWrap').addClass("off");
 
-	mapInfo(map);
-	//ttt();
-
-	map.closePopup();
-
-})
-
-function removeLine() {
-
-	map.removeLayer(firstpolyline)
-	map.removeLayer(map._layers)
-}
-
-	//var markers = []
-
-function nodata(map) {
-
-	//$("div").show(); //display :none 일떄
-	$('.infoListWrapNoData').css('display', 'block')
-	$('.infoListWrap').css('display', 'none')
+	$("#info").hide();
+	$('.infoListWrap').css('display', 'block')
+	$('.infoDetailWrap').css('display', 'none')
 
 }
 
-})
+function mapInfo(map) {
 
-
-function wayMarkerList(response , wayname) {
-
-
-	if ( $('.menu_bar_close').css('display') == 'block' ) {
-		$('.level_list').css('width', 'calc(100% - 400px)');
-    	$('.re-search-container').css('width', 'calc(100% - 400px)');
-	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-		$('.level_list').css('width', 'calc(100% - 180px)');
-    	$('.re-search-container').css('width', 'calc(100% - 180px)');
-	}
-
-	 $('.btn_infoWrap').removeClass("off");
-
-
+	var lat = map.getCenter().lat;
+	var lng = map.getCenter().lng;
 
 	markerList = [];
-	markerInRoute = [];
 
-	for ( var i = 0 ; i < response.data.length ; i++ ) {
-		if (response.data[i].way.name == wayname) {
-			console.log(response.data[i]);
-			markerInRoute.push(i);
+	map.eachLayer(function (layer) {
+	    if (!(layer instanceof L.TileLayer)) {
+	        map.removeLayer(layer);
+	    }
+	});
+
+	$.ajax({
+		type: "GET",
+		//url: "${authInfo.restApiUrl}/pothole",
+		url: "${authInfo.restApiUrl}/potholeInArea",
+		data: {
+			on_way:false,
+			//administrative_id: areaCode,
+			//administrative_id: "2409180", //성남시
+			north_west:"latitude:" + map.getBounds().getNorthWest().lat + ",longitude:" + map.getBounds().getNorthWest().lng,
+			north_east:"latitude:" + map.getBounds().getNorthEast().lat + ",longitude:" + map.getBounds().getNorthEast().lng,
+			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
+			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
+			region:"${authInfo.cdNa}",
+			devices:deviceIdList
+		},
+		success: drawMarker,
+		error: function(request,status,error){
+			//console.log("request.status = " + request.status)
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block')
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none');
+			ttt();
+
 		}
-	}
-
-	$('.infoList li').remove()
-	$('.infoList div').remove()
-
-	$(".infoWrap").addClass("on");
-	$(".infoListWrap p").css('display', 'block')
-	$(".infoListWrap p").text("총 "+ markerInRoute.length + " 건")
-
-	$.each(response.data, function(index) {
-	//==================================================================================================================
-	//==================================================================================================================
-		for (var x = 0 ; x < markerInRoute.length ; x++) {
-			if (markerInRoute[x] == index) {
-				//if (makeMarkerList[x] == index) {
-				//if (sortedTestDD[x].key == index) {
-				//console.log(deviceKeyValue)
-
-				var date = new Date(response.data[index]['timestamp'])
-
-				var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
-								+ date.getDate() + ' '
-								+ date.getHours() + ':' + date.getMinutes() ;
-
-				var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
-				var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
-				var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
-				var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-				var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
-
-				dateFormat  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec
-
-				//var addr_po_locality = response.data[index].way == null ? "도로정보 없음" : response.data[index].way.name
-				//var addr_po_locality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name
-				var addr_po_locality = (response.data[index].way.name == null || response.data[index].way.name == '') ? "도로정보 없음" : response.data[index].way.name
-				var macAddr = response.data[index]['device-id'];
-				var id = response.data[index].id;
-
-				var device_name = "";
-				var device_id = "";
-
-				for (var i=0; i< deviceKeyValue.length;i++) {
-					if (deviceKeyValue[i].macAddr == macAddr){
-						device_name = deviceKeyValue[i].deviceNm;
-						device_id = deviceKeyValue[i].deviceId;
-					}
-				}
-
-				let reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-				let resultData = id.replace(reg, "");
-
-					markerList.push("<li><a class='infoListItem'>"
-						+ "<div class='info'><h3 class='infoTitle' onClick=\"detail('" + id + "', ' " + device_name + "', '" + device_id + "', '" + addr_po_locality + "', '" + dateFormat + "', '" + response.data[index].point['latitude'] + "', '" + response.data[index].point['longitude'] + "')\"'>" + device_name + " ( " + device_id + " )</h3>"
-						+ "<ul class='infoContents'>"
-						+ "<li> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addr_po_locality + "</li>"
-						+ "<li> <fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</li>"
-						+ "</ul>"
-						+ "</div>"
-						+ "<div class='infoThumnail'>"
-						+ "<img src='${authInfo.restApiUrl}/pothole/" + id + "/thumbnail' alt='대표이미4지' onclick=\"originalimg('" + id + "')\">"
-						+ "</div>"
-						+ "</li>"
-					);
-
-
-					//}
-				}
-			}
-		//==================================================================================================================
-		//==================================================================================================================
 	})
-
-
-
-	for (var i=0; i<markerList.length; i++) {
-		if(i<10) {
-			$(".infoList").append(markerList[i])
-		}
-	}
-
-
 
 }
 
-$(".btn_iconTXT, #btn_Back").click(function(){
+function drawMarker(response) {
+
+	$("#info").hide();
+	//$('.infoListWrap').css('display', 'block')
+	$('.infoDetailWrap').css('display', 'none')
 	map.closePopup();
 
-	markerIconCheck();
+	console.log("abc => ", response)
+	allData = response.data;
 
-	$('.infoDetailWrap').css('display', 'none')
-	$('.infoListWrap').css('display', 'block')
+	sumMarkerSort = [];
 
+	for (var i = 0; i < lines.length; i++) {
+		map.removeLayer(lines[i])
+	}
 
-			$('.infoWrap').removeClass('on');
-            $('.infoWrap').addClass('off');
-        	$('.infoDetailWrap').css('display', 'none');
-        	$('.infoListWrap').css('display', 'none');
-        	//$(".infoListWrap p").text("")
-        	$(".infoListWrap p").css('display', 'hidden');
-        	$('.infoListWrapNoData').css('display', 'none');
+	for (var i = 0; i < markers.length; i++) {
+		map.removeLayer(markers[i])
+	}
 
-			if ( $('.menu_bar_close').css('display') == 'block' ) {
-				$('.level_list').css('width', 'calc(100% - 40px)');
-            	$('.re-search-container').css('width', 'calc(100% - 40px)');
-			} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-				$('.level_list').css('width', 'calc(100% - 40px)');
-            	$('.re-search-container').css('width', 'calc(100% - 40px)');
-			}
+	markers = []
 
-            $('.btn_infoWrap').addClass("off");
-	//$(".btn_infoWrap").click();
+	point = []
 
-});
+	var lvColorKeyValue = [];
+	var riskText = '';
 
-// ===============================================================================================================================
-function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, lng, clusterChk){
+	// riskLv1
+	//obj.css("color","색상");
+	for (var i = 1; i <= lvColorKeyValue.length; i++) {
+		$('#riskbgcolorLv' + i).css("background-color", lvColorKeyValue[i-1].color)
+		$('#riskLv' + i).text(lvColorKeyValue[i].lvNm);
+	}
+
+	markerCluster = L.markerClusterGroup({
+		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
+		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
+		iconCreateFunction: function(cluster) {
+			var count = cluster.getChildCount();
+			return L.divIcon({
+				html: '<div>' + count + '</div>',
+				className: 'mycluster',
+				iconSize: L.point(40, 40)
+			});
+		},
+		spiderfyOnMaxZoom: false,
+		zoomToBoundsOnClick: false,
+		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+	});
+
+ 	for (var i = 0 ; i < response.data.length ; i++) {
+
+		var markerdate = new Date(response.data[i].timestamp);
+
+		var item = response.data[i];
+
+		var deviceId = fn_device_id(item['device-id'])
+		var deviceNm = fn_device_name(item['device-id'])
+
+		var lat = item.point['latitude'];
+		var lng = item.point['longitude'];
+
+		var date = new Date(item['timestamp'])
+
+		var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
+						+ date.getDate() + ' '
+						+ date.getHours() + ':' + date.getMinutes() ;
+
+		var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
+		var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
+		var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
+		var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
+		var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
+
+		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+
+		var addrPoLocality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
+
+		var t = L.marker([item.point.latitude, item.point.longitude], {
+			id : item['id'],
+			lat : item.point['latitude'],
+			lng : item.point['longitude'],
+			ctime : cTime,
+			deviceId : deviceId,
+			deviceName : deviceNm,
+			addrName : addrPoLocality,
+			level : item.risk.level,
+			status : item.status,
+			potholes : item.risk['count-of-potholes'],
+			vertical : item.risk['count-of-vertical-cracks'],
+			horizontal : item.risk['count-of-horizontal-cracks'],
+			alligators : item.risk['count-of-alligators'],
+			icon : blueIcon,
+		}).on('click', onMarkerClick);
+
+		console.log("tt -- ", t);
+		markerCluster.addLayer(t);
+		markers.push(t);
+		//markerId.push(item['id']);
+
+		//map.removeLayer(markerCluster);
+
+		// 마커 클러스터 그룹에 클릭 이벤트 추가
+		markerCluster.on('clusterclick', function(event) {
+			var cluster = event.layer;
+			var childMarkers = cluster.getAllChildMarkers();
+
+			// 팝업 내용 생성
+			var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
+			//console.log('childMarkers -- ', childMarkers)
+			childMarkers.forEach(function(marker, index) {
+
+				var item = marker.options;
+
+				popupContent += "Marker " + (index + 1) + " : "
+							+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
+							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+							+ marker.getLatLng().toString()
+							+ "</b><br>";
+
+			});
+
+			//console.log('markerCluster >>> ', markerCluster);
+			// 첫 번째 마커의 위치를 팝업 위치로 사용
+			//var popupLatLng = childMarkers[0].getLatLng();
+			var popupLatLng = cluster.getLatLng();
+
+			// 팝업 생성 및 오픈
+			//cluster.bindPopup(popupContent).openPopup();
+
+			popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+		});
+
+	}
+
+ 	map.addLayer(markerCluster);
+
+ 	$('.infoList li').remove()
+	$('.infoList div').remove()
+
+	potholeCnt = response.data.length;
+	potholeListData = response.data;
+
+}
+
+function detail(id, clusterChk){
+
+	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
 
 	markerCluster.eachLayer(function(layer) {
+
 		if (layer.options.id === id) {
-		// 마커를 찾았으면 아이콘 변경
+
 			layer.setIcon(redIcon);
 			layer.options.iconChanged = true;
-		}
 
+			deviceNm = layer.options.deviceName;
+			deviceId = layer.options.deviceId;
+			addrPoLocality = layer.options.addrName;
+			dateFormat = layer.options.ctime;
+			lat = layer.options.lat;
+			lng = layer.options.lng;
+			level = layer.options.level;
+			status = layer.options.status;
+			potholes = layer.options.potholes;
+			vertical = layer.options.vertical;
+			horizontal = layer.options.horizontal;
+			alligators = layer.options.alligators;
+		}
 	});
 
 
 	$(".infoWrap").addClass("on");
- 	$(".infoListWrap p").css('display', 'block')
+ 	$(".infoListWrap p").css('display', 'block');
 
    	markersTemp = markers;
 
- 	console.log("clusterChk - " + clusterChk)
-
 	$(".infoWrap").addClass("on");
- 	$(".infoListWrap p").css('display', 'block')
+ 	$(".infoListWrap p").css('display', 'block');
 
    	markersTemp = markers;
 
@@ -1072,7 +830,7 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 
  	$("#info").hide();
 	//$('.infoListWrap').css('display', 'block')
-	$('.infoDetailWrap').css('display', 'none')
+	$('.infoDetailWrap').css('display', 'none');
 
 	img_id = id;
 
@@ -1081,47 +839,29 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 	for (var i=0; i<allData.length; i++) {
 
 		if (allData[i].id == id) {
-			thisData = allData[i]
+			thisData = allData[i];
 		}
 	}
 
-		var popuptxt = "<div><h1>디바이스명 : " + device_name + " ( " + device_id + " )</h1>"
-						+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addr_po_locality + " (" + lat + ", " + lng + ")<br>"
-						+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
+	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
+					+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
+					+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
 
-		var txtposition = 0.000030;
-		var max = map.getMaxZoom()+1;
-		var zoom = map.getZoom();
-		var no = 2;
+	var lat = Number(lat);
+	var lng = Number(lng);
 
-		for (var i=0; i<(max-zoom); i++) {
-			txtposition = txtposition * no;
-		}
+	var position = [lat, lng];
 
-		//var lat = Number(lat) + Number(0.00004)
-		var lat = Number(lat) + Number(txtposition)
-		var lng = Number(lng)
-
-		var position = [lat, lng];
-
-		if (clusterChk == 'N') {
-			popup.setLatLng(position)
-				.setContent(popuptxt)
-				.openOn(map);
-		}
-
-	/* var lvColorKeyValue = [];
-
-	<c:forEach var="lvList" items="${levelList}" varStatus="status">
-
-		lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}'})
-
-	</c:forEach> */
+	if (clusterChk == 'N') {
+		popup.setLatLng(position)
+			.setContent(popuptxt)
+			.openOn(map);
+	}
 
 	for (var i = 0; i < lvColorKeyValue.length; i++) {
 		if (Number(lvColorKeyValue[i].lv) == Number(thisData.risk.level)){
 			riskLvNm = lvColorKeyValue[i].riskNm;
-			riskColor = lvColorKeyValue[i].color
+			riskColor = lvColorKeyValue[i].color;
 		}
 	}
 
@@ -1132,7 +872,7 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 
 	//console.log(potholeListData)
 
-		for (var i = 0; i < potholeListData.length; i++) {
+	for (var i = 0; i < potholeListData.length; i++) {
 		if (potholeListData[i].id == id) {
 
 			//var addrName = potholeListData[i].way == null ? "도로정보 없음" : potholeListData[i].way.name
@@ -1172,28 +912,27 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 			$("#CntAlligators").text(thisData.risk['count-of-alligators'] + " 개")
 
 			// detail영역
-			$("#detail_title").text(device_name + " ( " + device_id + " )");
+			$("#detail_title").text(deviceNm + " ( " + deviceId + " )");
 			// 디바이스 name
-			$("#detail_device_name").text(device_name);
+			$("#detail_device_name").text(deviceNm);
 			// 디바이스 ID
-			$("#detail_device_id").text(device_id);
+			$("#detail_device_id").text(deviceId);
 			// 좌표
-			$("#detail_latlng").text("위도 " + potholeListData[i].point['latitude'] + " / 경도 " + potholeListData[i].point['longitude']);
+			$("#detail_latlng").text("<fmt:message key="LATITUDE" bundle="${bundle}"/> " + lat + " / <fmt:message key="LONGITUDE" bundle="${bundle}"/> " + lng);
 			// 위험도
 			$("#detail_risk_level").text(riskText);
 			// 도로명
 			//$("#detail_route_name").text();
-			$("#detail_route_name").text(addrName);
-
+			$("#detail_route_name").text(addrPoLocality);
 			// 촬영일시
 			$("#detail_ctime").text(dateFormat);
+
+			// 현재상태
+			$("#detail_state").text(statusName(status));
 
 		}
 
 	}
-
-
-
 
 	if ($(".infoDetailWrap").css("display") == "none") {
 	    //$("div").show(); //display :none 일떄
@@ -1209,210 +948,193 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 		//$('.infoListWrap').css('display', 'none')
 
 }
-// ===============================================================================================================================
 
+function ttt() {
 
-	function markerOn() {
+	$.ajax({
+		type: "GET",
+		url: "${authInfo.restApiUrl}/detected-road" ,
+		//url: "${authInfo.restApiUrl}//detected-road-by-date",
+		//url: "http://localhost:8081/detected-road",
+		data: {
+			on_way:false,
+			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+			south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+			region:"${authInfo.cdNa}"
+		},
+		success: function(resp) {
+			datas = resp.data
+            //console.log('탐지도로 데이터 확인--->> ', datas);
+			//console.log('포트홀 데이터 확인-->> ', allData);
 
-        let markerCheck = false;
+			var crackList = [];
+			var crackListLv11 = [];
+			var crackListLv22 = [];
+			var crackListLv33 = [];
+			var crackListLv44 = [];
+			var elseddd = [];
 
-		map.eachLayer(function(layer) {
-			if (layer instanceof L.Marker) {
-				markerCheck = true; // 마커가 하나라도 있으면 true로 설정
-			}
-		});
+			for (var i = 0; i < allData.length; i++) {
 
+				if ( allData[i].risk.level == 1 ) {
+					//console.log( i + " 번째  riskLv = " + allData[i].risk.level);
+					crackListLv11.push(allData[i].id);
 
-        /* map.eachLayer(function(layer) {
-            if (layer instanceof L.Marker) {
-            	markerCheck = true; // 마커가 하나라도 있으면 true로 설정\
-            	alert(markerCheck)
-            }
-        }); */
-    	// MarkerCluster 그룹 생성
-    	var markerCluster = L.markerClusterGroup({
-            disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
-            maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
-            iconCreateFunction: function(cluster) {
-                var count = cluster.getChildCount();
-    			return L.divIcon({
-                    //html: '<div style="background-color:black; color:white"><b>테에스으트으</b></div>',
-    				html: '<div>' + count + '</div>',
-                    className: 'mycluster',
-                    iconSize: L.point(40, 40)
-                });
-            },
-    		/* iconCreateFunction: function(cluster) {
-                return L.divIcon({
-                    html: '<b>' + cluster.getChildCount() + '</b>',
-                    className: 'mycluster',
-                    iconSize: L.point(40, 40)
-                });
-            },*/
-            spiderfyOnMaxZoom: false,
-            zoomToBoundsOnClick: false,
-    		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
-        });
+				} else if ( allData[i].risk.level == 2 ) {
 
-		if (!markerCheck) {
-			for (var i = 0 ; i < markers.length ; i++ ) {
+					crackListLv22.push(allData[i].id);
 
-	       		//console.log(i , " =- " , markers[i].options.lat)
-	       		var t = L.marker([markers[i].options.lat, markers[i].options.lng], {
-	       			id : markers[i].options.id,
-	       			lat : markers[i].options.lat,
-	       			lng : markers[i].options.lng,
-	       			ctime : markers[i].options.c_time,
-	       			deviceId : markers[i].options.deviceId,
-	       			deviceName : markers[i].options.deviceNm,
-	       			addrName : markers[i].options.addr_po_locality,
-	       			icon : blueIcon,
-	       			//icon:redIcon
-	       		})//.addTo(map)
-	       		.on('click', onClick);
+				} else if ( allData[i].risk.level == 3 ) {
 
-	       		markerCluster.addLayer(t);
+					crackListLv33.push(allData[i].id);
+
+				} else if ( allData[i].risk.level == 4 ) {
+
+					crackListLv44.push(allData[i].id);
+				} else {
+					elseddd.push(allData[i].id);
+				}
 			}
 
+			//var crackList = [];
+			var crackListLv1 = [];
+			var crackListLv2 = [];
+			var crackListLv3 = [];
+			var crackListLv4 = [];
+			//var elsedd = [];
 
-			// 마커 클러스터 그룹에 클릭 이벤트 추가
-			markerCluster.on('clusterclick', function(event) {
-				var cluster = event.layer;
-				var childMarkers = cluster.getAllChildMarkers();
+			color = lvColorKeyValue.find(item => item.lv === '99').color;
+			//lvColorKeyValue.find(item => item.lv === zerolv)
 
-				// 팝업 내용 생성
-				var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-				//console.log('childMarkers -- ', childMarkers)
-				childMarkers.forEach(function(marker, index) {
+			function deg2rad(deg) {
+		        return deg * (Math.PI/180)
+		    }
 
-					console.log(marker.options.id + "\n"
-								+ marker.options.deviceName + "\n"
-								+ marker.options.deviceId + "\n"
-								+ marker.options.addrName + "\n"
-								+ marker.options.ctime + "\n"
-					)
-					var item = marker.options;
-					//popupContent += 'Marker ' + (index + 1) + ' : ' + marker.getLatLng().toString() + '<br>';
+			for (var i = 0; i < datas.length; i++) {
 
-					popupContent += "Marker " + (index + 1) + " : <b id='" + marker.options.id + "'"
-															+ "onmouseover=\"this.style.color='blue'; this.style.cursor='pointer'\""
-															+ "onmouseout=\"this.style.color='black'\" "
-															+ "onClick=\"detail('" + item.id + "', '" + item.deviceName + "', '" + item.deviceId + "', '" +  item.addrName + "', '" + item.ctime + "', '" + item.lat + "', '" + item.lng + "', 'Y')\">" + marker.getLatLng().toString() + "</b><br>";
-				});
+				//var roadInfo = datas[i].detectedRoadInfo;
+				if (i < datas.length-1) {
+					var pointA = new L.LatLng(datas[i].latitude, datas[i].longitude);
+					var pointB = new L.LatLng(datas[i+1].latitude, datas[i+1].longitude);
 
-				//console.log('markerCluster >>> ', markerCluster);
-				// 첫 번째 마커의 위치를 팝업 위치로 사용
-				//var popupLatLng = childMarkers[0].getLatLng();
-				var popupLatLng = cluster.getLatLng();
+					var pointList = [ pointA, pointB ];
 
-				// 팝업 생성 및 오픈
-				//cluster.bindPopup(popupContent).openPopup();
+					var linesize = map.getZoom()-7
 
-				var popup = L.popup()
-									.setLatLng(popupLatLng)  // 팝업 위치 설정
-									.setContent(popupContent)
-									.openOn(map);
-			});
+					var firstpolyline = new L.Polyline(pointList, {
+					    //color: 'red',
+					    color: color,
+					    //color: color,
+					    //color: 'lightgray',
+					    //weight: 15,
+					    weight: linesize,
+					    //opacity: 0.1,
+					    smoothFactor: 1
 
-			//console.log("item = ", item)
+					    })//.on('click', function(e) {
+				            //wayMarkerList(response ,wayname)
 
-			map.addLayer(markerCluster);
+				        //});;
 
+			        var pointATime = new Date( datas[i].timestamp );
+			        var pointBTime = new Date( datas[i+1].timestamp );
 
+			        //console.log("빼기 ------------------------------" ,(pointBTime - pointATime));
+			        var BAsecond = (pointBTime - pointATime) / 1000;
 
-		}
-
-    }
-
-
-	function originalimg(id) {
-
- 		var popupimg = document.getElementById("pop_wrap");
-
-		var modalImg = document.getElementById("pop_img");
-
-		$('#pop_riskPopImg').css('display', 'block')
-		$("#pop_img").attr("src", "${authInfo.restApiUrl}/pothole/" + id + "/image");
-
- 	}
-
-	function ttt() {
-
-		$.ajax({
-			type: "GET",
-			url: "${authInfo.restApiUrl}/detected-road" ,
-			//url: "${authInfo.restApiUrl}//detected-road-by-date",
-			//url: "http://localhost:8081/detected-road",
-			data: {
-				on_way:false,
-				north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
-				north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
-				south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
-				south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-				region:"${authInfo.cdNa}"
-			},
-			success: function(resp) {
-				datas = resp.data
-	            console.log('탐지도로 데이터 확인--->> ', datas);
-				console.log('포트홀 데이터 확인-->> ', allData);
-
-				var crackList = [];
-				var crackListLv11 = [];
-				var crackListLv22 = [];
-				var crackListLv33 = [];
-				var crackListLv44 = [];
-				var elseddd = [];
-
-				for (var i = 0; i < allData.length; i++) {
-
-					if ( allData[i].risk.level == 1 ) {
-						//console.log( i + " 번째  riskLv = " + allData[i].risk.level);
-						crackListLv11.push(allData[i].id);
-
-					} else if ( allData[i].risk.level == 2 ) {
-
-						crackListLv22.push(allData[i].id);
-
-					} else if ( allData[i].risk.level == 3 ) {
-
-						crackListLv33.push(allData[i].id);
-
-					} else if ( allData[i].risk.level == 4 ) {
-
-						crackListLv44.push(allData[i].id);
-					} else {
-						elseddd.push(allData[i].id);
+					if (BAsecond < 10) {
+				        map.addLayer(firstpolyline);
 					}
 				}
 
-				//var crackList = [];
-				var crackListLv1 = [];
-				var crackListLv2 = [];
-				var crackListLv3 = [];
-				var crackListLv4 = [];
-				//var elsedd = [];
+			}
 
-				color = lvColorKeyValue.find(item => item.lv === '99').color;
-				//lvColorKeyValue.find(item => item.lv === zerolv)
 
-				function deg2rad(deg) {
-			        return deg * (Math.PI/180)
-			    }
 
-				for (var i = 0; i < datas.length; i++) {
+			var cnt = 0;
 
-					//var roadInfo = datas[i].detectedRoadInfo;
-					if (i < datas.length-1) {
-						var pointA = new L.LatLng(datas[i].latitude, datas[i].longitude);
-						var pointB = new L.LatLng(datas[i+1].latitude, datas[i+1].longitude);
+			var tttcnt = 0;
+
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv1 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+			//for (datas) {
+			for (var a = 0; a < datas.length; a++) {
+				for (var b = 0; b < crackListLv11.length; b++) {
+
+					if ( datas[a].id == crackListLv11[b] ) {
+						//console.log("인덱스 >> ", a , " - ", datas[a]);
+						crackListLv1.push(a);
+						//tttcnt++;
+					}
+				}
+
+
+				for (var b = 0; b < crackListLv22.length; b++) {
+
+					if ( datas[a].id == crackListLv22[b] ) {
+						crackListLv2.push(a);
+					}
+				}
+
+				for (var c = 0; c < crackListLv33.length; c++) {
+
+					if ( datas[a].id == crackListLv33[c] ) {
+						crackListLv3.push(a);
+					}
+				}
+
+				for (var d = 0; d < crackListLv44.length; d++) {
+
+					if ( datas[a].id == crackListLv33[d] ) {
+						crackListLv4.push(a);
+					}
+				}
+
+
+			}
+
+			for (var x = 0; x < crackListLv1.length; x++) {
+
+				var rangeSumM = 0;
+				var rangeSumP = 0;
+
+				for (var xx = crackListLv1[x]; xx > 0; xx--) {
+					if (xx == 84) {
+						console.log("11")
+					}
+					if (xx > 1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumM = rangeSumM + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
 
 						var pointList = [ pointA, pointB ];
 
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'red',
-						    color: color,
+						    //color: 'green',
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
 						    //weight: 15,
@@ -1420,718 +1142,528 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 						    //opacity: 0.1,
 						    smoothFactor: 1
 
-						    })//.on('click', function(e) {
-					            //wayMarkerList(response ,wayname)
+						    })
 
-					        //});;
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
 
-				        var pointATime = new Date( datas[i].timestamp );
-				        var pointBTime = new Date( datas[i+1].timestamp );
+				        var BAsecond = (pointBTime - pointATime) / 1000;
 
-				        //console.log("빼기 ------------------------------" ,(pointBTime - pointATime));
+				        //console.log(xx + " : " + pointA + ", " + pointB + " // " + pointBTime + " - " + pointATime + " = " + BAsecond);
+				        //console.log(xx + " : " + pointA + ", " + pointB + " // " + datas[xx-1].timestamp + " - " + datas[xx].timestamp + " = " + BAsecond);
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						} else {
+
+
+					    	break;
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+				console.log("-----------------------------------------------------------------------------------------------------")
+				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'green',
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
 				        var BAsecond = (pointBTime - pointATime) / 1000;
 
 						if (BAsecond < 10) {
 					        map.addLayer(firstpolyline);
 						}
-					}
 
-				}
+					    // -----------------------------------------------------------------------------------------------------
 
-
-
-				var cnt = 0;
-
-				var tttcnt = 0;
-
-				// ------------------------------------------------------------------------------------------------------------------------
-				// Lv1 리스트 처리 부분
-				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-				//for (datas) {
-				for (var a = 0; a < datas.length; a++) {
-					for (var b = 0; b < crackListLv11.length; b++) {
-
-						if ( datas[a].id == crackListLv11[b] ) {
-							//console.log("인덱스 >> ", a , " - ", datas[a]);
-							crackListLv1.push(a);
-							//tttcnt++;
-						}
-					}
-
-
-					for (var b = 0; b < crackListLv22.length; b++) {
-
-						if ( datas[a].id == crackListLv22[b] ) {
-							crackListLv2.push(a);
-						}
-					}
-
-					for (var c = 0; c < crackListLv33.length; c++) {
-
-						if ( datas[a].id == crackListLv33[c] ) {
-							crackListLv3.push(a);
-						}
-					}
-
-					for (var d = 0; d < crackListLv44.length; d++) {
-
-						if ( datas[a].id == crackListLv33[d] ) {
-							crackListLv4.push(a);
-						}
-					}
-
-
-				}
-
-				for (var x = 0; x < crackListLv1.length; x++) {
-
-					var rangeSumM = 0;
-					var rangeSumP = 0;
-
-					for (var xx = crackListLv1[x]; xx > 0; xx--) {
-						if (xx == 84) {
-							console.log("11")
-						}
-						if (xx > 1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumM = rangeSumM + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'green',
-							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx-1].timestamp );
-					        var pointBTime = new Date( datas[xx].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-					        //console.log(xx + " : " + pointA + ", " + pointB + " // " + pointBTime + " - " + pointATime + " = " + BAsecond);
-					        //console.log(xx + " : " + pointA + ", " + pointB + " // " + datas[xx-1].timestamp + " - " + datas[xx].timestamp + " = " + BAsecond);
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							} else {
-
-
-						    	break;
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumM > 25 ) {
-						    	break;
-						    }
-						}
-					}
-					console.log("-----------------------------------------------------------------------------------------------------")
-					for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
-
-						if (xx < datas.length-1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumP = rangeSumP + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'green',
-							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx].timestamp );
-					        var pointBTime = new Date( datas[xx+1].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumP > 25 ) {
-						    	break;
-						    }
-						}
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
 					}
 				}
-
-				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-				// Lv1 리스트 처리 부분
-				// ------------------------------------------------------------------------------------------------------------------------
-
-				// ------------------------------------------------------------------------------------------------------------------------
-				// Lv2 리스트 처리 부분
-				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-				for (var x = 0; x < crackListLv2.length; x++) {
-
-					var rangeSumM = 0;
-					var rangeSumP = 0;
-
-					for (var xx = crackListLv2[x]; xx > 0; xx--) {
-
-						if (xx > 1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumM = rangeSumM + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'blue',
-							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx-1].timestamp );
-					        var pointBTime = new Date( datas[xx].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumM > 25 ) {
-						    	break;
-						    }
-						}
-					}
-
-					for (var xx = crackListLv2[x]; xx < datas.length; xx++) {
-
-						if (xx < datas.length-1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumP = rangeSumP + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'blue',
-							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx].timestamp );
-					        var pointBTime = new Date( datas[xx+1].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumP > 25 ) {
-						    	break;
-						    }
-						}
-					}
-				}
-
-				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-				// Lv2 리스트 처리 부분
-				// ------------------------------------------------------------------------------------------------------------------------
-
-				// ------------------------------------------------------------------------------------------------------------------------
-				// Lv3 리스트 처리 부분
-				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-				for (var x = 0; x < crackListLv3.length; x++) {
-
-					var rangeSumM = 0;
-					var rangeSumP = 0;
-
-					for (var xx = crackListLv3[x]; xx > 0; xx--) {
-
-						if (xx > 1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumM = rangeSumM + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'orange',
-							    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx-1].timestamp );
-					        var pointBTime = new Date( datas[xx].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumM > 25 ) {
-						    	break;
-						    }
-						}
-					}
-
-					for (var xx = crackListLv3[x]; xx < datas.length; xx++) {
-
-						if (xx < datas.length-1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumP = rangeSumP + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'orange',
-							    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx].timestamp );
-					        var pointBTime = new Date( datas[xx+1].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumP > 25 ) {
-						    	break;
-						    }
-						}
-					}
-				}
-
-				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-				// Lv3 리스트 처리 부분
-				// ------------------------------------------------------------------------------------------------------------------------
-
-
-				// ------------------------------------------------------------------------------------------------------------------------
-				// Lv4 리스트 처리 부분
-				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-				for (var x = 0; x < crackListLv4.length; x++) {
-
-					var rangeSumM = 0;
-					var rangeSumP = 0;
-
-					for (var xx = crackListLv4[x]; xx > 0; xx--) {
-
-						if (xx > 1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumM = rangeSumM + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    //color: 'red',
-							    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    //color: 'gray',
-							    //color: color,
-							    //color: 'lightgray',
-							    //weight: 15,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx-1].timestamp );
-					        var pointBTime = new Date( datas[xx].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumM > 25 ) {
-						    	break;
-						    }
-						}
-					}
-
-					for (var xx = crackListLv4[x]; xx < datas.length; xx++) {
-
-						if (xx < datas.length-1) {
-
-							var R = 6371; // Radius of the earth in km
-						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-						    //var d = R * c; // Distance in km
-						    var d = (R * c) * 1000; // Distance in km
-
-						    rangeSumP = rangeSumP + d;
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-							var pointList = [ pointA, pointB ];
-
-							var linesize = map.getZoom()-7
-
-							var firstpolyline = new L.Polyline(pointList, {
-							    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-							    weight: linesize,
-							    //opacity: 0.1,
-							    smoothFactor: 1
-
-							    })
-
-					        var pointATime = new Date( datas[xx].timestamp );
-					        var pointBTime = new Date( datas[xx+1].timestamp );
-
-					        var BAsecond = (pointBTime - pointATime) / 1000;
-
-							if (BAsecond < 10) {
-						        map.addLayer(firstpolyline);
-							}
-
-						    // -----------------------------------------------------------------------------------------------------
-
-						    if (rangeSumP > 25 ) {
-						    	break;
-						    }
-						}
-					}
-				}
-
-				//console.log("====================================================================================================")
-				//console.log("====================================================================================================")
-			},
-			error: function(request,status,error){
-
-				//console.log("request.status = " + request.status)dddddddddddddddddddddddddd
-
-			},
-			beforeSend:function(){
-				$('#circularG').css('display','block')
-			},
-			complete : function(data) {
-				//  실패했어도 완료가 되었을 때 처리
-				$('#circularG').css('display','none')
-
 			}
-		})
-	}
+
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv1 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
+
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv2 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+			for (var x = 0; x < crackListLv2.length; x++) {
+
+				var rangeSumM = 0;
+				var rangeSumP = 0;
+
+				for (var xx = crackListLv2[x]; xx > 0; xx--) {
+
+					if (xx > 1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumM = rangeSumM + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+
+				for (var xx = crackListLv2[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
+					}
+				}
+			}
+
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv2 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
+
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv3 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+			for (var x = 0; x < crackListLv3.length; x++) {
+
+				var rangeSumM = 0;
+				var rangeSumP = 0;
+
+				for (var xx = crackListLv3[x]; xx > 0; xx--) {
+
+					if (xx > 1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumM = rangeSumM + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'orange',
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+
+				for (var xx = crackListLv3[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'orange',
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
+					}
+				}
+			}
+
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv3 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
 
 
-	function abc() {
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv4 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
 
-		/**************************************************************************************************************************************/
-		//north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
-		//north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
-		//south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
-		//south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng - 0.0025),
+			for (var x = 0; x < crackListLv4.length; x++) {
 
-		//var dd1 = [map.getBounds().getNorthWest().lat-0.0125, map.getBounds().getNorthEast().lat-0.0125, map.getBounds().getSouthWest().lat+0.0125, map.getBounds().getSouthEast().lat-0.0125, map.getBounds().getNorthWest().lat-0.0125];
-		//var dd2 = [map.getBounds().getNorthWest().lng+0.0125, map.getBounds().getNorthEast().lng-0.0125, map.getBounds().getSouthWest().lng+0.0125, map.getBounds().getSouthEast().lng+0.0125, map.getBounds().getNorthWest().lng+0.0125];
+				var rangeSumM = 0;
+				var rangeSumP = 0;
 
-		var dd1 = [	map.getBounds().getNorthWest().lat,
-					map.getBounds().getNorthEast().lat,
-					map.getBounds().getSouthEast().lat,
-					map.getBounds().getSouthWest().lat,
-					map.getBounds().getNorthWest().lat ];
-		var dd2 = [	map.getBounds().getNorthWest().lng,
-					map.getBounds().getNorthEast().lng,
-					map.getBounds().getSouthEast().lng,
-					map.getBounds().getSouthWest().lng,
-					map.getBounds().getNorthWest().lng ];
+				for (var xx = crackListLv4[x]; xx > 0; xx--) {
 
-		var cc1 = [	map.getBounds().getNorthWest().lat+0.0025,
-					map.getBounds().getNorthEast().lat+0.0025,
-					map.getBounds().getSouthEast().lat-0.0025,
-					map.getBounds().getSouthWest().lat-0.0025,
-					map.getBounds().getNorthWest().lat+0.0025 ];
-		var cc2 = [	map.getBounds().getNorthWest().lng-0.0025,
-					map.getBounds().getNorthEast().lng+0.0025,
-					map.getBounds().getSouthEast().lng+0.0025,
-					map.getBounds().getSouthWest().lng-0.0025,
-					map.getBounds().getNorthWest().lng-0.0025 ];
+					if (xx > 1) {
 
-		var tlines = []
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
 
-		for (var a = 0 ; a < dd1.length-1 ; a++ ) {
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
 
-			var pointA = new L.LatLng(dd1[a], dd2[a]);
-			var pointB = new L.LatLng(dd1[a+1], dd2[a+1]);
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
 
-			var pointList = [ pointA, pointB ];
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
 
-			var riskLvColor = ""
+					    rangeSumM = rangeSumM + d;
 
-			var linesize = 13
+					    // -----------------------------------------------------------------------------------------------------
 
-			var firstpolyline11 = new L.Polyline(pointList, {
-			    //color: 'red',
-			    color: 'red',
-			    //weight: 15,
-			    weight: linesize,
-			    //opacity: 0.1,
-			    smoothFactor: 1
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
 
-			    })//.on('click', function(e) {
-			    	//alert('Polyline clicked at ' + e.latlng);
-		            // You can also handle other actions here
-		            //wayMarkerList(response ,wayname)
+						var pointList = [ pointA, pointB ];
 
-		        //});;
+						var linesize = map.getZoom()-7
 
-			map.addLayer(firstpolyline11);
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'red',
+						    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
 
-			tlines.push(firstpolyline11);
+						    })
+
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+
+				for (var xx = crackListLv4[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
+					}
+				}
+			}
+
+		},
+		error: function(request,status,error){
+			//console.log("request.status = " + request.status)dddddddddddddddddddddddddd
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block')
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none')
+
 		}
+	})
+}
 
-		for (var aa = 0 ; aa < cc1.length-1 ; aa++ ) {
+$(document).ready(function() {
 
-			var pointA = new L.LatLng(cc1[aa], cc2[aa]);
-			var pointB = new L.LatLng(cc1[aa+1], cc2[aa+1]);
+	let now1 = new Date('2023-03-30');
+	//console.log("현재 : ", now1);
 
-			var pointList = [ pointA, pointB ];
+	let oneMonthAgo = new Date(now1.setMonth(now1.getMonth() - 1)); // 한달
+	//console.log("한달 전 : ", oneMonthAgo);
 
-			var riskLvColor = ""
+	let now2 = new Date('2023-12-22');
+	//console.log("현재 : ", now2);
 
-			var linesize = 13
+	let oneMonthLater = new Date(now2.setMonth(now2.getMonth() + 1));
+	//console.log("한달 후 : ", oneMonthLater)
 
-			var firstpolyline22 = new L.Polyline(pointList, {
-			    //color: 'red',
-			    color: 'blue',
-			    //weight: 15,
-			    weight: linesize,
-			    //opacity: 0.1,
-			    smoothFactor: 1
+	//0.0025
 
-			    })//.on('click', function(e) {
-			    	//alert('Polyline clicked at ' + e.latlng);
-		            // You can also handle other actions here
-		            //wayMarkerList(response ,wayname)
+	//fromDt = $('#fromDt').val().replaceAll('-', '');
+	//toDt = $('#toDt').val().replaceAll('-', '');
 
-		        //});;
+	// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
+	var date1 = new Date();
+	//$('#toDt').val(fnDateFormat(date1, 'select'))
+	var date2 = new Date(date1.setDate(date1.getDate() - 30));
+	// $('#fromDt').val(dateFormat(date2, 'select'))
+	//$('#fromDt').val('2023-10-01')
 
-			map.addLayer(firstpolyline22);
 
-			tlines.push(firstpolyline22);
-		}
+//setLevelList(1, '');
+region = "${authInfo.cdNa}";
 
-	/**************************************************************************************************************************************/
-	}
+mapInfo(map);
 
+
+
+})
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
-<script>
-/* document.addEventListener('DOMContentLoaded', function() {
-	var divA = document.getElementById('.infoWrap');
-	var divB = document.getElementById('.riskInfopopup');
 
-	// divA의 위치와 크기를 가져옴
-	//var rect = divA.getBoundingClientRect();
-
-	// divB의 위치를 divA의 위치를 기준으로 설정
-	//divB.style.top = (rect.bottom + 20) + 'px'; // divA의 아래쪽에 20px 떨어진 위치에 divB를 배치
-	//divB.style.left = rect.left + 'px'; // divA와 같은 left 위치에 divB를 배치
-	divB.style.left = (divA.left + 20) + 'px'; // divA와 같은 left 위치에 divB를 배치
-}); */
-</script>
 

@@ -51,44 +51,52 @@ $(function() {
 		}
 	}
 
-   $(".menu_bar").on({
-	   click: function(){
-		   $(".sub, .left").addClass("on");
-		   $(".menu_bar").css("display","none");
-		   $(".menu_bar_close").css("display","block");
-		   $(".sub .submenu").css("display","block");
-		   $(".main .container .contents_box.contents_layout").addClass("on").css("width", "calc(100% - 240px)");
-		   $(".submenu > li").removeClass("on");
-		   $(".submenu > li > ul").slideUp();
-		   $(".submenu > li:first-child").addClass("on");
-		   $(".submenu > li:first-child ul").css("display", "block");
-		   leftBar = true;
-		   $("#thead").width($(window).width()-320+"px");
-	   }
-   });
+	var lastActiveMenu = null;
 
-   $(".menu_bar_close").on({
-	   click: function(){
-		   $(".sub, .left").removeClass("on");
-		   $(".menu_bar_close").css("display","none");
-		   $(".menu_bar").css("display","block");
-		   $(".sub .submenu").css("display","none");
-		   $(".main .container .contents_box.contents_layout").removeClass("on").css("width", "calc(100% - 30px)");
-		   $(".submenu > li:first-child").removeClass("on");
-		   $(".submenu > li:first-child ul").css("display", "none");
-		   leftBar = false;
-		   $("#thead").width($(window).width()-100+"px");
-	   }
-   });
+	$(".menu_bar").on({
+	    click: function() {
+	        $(".sub, .left").addClass("on");
+	        $(".menu_bar").css("display", "none");
+	        $(".menu_bar_close").css("display", "block");
+	        $(".sub .submenu").css("display", "block");
+	        $(".main .container .contents_box.contents_layout").addClass("on").css("width", "calc(100% - 240px)");
 
-   $(".submenu > li").on({
-	   click: function(){
-		   $(".submenu > li").removeClass("on");
-		   $(".submenu > li > ul").stop().slideUp();
-		   $(this).addClass("on");
-		   $(this).find("ul").stop().slideDown();
-	   }
-   });
+	        if (lastActiveMenu) {
+	            $(lastActiveMenu).addClass("on");
+	            $(lastActiveMenu).find("ul").css("display", "block");
+	        }
+
+	        leftBar = true;
+	        $("#thead").width($(window).width() - 320 + "px");
+	    }
+	});
+
+	$(".menu_bar_close").on({
+	    click: function() {
+	        $(".sub, .left").removeClass("on");
+	        $(".menu_bar_close").css("display", "none");
+	        $(".menu_bar").css("display", "block");
+	        $(".sub .submenu").css("display", "none");
+	        $(".main .container .contents_box.contents_layout").removeClass("on").css("width", "calc(100% - 45px)");
+
+	        // 마지막으로 열린 메뉴 항목을 저장
+	        lastActiveMenu = $(".submenu > li.on").get(0);
+	        leftBar = false;
+	        $("#thead").width($(window).width() - 100 + "px");
+	    }
+	});
+
+	$(".submenu > li").on({
+	    click: function() {
+	        $(".submenu > li").removeClass("on");
+	        $(".submenu > li > ul").stop().slideUp();
+	        $(this).addClass("on");
+	        $(this).find("ul").stop().slideDown();
+
+	        // 메뉴 항목을 클릭할 때마다 해당 항목을 lastActiveMenu에 저장
+	        lastActiveMenu = this;
+	    }
+	});
 
 	/*대기질 best worst*/
 	$(".result .tab dt span").on({
