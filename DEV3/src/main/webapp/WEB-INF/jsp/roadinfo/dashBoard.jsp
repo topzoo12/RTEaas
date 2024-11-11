@@ -646,7 +646,6 @@
 				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt +'&region='+ region,
 				async : false,
 				data : {
-
 				},
 				headers : {
 					'Authorization' : 'Bearer '
