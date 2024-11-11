@@ -102,7 +102,8 @@
 											<dd id="detail_route_name">-</dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime">-</dd>
-
+											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
+											<dd id="popup_road_status">미분류</dd>
 										</dl>
 									</div>
 								</div>
@@ -147,6 +148,8 @@
 											<dd id="detail_route_name">-</dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
+											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
+											<dd id="popup_road_status">미분류</dd>
 										</dl>
 									</div>
 								</div>
@@ -191,6 +194,8 @@
 											<dd id="detail_route_name">-</dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
+											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
+											<dd id="popup_road_status">미분류</dd>
 										</dl>
 									</div>
 								</div>
@@ -235,6 +240,8 @@
 											<dd id="detail_route_name">-</dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
+											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
+											<dd id="popup_road_status">미분류</dd>
 										</dl>
 									</div>
 								</div>
@@ -279,6 +286,8 @@
 											<dd id="detail_route_name">-</dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
+											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
+											<dd id="popup_road_status">미분류</dd>
 										</dl>
 									</div>
 								</div>
@@ -502,8 +511,42 @@
 
 		}
 
-		let prependNumber = 1;
+	  //다국어 추가
+       var statusList = [];
+       <c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
+      	 statusList.push({ 'codeId' : '${statuslist.cdId}', 'statusNm' : '${statuslist.cdNm}', 'statusNmEng' : '${statuslist.cdNmEng}', 'statusNmJp' : '${statuslist.cdNmJp}'});
+		</c:forEach>
 
+		function getRoadStatus(statusCode) {
+			var result ='' ;
+
+			if (statusCode != null ){
+				var result = statusList.find(item => item.codeId === statusCode);
+
+				switch ('${nowCdNa}') {
+			        case 'KR':
+			            return result.statusNm;
+			        case 'US':
+			        	return result.statusNmEng;
+			        case 'JP':
+			        	return result.statusNmJp;;
+				}
+
+			} else {
+				switch ('${nowCdNa}') {
+		        case 'KR':
+		            return '미분류';
+		        case 'US':
+		            return '(us)미분류';
+		        case 'JP':
+		            return '(jp)미분류';
+				}
+			}
+			return result;
+		}
+
+
+		let prependNumber = 1;
 
 		$('.example-opensingle').beefup({
 			openSingle : true,
@@ -599,11 +642,10 @@
 
 			$.ajax({
 				type : "GET",
-				//url : 'http://localhost:8080/dashboard/worstroad?from='+ fromDt +'&region='+ region,
+				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&region='+ region,
 				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt +'&region='+ region,
 				async : false,
 				data : {
-
 				},
 				headers : {
 					'Authorization' : 'Bearer '
@@ -620,7 +662,6 @@
 				error	: function(xhr, status, error) {
 					$('#circularG').css('display','none')
 				},
-
 				success : function(resp) {
 					datas = resp.data;
 
@@ -645,12 +686,11 @@
 						$('.badge_risk:eq(' + i + ')').addClass(iconClass);
 					 	$('.badge_risk:eq(' + i + ')').text(levelText);
 
-
 						//HEAD
 						// 이름
 						$('.beefup__head:eq(' + i + ').worstHead h3').text(data.wayName);
 						// 건수
-						$('.beefup__head:eq(' + i + ').worstHead span:eq(0)').text('<fmt:message key="TOTAL" bundle="${bundle}"/> ' + data.count);
+						$('.beefup__head:eq(' + i + ').worstHead span:eq(0)').text('<fmt:message key="TOTAL" bundle="${bundle}"/> ' + data.count +'<fmt:message key="COUNT2" bundle="${bundle}"/> ');
 						// 시간
 						$('.beefup__head:eq(' + i + ').worstHead span:eq(1)').text(date1);
 
@@ -665,7 +705,7 @@
 						// 디바이스명
 						$('.infoDetail:eq(' + i + ') dd').eq(1).text(deviceInfo.deviceNm);
 						// 위험도
-						$('.infoDetail:eq(' + i + ') dd').eq(2).text('Level ' + level + ' '+ levelText);
+						$('.infoDetail:eq(' + i + ') dd').eq(2).text(levelText);
 
 						// 위치
 						$('.infoDetail:eq(' + i + ') dd').eq(3).text('<fmt:message key="LATITUDE" bundle="${bundle}"/> ' + data.latitude + ' / <fmt:message key="LONGITUDE" bundle="${bundle}"/> ' + data.longitude);
@@ -673,6 +713,8 @@
 						$('.infoDetail:eq(' + i + ') dd').eq(4).text(data.wayName);
 						// 촬영일시
 						$('.infoDetail:eq(' + i + ') dd').eq(5).text(date1);
+						// 조치상태
+						$('.infoDetail:eq(' + i + ') dd').eq(6).text(getRoadStatus(data['status']));
 
 						// FOOTER
 						// 포트홀
@@ -683,6 +725,8 @@
 						$('.itemvalue:eq(' + i + ') em').eq(2).text(data.countOfHorizontalCrack);
 						// 피로균열
 						$('.itemvalue:eq(' + i + ') em').eq(3).text(data.countOfAlligators);
+
+
 					}
 
 					/*
