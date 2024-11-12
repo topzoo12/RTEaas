@@ -410,9 +410,10 @@
 				var day = date.getDate() < 10 ? "0" + "" + date.getDate(): date.getDate();
 				var hour = date.getHours() < 10 ? "0" + "" + date.getHours() : date.getHours();
 				var min = date.getMinutes() < 10 ? "0" + "" + date.getMinutes() : date.getMinutes();
-				var sec = date.getSeconds() < 10 ? "0" + "" + date.getSeconds() : date.getSeconds();
+				//var sec = date.getSeconds() < 10 ? "0" + "" + date.getSeconds() : date.getSeconds();
 
-				dateString = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+				dateString = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
+				//+ ":" + sec;
 
 			} else if (format == 'select') {
 
