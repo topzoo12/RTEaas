@@ -716,9 +716,9 @@ function drawMarker(response) {
 		var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
 		var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
 		var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-		var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
+		//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
 
-		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
 		var addrPoLocality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
 

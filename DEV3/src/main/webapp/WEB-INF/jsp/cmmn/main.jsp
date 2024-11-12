@@ -532,7 +532,7 @@ $(".menu_bar_close").click(function(){
 
 	 //sleep(300);
 	//map.invalidateSize();
-	setTimeout(() => map.invalidateSize(), 5000);
+	setTimeout(() => map.invalidateSize(), 550);
 /* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1485px');
         $('.re-search-container').css('width', '1485px');
@@ -943,9 +943,9 @@ function reSearch() {
 				var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate();
 				var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours();
 				var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes();
-				var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
+				//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
-				var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+				var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
 				var addrPoLocality = (item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
 
