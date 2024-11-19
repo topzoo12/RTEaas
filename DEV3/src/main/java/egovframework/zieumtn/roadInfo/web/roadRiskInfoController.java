@@ -148,5 +148,101 @@ public class roadRiskInfoController {
 
 	}
 
+	@RequestMapping(value = "/roadinfo/roadDetetionInfo.do")
+	public ModelAndView roadDetetionInfo(@ModelAttribute("fcltsInfoVO") FcltsInfoVO searchVO, ModelMap model, HttpSession session) throws Exception {
+
+		AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+
+		searchVO.setSessionCoId(authInfo.getSessionCoId());
+		searchVO.setSessionUserId(authInfo.getSessionUserId());
+
+		// 디바이스 리스트
+		sysDeviceVO deviceVO = new sysDeviceVO();
+		deviceVO.setCoId(authInfo.getCoId());
+		List<?> deviceList = sysDeviceService.selectDeviceList(deviceVO);
+
+		LOGGER.info("접속정보" + authInfo.getCoId());
+
+		// 심각도 정보
+		CodeVO select1VO = new CodeVO();
+		select1VO.setCdgrpId("LV");
+		select1VO.setSessionCoId(authInfo.getSessionCoId());
+		select1VO.setSessionUserId(authInfo.getSessionUserId());
+		List<?> levelList = codeService.selectCommCodeList(select1VO);
+
+
+		session.setAttribute("deviceList", deviceList);
+		session.setAttribute("authInfo", authInfo);
+		session.setAttribute("levelList", levelList);
+		session.setAttribute("cdNa", authInfo.getCdNa());
+
+
+		ModelAndView mv = new ModelAndView("/roadinfo/roadDetetionInfo");
+
+		List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
+		for(LoginMenuVO fav : favList){
+			if(fav.getSrnUrl().equals("/roadinfo/roadDetetionInfo")) {
+				mv.addObject("fav", "message");
+			}
+		}
+
+		return mv;
+
+	}
+
+	@RequestMapping(value = "/roadinfo/roadObstacleList.do")
+	public ModelAndView roadObstacleList(@ModelAttribute("fcltsInfoVO") FcltsInfoVO searchVO, ModelMap model, HttpSession session) throws Exception {
+
+
+		System.out.println("******************/roadstats/period");
+
+		AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+
+		searchVO.setSessionCoId(authInfo.getSessionCoId());
+		searchVO.setSessionUserId(authInfo.getSessionUserId());
+
+		CodeVO codeVO1 = new CodeVO();
+		codeVO1.setCdgrpId("AA");
+		codeVO1.setSessionCoId(authInfo.getSessionCoId());
+		codeVO1.setSessionUserId(authInfo.getSessionUserId());
+		List<?> codeList1 = codeService.selectCommCodeList(codeVO1);
+
+		CodeVO codeVO2 = new CodeVO();
+		codeVO2.setCdgrpId("BB");
+		codeVO2.setSessionCoId(authInfo.getSessionCoId());
+		codeVO2.setSessionUserId(authInfo.getSessionUserId());
+		List<?> codeList2 = codeService.selectCommCodeList(codeVO2);
+
+		List<FcltsInfoVO> deviceList = (List<FcltsInfoVO>) deviceService.selectDeviceList(searchVO);
+
+		SensorInfoVO ioVO = new SensorInfoVO();
+		if(deviceList.size()>0) {
+			ioVO.setFcltsUuid(deviceList.get(0).getFcltsUuid());
+			ioVO.setSessionCoId(authInfo.getSessionCoId());
+			ioVO.setSessionUserId(authInfo.getSessionUserId());
+
+		}
+
+		List<?> ioList = deviceService.selectIoList(ioVO);
+		ModelAndView mv = new ModelAndView("/roadinfo/roadObstacleList");
+
+		mv.addObject("resultList1", deviceList);
+		mv.addObject("resultList2", ioList);
+		mv.addObject("selectList1", codeList1);
+		mv.addObject("selectList2", codeList2);
+		mv.addObject("totCnt1", deviceList.size());
+		mv.addObject("totCnt2", ioList.size());
+
+		List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
+		for(LoginMenuVO fav : favList){
+			if(fav.getSrnUrl().equals("/roadinfo/roadObstacleList")) {
+				mv.addObject("fav", "message");
+			}
+		}
+
+		return mv;
+
+	}
+
 
 }

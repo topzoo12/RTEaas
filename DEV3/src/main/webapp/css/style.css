@@ -1470,7 +1470,8 @@ input:checked + .slider:before {
 	letter-spacing: 0;
 }
 
-.roadinfo .infoDetailWrap .infoTitle{
+.roadinfo .infoDetailWrap .infoTitle,
+.roadinfo .infoListWrap .infoListTop{
     border-top: 1px solid var(--border);
 }
 .infoListWrap p.itemCount em{
