@@ -394,12 +394,12 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		url: "${authInfo.restApiUrl}/pothole",
-		data: {
+		url: "${authInfo.restApiUrl}/pothole/info",
+		data:{
 			on_way:false,
 			administrative_id: areaCode,
 			region: region,
-			devices: deviceIdList
+			co_id: '${authInfo.coId}'
 		},
 		success: function(response) {
 			allData = response.data;

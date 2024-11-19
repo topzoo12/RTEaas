@@ -320,16 +320,22 @@ var blueIcon = L.icon({
 
 var infoList = [];
 var sortDataList= [];
-var deviceIdList;
+var deviceIdList = [];
 
 var deviceKeyValue = [];
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
 	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
-		if (deviceIdList == "" ) {
+		/* if (deviceIdList == "" ) {
 			deviceIdList += '${deList.macAddr}'
 		} else {
 			deviceIdList += ',${deList.macAddr}'
+		}*/
+		var mac = '${deList.macAddr}';
+
+		if (mac.length > 0 && mac != ""){
+			deviceIdList.push(mac);
 		}
+
 </c:forEach>
 
 var statusKeyValue = [];
@@ -391,14 +397,15 @@ $('.btn_search').on("click", function(){
     	$("#pop_alert").stop().fadeIn(300);
 	}
 
+
 	$.ajax({
 		type: "GET",
-		url: "${authInfo.restApiUrl}/pothole",
-		data: {
+		url: "${authInfo.restApiUrl}/pothole/info",
+		data:{
 			on_way:false,
 			administrative_id: areaCode,
 			region: region,
-			devices: deviceIdList
+			co_id: '${authInfo.coId}'
 		},
 		success: function(response) {
 			allData = response.data;
