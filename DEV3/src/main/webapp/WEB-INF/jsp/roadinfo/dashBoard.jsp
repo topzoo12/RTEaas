@@ -433,7 +433,7 @@
 			var today = new Date();
 
 			today.setFullYear(today.getFullYear() - 1);
-			today.setDate(today.getDate() - 1);
+			today.setDate(today.getDate() + 1);
 
 			var fromDate = dateFormat(today, 'select');
 			return fromDate.replaceAll('-','');
@@ -560,12 +560,12 @@
 
 			var fromDt = getFromYearDate();
 			var toDt = dateFormat(today, 'select').replaceAll('-','');
+			var coId = '${authInfo.coId}';
 
 			$.ajax({
 				type : "GET",
-				//url : 'http://localhost:8080/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region,
-				url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region,
-				//url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from=20230101&to=20241201&region='+ region, //url : 'http://localhost:8081/dashboard/potholesbyroad?from=20230101&to=20231201&region='+ region,
+				//url : 'http://localhost:8081/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region + "&coId=" + coId,
+				url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region +"&coId=" + coId,
 				async : false,
 				data : {
 
@@ -639,12 +639,15 @@
 
 			var region = '${cdNa}';
 
+			var today = new Date();
 			var fromDt = getFromYearDate();
+			var toDt = dateFormat(today, 'select').replaceAll('-','');
+			var coId = '${authInfo.coId}';
 
 			$.ajax({
 				type : "GET",
-				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&region='+ region,
-				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt +'&region='+ region,
+				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&to='+toDt+'&region='+ region +"&coId=" + coId,
+				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt  +'&to='+toDt +'&region='+ region,
 				async : false,
 				data : {
 				},
@@ -751,10 +754,11 @@
 			$.ajax({
 				type : "GET",
 				url : "${authInfo.restApiUrl}/statistics/yearly/month/count",
-				//url : "http://localhost:8080/statistics/yearly/month/count",
+				//url : "http://localhost:8081/statistics/yearly/month/count",
 				async : true,
 				data : {
-					region : region
+					region : region,
+					coId : '${authInfo.coId}'
 				},
 				headers : {
 					'Authorization' : 'Bearer '

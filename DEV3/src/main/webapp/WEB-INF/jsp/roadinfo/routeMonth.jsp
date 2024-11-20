@@ -262,17 +262,17 @@ function drawline() {
 
 	$.ajax({
 		type: "GET",
-		//url: "${authInfo.restApiUrl}/detected-road" ,
 		url: "${authInfo.restApiUrl}/detected-road-by-date",
-		//url: "http://localhost:8081/detected-road",
+		//url: "http://localhost:8081/detected-road-by-date",
 		data: {
-			on_way:false,
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
 			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
 			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
 			south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
 			searchMonth:$("#searchYearMonth").data('code'),
-			region:"${authInfo.cdNa}"
+			region:"${authInfo.cdNa}",
+			co_id :"${authInfo.coId}"
+
 		},
 		success: function(resp) {
 			datas = resp.data

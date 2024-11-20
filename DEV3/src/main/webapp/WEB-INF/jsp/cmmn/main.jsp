@@ -414,6 +414,7 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
+		//url: "http://localhost:8081/pothole",
 		url: "${authInfo.restApiUrl}/pothole",
 		data:{
 			on_way : false,

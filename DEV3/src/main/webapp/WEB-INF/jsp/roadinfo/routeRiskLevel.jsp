@@ -614,7 +614,7 @@ function mapInfo(map) {
 
 	$.ajax({
 		type: "GET",
-		//url: "${authInfo.restApiUrl}/pothole",
+		//url: "http://localhost:8081/potholeInArea",
 		url: "${authInfo.restApiUrl}/potholeInArea",
 		data: {
 			on_way:false,
@@ -625,7 +625,7 @@ function mapInfo(map) {
 			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
 			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
 			region:"${authInfo.cdNa}",
-			devices:deviceIdList
+			co_id :"${authInfo.coId}"
 		},
 		success: drawMarker,
 		error: function(request,status,error){
@@ -637,7 +637,7 @@ function mapInfo(map) {
 		complete : function(data) {
 			//  실패했어도 완료가 되었을 때 처리
 			$('#circularG').css('display','none');
-			ttt();
+			getDetectedRoad();
 
 		}
 	})
@@ -949,20 +949,19 @@ function detail(id, clusterChk){
 
 }
 
-function ttt() {
+function getDetectedRoad() {
 
 	$.ajax({
 		type: "GET",
 		url: "${authInfo.restApiUrl}/detected-road" ,
-		//url: "${authInfo.restApiUrl}//detected-road-by-date",
 		//url: "http://localhost:8081/detected-road",
 		data: {
-			on_way:false,
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
 			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
 			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
 			south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-			region:"${authInfo.cdNa}"
+			region:"${authInfo.cdNa}",
+			co_id :"${authInfo.coId}"
 		},
 		success: function(resp) {
 			datas = resp.data
@@ -1052,10 +1051,7 @@ function ttt() {
 			}
 
 
-
 			var cnt = 0;
-
-			var tttcnt = 0;
 
 			// ------------------------------------------------------------------------------------------------------------------------
 			// Lv1 리스트 처리 부분
@@ -1067,7 +1063,7 @@ function ttt() {
 					if ( datas[a].id == crackListLv11[b] ) {
 						//console.log("인덱스 >> ", a , " - ", datas[a]);
 						crackListLv1.push(a);
-						//tttcnt++;
+
 					}
 				}
 
