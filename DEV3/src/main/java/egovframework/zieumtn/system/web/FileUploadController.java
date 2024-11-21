@@ -227,6 +227,9 @@ public class FileUploadController {
 		fileParam.setFilePath(uploadFolder);
 		fileParam.setFileType(file.getContentType());
 		fileParam.setInsertDate(todayfm);
+		//fileParam.setFileSize((long) file.getSize());
+		//fileParam.setFileSize(file.getSize()); String.valueOf((long) Math.floor(insertId))
+		fileParam.setFileSize((int) file.getSize());
 
 
 

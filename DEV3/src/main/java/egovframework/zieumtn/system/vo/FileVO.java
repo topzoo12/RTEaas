@@ -47,6 +47,7 @@ public class FileVO extends CommonDefaultVO {
 	private String insertDate;
 	private String fileType;
 	private Double SeqNo;
+	private Integer fileSize;
 
 	public String getCoId() {
 		return coId;
@@ -90,6 +91,13 @@ public class FileVO extends CommonDefaultVO {
 	public void setSeqNo(Double seqNo) {
 		SeqNo = seqNo;
 	}
+	public Integer getFileSize() {
+		return fileSize;
+	}
+	public void setFileSize(Integer fileSize) {
+		this.fileSize = fileSize;
+	}
+
 
 
 

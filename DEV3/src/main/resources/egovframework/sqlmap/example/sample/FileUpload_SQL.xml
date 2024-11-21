@@ -11,6 +11,7 @@
 		<result property="userId" column="userId"/>
 		<result property="fileNm" column="fileNm"/>
 		<result property="filePath" column="filePath"/>
+		<result property="fileSize" column="fileSize"/>
 		<result property="insertDate" column="insertDate"/>
 		<result property="fileType" column="fileType"/>
 	</resultMap>
@@ -30,9 +31,9 @@
 	     <![CDATA[
 		INSERT
 		  INTO PUBLIC.TB_FILE_LIST
-			 ( seq_no,CO_ID, upd_id, file_nm, file_path, file_type, insert_dtm )
+			 ( seq_no,CO_ID, upd_id, file_nm, file_path, file_type, insert_dtm, file_size )
 		VALUES
-		 	 ( #seqNo# ,#coId#, #userId#, #fileNm#, #filePath#, #fileType#, #insertDate# )
+		 	 ( #seqNo# ,#coId#, #userId#, #fileNm#, #filePath#, #fileType#, #insertDate#, #fileSize# )
 		 ]]>
 
 	</insert>
@@ -45,7 +46,8 @@
 				FILE_NM as fileNm,
 				FILE_PATH as filePath,
 				INSERT_DTM as insertDate,
-				FILE_TYPE as fileType
+				FILE_TYPE as fileType,
+				FILE_SIZE as fileSize
 			FROM TB_FILE_LIST
 				WHERE CO_ID = #coId#
     </select>

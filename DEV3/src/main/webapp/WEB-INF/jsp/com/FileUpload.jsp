@@ -7,7 +7,11 @@
 
 <c:set var="bundleName" value="bundles.lang_${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
 <fmt:setBundle basename="${bundleName}" var="bundle" />
-
+<style>
+     form input::file-selector-button {
+       display: none;
+     }
+</style>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=j5co10chpb"></script>
 
 <div class="contentsWrap">
@@ -23,25 +27,22 @@
 		</form> --%>
 
 		<li class="view">
-				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data">
-				    <input type="file" name="file" id="file" style="display:none">
-				    <!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
-				    <!-- <input type="submit" value="UPLOAD" class="btn_m btn_primary btn_r" id="save_faq"><br/> -->
-				</form>
+
 			<div class="stitle">
-                <p class="tl"><span class="cnt"><fmt:message key="TOTAL" bundle="${bundle}"/> <strong id="totCnt">${totCnt}</strong> <fmt:message key="COUNT2" bundle="${bundle}"/></span></p>
+                <p class="tl" style="width:100px;"><span class="cnt"><fmt:message key="TOTAL" bundle="${bundle}"/> <strong id="totCnt">${totCnt}</strong> <fmt:message key="COUNT2" bundle="${bundle}"/></span></p>
 				<!-- <label for="file">
 					<div class="btn_m btn_primary btn_r">파일 업로드하기</div>
 				</label> -->
 
-				<p class="bbs_btn">
-					<%-- <a href="#" class="btn_bbs btn_write pop_reg" data-pop="write-1"><fmt:message key="NEW" bundle="${bundle}"/></a>
-					<a href="#" class="btn_bbs btn_edit pop_mod" data-pop="write-1"><fmt:message key="MOD" bundle="${bundle}"/></a> --%>
-					<!-- <a href="#" class="btn_bbs btn_delete pop_del" id="pop_del-1" data-pop="write-1">삭제</a> -->
-					<!-- <label for="file">
-						<div class="btn_m btn_primary btn_r">파일 업로드하기</div>
-					</label> -->
-					<label class="btn_m btn_primary btn_r" for="file">파일 선택하기</label>
+					<!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
+					<!-- <input type="submit" value="UPLOAD" class="btn_m btn_primary btn_r" id="save_faq"><br/> -->
+
+				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:75%; direction: rtl;">
+					<input type="file" name="file" id="file" style="width:100%">
+				</form>
+
+				<p class="bbs_btn" style="width:224px;">
+					<label class="btn_m btn_primary btn_r" for="file" style="cursor: pointer">파일 선택하기</label>
 					<!-- <button class="btn_m btn_primary btn_r" id="file">파일 선택</button> -->
 					<button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button>
 				</p>
@@ -50,10 +51,11 @@
 			<table class="table">
 				<colgroup>
 					<col style="width: 48px">
-					<col style="width: 520px">
-					<col style="width: 350px">
-					<col style="width: 250px">
-					<col style="width: 250px">
+					<col style="width: 500px">
+					<col style="width: 200px">
+					<col style="width: 200px">
+					<col style="width: 100px">
+					<col style="width: 120px">
 					<col style="width: 250px">
 				</colgroup>
 				<thead>
@@ -62,6 +64,7 @@
                         <th>파일명</th>
                         <th>파일경로</th>
                         <th>파일타입</th>
+                        <th>파일사이즈</th>
                         <th>저장자</th>
                         <th>저장날짜</th>
 					</tr>
@@ -72,10 +75,11 @@
 				<table class="table" id="table-1">
 					<colgroup>
 						<col style="width: 48px">
-						<col style="width: 520px">
-						<col style="width: 350px">
-						<col style="width: 250px">
-						<col style="width: 250px">
+						<col style="width: 500px">
+						<col style="width: 200px">
+						<col style="width: 200px">
+						<col style="width: 100px">
+						<col style="width: 120px">
 						<col style="width: calc(250px - 17px)">
 					</colgroup>
 		        	<tbody>
@@ -85,6 +89,7 @@
 							<td align="center" class="listtd"><c:out value="${result.fileNm}"/></td>
 							<td align="left" class="listtd"><c:out value="${result.filePath}"/></td>
 							<td align="left" class="listtd"><c:out value="${result.fileType}"/></td>
+							<td align="center" class="listtd"><c:out value="${result.fileSize}"/></td>
 							<td align="left" class="listtd"><c:out value="${result.userId}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.insertDate}"/></td>
 							<%-- <td style="display:none;" align="center" class="listtd"><c:out value="${result.regId}"/></td>
@@ -97,38 +102,6 @@
 
 		</li>
 
-
-
-            <!-- table class="table_write">
-                <tbody>
-                    <tr>
-                        <th><fmt:message key="AUTHOR" bundle="${bundle}"/></th>
-                        <td>
-                        <input type="text" value="${authInfo.usrNm}" name="author" id="author" class="input3" placeholder="" disabled>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><fmt:message key="ID" bundle="${bundle}"/></span></th>
-                        <td>
-                        <input type="text" value="${authInfo.usrId}" name="userId" id="userId" class="input3" placeholder="" disabled>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><fmt:message key="Q_TITLE" bundle="${bundle}"/></th>
-                        <td>
-                        <input type="text" value="" name="faqTitle" id="faqTitle" class="input3" placeholder="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><fmt:message key="Q_CONTENS" bundle="${bundle}"/></th>
-                        <td>
-                        <textarea name="faqContents" id ="faqContents" cols="30" rows="5"></textarea>
-                        </td>
-                    </tr>
-                </tbody>
-            </table-->
-
-
             <%-- <div class="btnwrap">
                 <!-- <span class="btn_m btn_darkline btn_r" id=""><fmt:message key="CANCEL" bundle="${bundle}"/></span> -->
                 <button class="btn_m btn_primary btn_r" id="save_faq"><fmt:message key="SEND_EMAIL" bundle="${bundle}"/></button>
@@ -137,6 +110,17 @@
 	</ul>
 
 </div>
+<!-- 로딩중 맵용 -->
+<!-- <div id="circularG" >
+   <div id="circularG_1" class="circularG map"></div>
+   <div id="circularG_2" class="circularG map"></div>
+   <div id="circularG_3" class="circularG map"></div>
+   <div id="circularG_4" class="circularG map"></div>
+   <div id="circularG_5" class="circularG map"></div>
+   <div id="circularG_6" class="circularG map"></div>
+   <div id="circularG_7" class="circularG map"></div>
+   <div id="circularG_8" class="circularG map"></div>
+</div> -->
 
 <script language="javascript">
 
@@ -144,6 +128,26 @@ $('#table-1 > tbody > tr').on('click', function(){
 	$(this).parent().children().removeClass('on');
 	$(this).addClass('on');
 });
+
+var fileNameChk = $('#file').val();
+
+
+/* var fileInput = document.querySelector('.file');
+var nameInput = document.querySelector('.upload-name'); */
+
+$('#file').on('change', function() {
+    var fileName = $(this).val().split('\\').pop(); // 파일 경로에서 이름만 추출
+    $('#fileName').text(fileName || "선택된 파일 없음");
+});
+
+/* fileInput.addEventListener('change', function(e){
+  const input = e.target.closest('.file');
+
+  if (!input) return;
+  var fileName = input.value.split('/').pop().split('\\').pop();
+  nameInput.value = fileName;
+
+}); */
 
 /* $(document).on('click', '.pop_alert_close', function() {
 
@@ -156,11 +160,12 @@ $('#save_faq').on('click', function(){
 	var form = $('#fileUploadForm')[0];
 	var formData = new FormData(form);
 
-	var fileValue = $('#file').val().split("\\");
-	var fileName = fileValue[fileValue.length-1]; // 파일명
+
+	//console.log("fileValue : ", fileValue, " fileName : ", fileName );
+	//var fileSize = $('#file')[0].files[0].size;
 
  	//if(valid(fileName)){
- 	if(fileName.length > 0){
+ 	if(valid()){
 
  		$.ajax({
  			type : 'POST',
@@ -175,81 +180,66 @@ $('#save_faq').on('click', function(){
 
 				$("#alert_msg").html(result.msg);
 				$('#pop_alert').stop().fadeIn(300);
-				/* $('#pop_alert').stop().fadeOut(300, function() {
-			        // 팝업이 완전히 사라진 후 브라우저 리로드
-			        location.reload();
-			    }); */
-			    /* $('#pop_alert').stop().fadeIn(300, function() {
-		            // 팝업이 표시된 후 일정 시간 대기 후 닫음
-		            setTimeout(function() {
-		                $('#pop_alert').stop().fadeOut(300, function() {
-		                    // 팝업 닫기 애니메이션 완료 후 페이지 새로고침
-		                    location.reload();
-		                });
-		            }, 400); // 2초 대기
-		        }); */
 
-				/* if(result.code == 0000){
-					// 성공시 창닫기
-					//$('#pop_write-1').hide();
-    				//$('.btn_search').click();
-					window.location.reload();
-				} */
-					//location.reload();
 				getFileList();
 
+	 			},
+	 			error : function(err){
+	 				console.log(err);
+	 			},
+	 			/* beforeSend:function(){
+	 				$('#circularG').css('display','block')
+	 			},
+	 			complete : function(data) {
+	 				//  실패했어도 완료가 되었을 때 처리
+	 				$('#circularG').css('display','none');
+	 			} */
 
- 			},
- 			error : function(err){
- 				console.log(err);
- 				}
  			});
- 		} else {
+
+
+
+ 		} /* else {
  			//alert("선택된 파일이 없습니다.");
  			$("#alert_msg").html("선택된 파일이 없습니다.");
  			$("#pop_alert").stop().fadeIn(300);
  	    	$("#pop_alert").stop().fadeIn(300);
- 		}
+ 		} */
 
 
 
 	});
 
-function valid(params){
+function valid(){
 
-	/* console.log('authinfo 확인: ${authInfo.usrId}, usrNm');
+	/* console.log('authinfo 확인: ${authInfo.usrId}, usrNm');*/
 	var cnt = 0;
-	var msg = ""; */
+	var msg = "";
 	var bool = true;
-
-
 /*
-	if (!params.senderName){
+	var fileValue = $('#file').val().split("\\");
+	var fileName = fileValue[fileValue.length-1]; // 파일명
+	*/
+	console.log($('#file')[0].files);
+	if(!$('#file').val()){
 		cnt += 1;
-		msg += "<fmt:message key="AUTHOR_REQUIRED" bundle="${bundle}"/><br>";
-	}
-
-	if (!params.senderMail){
+		msg += "선택된 파일이 없습니다."
+	} else 	if ($('#file')[0].files[0].size > 524288000) {
 		cnt += 1;
-		msg += "<fmt:message key="ID_REQUIRED" bundle="${bundle}"/><br>";
+		msg += "저장할 수 있는 최대 파일 크기는 500MB 입니다.\n"
 	}
-
-	if (!params.subject){
+/*
+	if (fileName.length < 1) {
 		cnt += 1;
-		msg += "<fmt:message key="FAQ_TITLE_REQUIRED" bundle="${bundle}"/><br>";
+		msg += "선택된 파일이 없습니다."
 	}
-
-	if (!params.message){
-		cnt += 1;
-		msg += "<fmt:message key="FAQ_CONTENTS_REQUIRED" bundle="${bundle}"/>";
-	}
-
+*/
 	if (cnt > 0) {
 		$("#alert_msg").html(msg);
 		$('#pop_alert').stop().fadeIn(300);
         $('#pop_alert').stop().fadeIn(300);
         bool = false;
-	} */
+	}
 
 	return bool;
 
@@ -278,6 +268,7 @@ function getFileList(){
 					+'<td align="center" class="listtd">' + el.rowno + '</td>'
 					+'<td align="center" class="listtd">' + el.fileNm + '</td>'
 					+'<td align="left" class="listtd">' + el.filePath + '</td>'
+					+'<td align="left" class="listtd">' + el.fileSize + '</td>'
 					+'<td align="left" class="listtd">' + el.fileType + '</td>'
 					+'<td align="left" class="listtd">' + el.userId + '</td>'
 					+'<td align="center" class="listtd">' + el.insertDate + '</td>'
