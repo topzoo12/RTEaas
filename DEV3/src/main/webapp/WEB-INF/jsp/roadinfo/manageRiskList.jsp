@@ -741,6 +741,8 @@
 
 			fromDt = $('#fromDt').val().replaceAll('-', '');
 			toDt = $('#toDt').val().replaceAll('-', '');
+			var coId = '${authInfo.coId}';
+
 			// var wayId = region == 'KR' ? '2409180' : '2409180' // 최초조회시 기본 성남 (일본좌표아직없음)
 
 			if (searchLv != 0) {
@@ -750,8 +752,8 @@
 
 			$.ajax({
 				type : "GET",
-				//url : "http://localhost:8080/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus,
-				url : "${authInfo.restApiUrl}/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus,
+				//url : "http://localhost:8081/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus +"&coId=" + coId,
+				url : "${authInfo.restApiUrl}/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus +"&coId=" + coId,
 				async : true,
 				data : {
 				},
