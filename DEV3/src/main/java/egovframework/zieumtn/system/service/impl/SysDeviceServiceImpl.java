@@ -85,21 +85,22 @@ public class SysDeviceServiceImpl extends EgovAbstractServiceImpl implements Sys
 		return rs;
 	}
 
-
 	@Override
 	public int updateSysDevice(sysDeviceVO paramVO) {
 		int rs =  sysDeviceDAO.updateSysDevice(paramVO);
 		return rs;
 	}
 
-
 	@Override
-	public int deleteSysDevice(sysDeviceVO paramVO) {
-		int rs =  sysDeviceDAO.deleteSysDevice(paramVO);
+	public List<?> selectMacAddrList(sysDeviceVO vo) throws Exception {
+		List<?> rs = sysDeviceDAO.selectMacAddrList(vo);
 		return rs;
 	}
 
-
-
+	/*@Override
+	public int deleteSysDevice(sysDeviceVO paramVO) {
+		int rs =  sysDeviceDAO.deleteSysDevice(paramVO);
+		return rs;
+	}*/
 
 }

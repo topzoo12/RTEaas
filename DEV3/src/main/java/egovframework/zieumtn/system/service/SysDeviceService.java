@@ -43,6 +43,7 @@ public interface SysDeviceService {
 	List<?> selectDeviceList(sysDeviceVO vo) throws Exception;		// 디바이스 목록 조회
 	int insertSysDevice(sysDeviceVO paramVO);						// 신규 디아비스 등록
 	int updateSysDevice(sysDeviceVO paramVO);						// 디바이스 수정
-	int deleteSysDevice(sysDeviceVO paramVO);						// 디바이스 삭제
+	List<?> selectMacAddrList(sysDeviceVO vo) throws Exception;
 
+	//int deleteSysDevice(sysDeviceVO paramVO);						// 디바이스 삭제
 }

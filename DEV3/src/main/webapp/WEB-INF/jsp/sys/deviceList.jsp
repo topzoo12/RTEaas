@@ -189,7 +189,7 @@ var g_isInsert = true;
 			dataType : 'text',
 			url : '/getSysDeviceList.do',
 			success : function (resp) {
-				console.log('resp 확인', resp);
+
 				var json = JSON.parse(resp);
 				var result = json.result;
  				var resultCode = json.resultCode;
@@ -229,9 +229,8 @@ var g_isInsert = true;
 	$('#table-1 > tbody > tr').on('click', function(){
 		$(this).parent().children().removeClass('on');
 		$(this).addClass('on');
+
 	});
-
-
 
 	// 검색
 	$('#btn_search').on('click', function () {
@@ -287,17 +286,145 @@ var g_isInsert = true;
 			,'useYn':$('#p1_useYn').is(':checked')?$('#p1_useYn').val():'N'
 		};
 
-		console.log(params);
+		console.log('파람 확인1', params);
+		var apiParams = {
+				region: '${authInfo.cdNa}'
+				,deviceId: $('#p1_macAddr').val()
+				,coId: '${authInfo.coId}'
+				,coDeviceId: $('#p1_deviceId').val()
+				,useYn: $('#p1_useYn').is(':checked')?$('#p1_useYn').val():'N'
+		};
 
-		if(valid(params)){
+/*
+	 	var apiUpdateParams = {
+				region: '${authInfo.cdNa}'
+				,deviceId: $('#p1_macAddr').val()
+				,updateDeviceId: $('#p1_macAddr').val()
+				,coId: '${authInfo.coId}'
+				,coDeviceId: $('#p1_deviceId').val()
+				,useYn: $('#p1_useYn').is(':checked')?$('#p1_useYn').val():'N'
+		};
+ */
+
+	 	if (valid(params)) {
+
+	 	    checkMacAddr($('#p1_macAddr').val(), function(isValid) {  // 콜백으로 처리
+	 	        if (isValid) {
+
+	 	            $.ajax({
+	 	                type: 'POST',
+	 	                data: params,
+	 	                dataType: 'text',
+	 	                url: (g_isInsert ? '/insertSysDevice.do' : '/updateSysDevice.do'),
+	 	                success: function (resp) {
+	 	                    var json = JSON.parse(resp);
+	 	                    var result = json.result;
+
+	 	                   if(result.code == 0){
+	 	                	  if (g_isInsert) {
+		 	                        $.ajax({
+		 	                            type: 'POST',
+		 	                            url: '${authInfo.restApiUrl}/device',
+		 	                            data: JSON.stringify(apiParams),
+		 	                            contentType: 'application/json',
+		 	                            dataType: 'json',
+		 	                            headers: {
+		 	                                'Accept': 'application/json'
+		 	                            },
+		 	                            success: function (resp) { },
+		 	                            error: function (xhr, status, error) {
+		 	                                console.error('Error in register device request:', error);
+		 	                            }
+		 	                        });
+		 	                    } else {
+		 	                        $.ajax({
+		 	                            type: 'POST',
+		 	                            url: '${authInfo.restApiUrl}/modify/device',
+		 	                            data: JSON.stringify(apiParams),
+		 	                            contentType: 'application/json',
+		 	                            dataType: 'json',
+		 	                            headers: {
+		 	                                'Accept': 'application/json'
+		 	                            },
+		 	                            success: function (resp) { },
+		 	                            error: function (xhr, status, error) {
+		 	                                console.error('Error in update device request:', error);
+		 	                            }
+		 	                        });
+		 	                    }
+	 	                   }
+
+	 	                    $("#alert_msg").html(result.msg);
+	 	                    $('#pop_alert').stop().fadeIn(300);
+	 	                    $('#pop_alert').stop().fadeIn(300);
+
+	 	                    if (result.code == 0000) {
+	 	                        // 성공시 창닫기
+	 	                        $('#pop_write-1').hide();
+	 	                        $('.btn_search').click();
+	 	                    }
+	 	                },
+	 	                error: function (err) {
+	 	                    console.log(err);
+	 	                }
+	 	            });
+
+	 	        } else {
+	 	            return false;  // 중복된 MAC 주소가 있는 경우
+	 	        }
+	 	    });
+	 	}
+
+		/* if (valid(params)) {
+			if ( checkMacAddr( $('#p1_macAddr').val() )  ){
+
+				console.log('체크 메소드 결과 확인', checkMacAddr( $('#p1_macAddr').val() ));
 			$.ajax({
 				type : 'POST',
-				data : params,
-				dataType : 'text',
+				data : params, */
+		/*//		dataType : 'text',
 				url : (g_isInsert?'/insertSysDevice.do':'/updateSysDevice.do'),
 				success : function (resp) {
 					var json = JSON.parse(resp);
 					var result = json.result;
+
+			            if (g_isInsert){
+			            	$.ajax({
+				                type: 'POST',
+				                //url: '${authInfo.restApiUrl}/device',
+				                url: 'http://localhost:8081/device',
+				                data: JSON.stringify(apiRegisterParams),
+				                contentType: 'application/json',
+				                dataType: 'json',
+				                headers: {
+				                    'Accept': 'application/json' // 서버가 JSON 형식의 응답을 보내도록 요구
+				                },
+				                success: function (resp) {
+
+				                },
+				                error: function(xhr, status, error) {
+				                    console.error('Error in register device request:', error);
+				                }
+				            });
+			            } else {
+			            	$.ajax({
+				                type: 'POST',
+				                //url: '${authInfo.restApiUrl}/modify/device',
+				                url: 'http://localhost:8081/modify/device',
+				                data: JSON.stringify(apiUpdateParams),
+				                contentType: 'application/json',
+				                dataType: 'json',
+				                headers: {
+				                    'Accept': 'application/json'
+				                },
+				                success: function (resp) {
+
+				                },
+				                error: function(xhr, status, error) {
+				                    console.error('Error in update device request:', error);
+				                }
+				            });
+			            }
 
     				$("#alert_msg").html(result.msg);
 					$('#pop_alert').stop().fadeIn(300);
@@ -315,9 +442,12 @@ var g_isInsert = true;
 					console.log(err);
 				}
 			});
+
+			}
+
 		} else {
 			return false;
-		}
+		} */
 
 	});
 
@@ -332,13 +462,17 @@ var g_isInsert = true;
 			msg += "<fmt:message key="REQ_DEVICE_ID" bundle="${bundle}"/><br>";
 		}
 
-
 		if(!params.deviceNm){
 			cnt += 1;
 			msg += "<fmt:message key="REQ_DEVICE_NM" bundle="${bundle}"/><br>";
 		}
 
-		if(cnt>0){
+		if(!params.macAddr){
+			cnt += 1;
+			msg += "<fmt:message key="MAC_REQUIRED" bundle="${bundle}"/><br>";
+		}
+
+		if(cnt > 0){
 			$("#alert_msg").html(msg);
 			$('#pop_alert').stop().fadeIn(300);
 	        $('#pop_alert').stop().fadeIn(300);
@@ -349,6 +483,73 @@ var g_isInsert = true;
 
 	}
 
+	function checkMacAddr(mac, callback) {
+	    var macParam = {
+	        'macAddr': mac
+	    };
+
+	    $.ajax({
+	        type: 'POST',
+	        data: macParam,
+	        dataType: 'text',
+	        url: '/getMacAddrList.do',
+	        success: function (resp) {
+	            var json = JSON.parse(resp);
+	            var result = json.result;
+
+	            if (result.length > 0) {
+	                $("#alert_msg").html("중복된 MAC 주소입니다.");
+	                $('#pop_alert').stop().fadeIn(300);
+	                $('#pop_alert').stop().fadeIn(300);
+	                callback(false);  // 콜백에 false를 넘겨줌
+	            } else {
+	                callback(true);  // 콜백에 true를 넘겨줌
+	            }
+	        },
+	        error: function (err) {
+	            console.log(err);
+	            callback(false);  // 에러 발생 시 false 반환
+	        }
+	    });
+	}
+
+	/* function checkMacAddr(mac){
+
+		var macParam = {
+				'macAddr' : mac
+		};
+
+		console.log('ajax 전');
+		$.ajax({
+			type : 'POST',
+			data : macParam,
+			dataType : 'text',
+			url : '/getMacAddrList.do',
+			success : function (resp) {
+
+				var json = JSON.parse(resp);
+				var result = json.result;
+
+				console.log('맥주소 체크 완료', result.length);
+
+				if (result.length > 0) {
+					$("#alert_msg").html("중복된 MAC 주소입니다.");
+					$('#pop_alert').stop().fadeIn(300);
+			        $('#pop_alert').stop().fadeIn(300);
+			        return false;
+				}
+
+				return true;
+
+			},
+			error : function(err){
+				console.log(err);
+			}
+		});
+
+	} */
+
+	var findMacAddr= '';
 
 	// 팝업시 데이터 바인딩 처리
 	function popupData(target_pop,row){
@@ -375,6 +576,8 @@ var g_isInsert = true;
 
 				$('#p1_useYn').prop('checked',row.find('td:eq(7)').text()=='사용'?true:false);
 				// $('#p1_useYn').val('checked',row.find('td:eq(7)').text()=='사용'?'Y':'N');
+
+				findMacAddr = row.find('td:eq(4)').text();
 
 				g_isInsert = false;
 			} else {

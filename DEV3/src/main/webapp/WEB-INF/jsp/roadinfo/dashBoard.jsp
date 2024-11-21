@@ -647,7 +647,7 @@
 			$.ajax({
 				type : "GET",
 				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&to='+toDt+'&region='+ region +"&coId=" + coId,
-				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt  +'&to='+toDt +'&region='+ region,
+				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt  +'&to='+toDt +'&region='+ region +"&coId=" + coId,
 				async : false,
 				data : {
 				},
