@@ -111,7 +111,7 @@
 
 </div>
 <!-- 로딩중 맵용 -->
-<!-- <div id="circularG" >
+<div id="circularG" style="display:none">
    <div id="circularG_1" class="circularG map"></div>
    <div id="circularG_2" class="circularG map"></div>
    <div id="circularG_3" class="circularG map"></div>
@@ -120,7 +120,7 @@
    <div id="circularG_6" class="circularG map"></div>
    <div id="circularG_7" class="circularG map"></div>
    <div id="circularG_8" class="circularG map"></div>
-</div> -->
+</div>
 
 <script language="javascript">
 
@@ -187,13 +187,13 @@ $('#save_faq').on('click', function(){
 	 			error : function(err){
 	 				console.log(err);
 	 			},
-	 			/* beforeSend:function(){
+	 			beforeSend:function(){
 	 				$('#circularG').css('display','block')
 	 			},
 	 			complete : function(data) {
 	 				//  실패했어도 완료가 되었을 때 처리
 	 				$('#circularG').css('display','none');
-	 			} */
+	 			}
 
  			});
 
