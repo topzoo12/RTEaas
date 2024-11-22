@@ -102,6 +102,13 @@ public class sysDeviceDAO extends EgovAbstractDAO {
 		return list("sysDeviceDAO.selectMacAddrList", vo);
 	}
 
+	public List<?> selectMacAddrExcept(sysDeviceVO vo) throws Exception {
+		return list("sysDeviceDAO.selectMacAddrExcept", vo);
+	}
+
+	public List<?> selectDevicePK(sysDeviceVO vo) throws Exception {
+		return list("sysDeviceDAO.selectDevicePK", vo);
+	}
 /*
 	public int deleteSysDevice(sysDeviceVO paramVO) {
 		// TODO Auto-generated method stub

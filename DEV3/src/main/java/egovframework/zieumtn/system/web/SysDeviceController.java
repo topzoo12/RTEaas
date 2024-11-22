@@ -289,8 +289,27 @@ public class SysDeviceController {
 
 			List<?> macAddrList = sysDeviceService.selectMacAddrList(searchVO);
 
-			System.out.println("맥주소 체크 컨트롤러" + searchVO);
-			System.out.println("-----------------------------------------------");
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", macAddrList);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		} catch (NullPointerException e) {
+			System.err.println("Null 에러 발생::" + e.toString());
+		} catch (Exception e) {
+			System.err.println("에러 발생::" + e.toString());
+		}
+	}
+
+	//수정 시 mac 주소 unique 확인
+	@RequestMapping(value = "/checkMacAddrList.do", method = RequestMethod.POST)
+	public void checkMacAddrList(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> macAddrList = sysDeviceService.selectMacAddrExcept(searchVO);
 
 			response.setContentType("text/html; charset=UTF-8");
 
@@ -306,6 +325,30 @@ public class SysDeviceController {
 			System.err.println("에러 발생::" + e.toString());
 		}
 	}
+
+
+	//디바이스 pk unique 확인
+	@RequestMapping(value = "/checkDuplicateDevicePK.do", method = RequestMethod.POST)
+	public void checkDuplicateDevicePK(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> device = sysDeviceService.selectDevicePK(searchVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", device);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		} catch (NullPointerException e) {
+			System.err.println("Null 에러 발생::" + e.toString());
+		} catch (Exception e) {
+			System.err.println("에러 발생::" + e.toString());
+		}
+	}
+
 
 /* 삭제 기능 제거
 	 @RequestMapping(value = "/deleteSysDevice.do", method = RequestMethod.POST)
