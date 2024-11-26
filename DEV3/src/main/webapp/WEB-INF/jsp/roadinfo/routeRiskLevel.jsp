@@ -1053,20 +1053,14 @@ function getDetectedRoad() {
 
 			var cnt = 0;
 
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv1 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-			//for (datas) {
 			for (var a = 0; a < datas.length; a++) {
 				for (var b = 0; b < crackListLv11.length; b++) {
 
 					if ( datas[a].id == crackListLv11[b] ) {
 						//console.log("인덱스 >> ", a , " - ", datas[a]);
 						crackListLv1.push(a);
-
 					}
 				}
-
 
 				for (var b = 0; b < crackListLv22.length; b++) {
 
@@ -1088,9 +1082,11 @@ function getDetectedRoad() {
 						crackListLv4.push(a);
 					}
 				}
-
-
 			}
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv1 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+			//for (datas) {
 
 			for (var x = 0; x < crackListLv1.length; x++) {
 
@@ -1129,7 +1125,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
 						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1194,7 +1190,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
 						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1266,7 +1262,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'blue',
 						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1324,7 +1320,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'blue',
 						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1396,7 +1392,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1454,7 +1450,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1492,7 +1488,7 @@ function getDetectedRoad() {
 			// Lv4 리스트 처리 부분
 			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
 
-			for (var x = 0; x < crackListLv4.length; x++) {
+			/* for (var x = 0; x < crackListLv4.length; x++) {
 
 				var rangeSumM = 0;
 				var rangeSumP = 0;
@@ -1606,11 +1602,14 @@ function getDetectedRoad() {
 					    }
 					}
 				}
-			}
+			} */
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv4 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
 
 		},
 		error: function(request,status,error){
-			//console.log("request.status = " + request.status)dddddddddddddddddddddddddd
+			//console.log("request.status = " + request.status);
 		},
 		beforeSend:function(){
 			$('#circularG').css('display','block')
