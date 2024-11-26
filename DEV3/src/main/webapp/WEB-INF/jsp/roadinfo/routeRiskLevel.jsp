@@ -1392,7 +1392,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1450,7 +1450,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
