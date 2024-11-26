@@ -14,6 +14,7 @@
 		<result property="fileSize" column="fileSize"/>
 		<result property="insertDate" column="insertDate"/>
 		<result property="fileType" column="fileType"/>
+		<result property="seqNo" column="seqNo"/>
 	</resultMap>
 
 
@@ -47,7 +48,8 @@
 				FILE_PATH as filePath,
 				INSERT_DTM as insertDate,
 				FILE_TYPE as fileType,
-				FILE_SIZE as fileSize
+				FILE_SIZE as fileSize,
+				SEQ_NO as seqNo
 			FROM TB_FILE_LIST
 				WHERE CO_ID = #coId#
     </select>

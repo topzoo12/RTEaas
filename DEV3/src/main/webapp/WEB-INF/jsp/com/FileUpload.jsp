@@ -52,21 +52,21 @@
 				<colgroup>
 					<col style="width: 48px">
 					<col style="width: 500px">
-					<col style="width: 200px">
-					<col style="width: 200px">
-					<col style="width: 100px">
-					<col style="width: 120px">
+					<%-- <col style="width: 200px"> --%>
+					<col style="width: 150px">
 					<col style="width: 250px">
+					<col style="width: 250px">
+					<%-- <col style="width: 200px"> --%>
 				</colgroup>
 				<thead>
 					<tr>
                         <th>No.</th>
                         <th>파일명</th>
-                        <th>파일경로</th>
-                        <th>파일타입</th>
+                        <!-- <th>파일타입</th> -->
                         <th>파일사이즈</th>
                         <th>저장자</th>
                         <th>저장날짜</th>
+                        <!-- <th>파일경로</th> -->
 					</tr>
 				</thead>
 			</table>
@@ -76,22 +76,24 @@
 					<colgroup>
 						<col style="width: 48px">
 						<col style="width: 500px">
-						<col style="width: 200px">
-						<col style="width: 200px">
-						<col style="width: 100px">
-						<col style="width: 120px">
+						<%-- <col style="width: 200px"> --%>
+						<col style="width: 150px">
+						<col style="width: 250px">
 						<col style="width: calc(250px - 17px)">
+						<%-- <col style="width: 200px"> --%>
 					</colgroup>
 		        	<tbody>
 					<c:forEach var="result" items="${resultList}" varStatus="status">
 						<tr class="<c:if test="${result.rowno eq '1'}">on</c:if>">
 							<td align="center" class="listtd"><c:out value="${result.rowno}"/></td>
-							<td align="center" class="listtd"><c:out value="${result.fileNm}"/></td>
-							<td align="left" class="listtd"><c:out value="${result.filePath}"/></td>
-							<td align="left" class="listtd"><c:out value="${result.fileType}"/></td>
-							<td align="center" class="listtd"><c:out value="${result.fileSize}"/></td>
-							<td align="left" class="listtd"><c:out value="${result.userId}"/></td>
+							<td align="left" class="listtd"><c:out value="${result.fileNm}"/></td>
+							<%-- <td align="left" class="listtd"><c:out value="${result.fileType}"/></td> --%>
+							<%-- <td align="right" class="listtd"><c:out value="${result.fileSize}"/></td> --%>
+							<td align="right" class="listtd"><fmt:formatNumber value="${result.fileSize}" pattern="#,###" />&nbsp;&nbsp;&nbsp; byte</td>
+							<td align="center" class="listtd"><c:out value="${result.userId}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.insertDate}"/></td>
+							<td style="display:none;" align="left" class="listtd"><c:out value="${result.filePath}"/></td>
+							<td style="display:none;" align="center" class="listtd"><c:out value="${result.seqNo}"/></td>
 							<%-- <td style="display:none;" align="center" class="listtd"><c:out value="${result.regId}"/></td>
 							<td style="display:none;" align="center" class="listtd"><c:out value="${result.regDt}"/></td> --%>
 						</tr>
@@ -123,43 +125,130 @@
 </div>
 
 <script language="javascript">
+//console.log("${resultList}");
 
 $('#table-1 > tbody > tr').on('click', function(){
 	$(this).parent().children().removeClass('on');
 	$(this).addClass('on');
 });
 
+$('#table-1 > tbody > tr').on('dblclick', function(){
+//	$(this).parent().children().removeClass('on');
+//	$(this).addClass('on');
+	//alert("1111111111111111111");
+	 //let target_pop = $(this).data('pop');
+	 //console.log(target_pop)
+
+	var row = $('#table-1 > tbody > .on');
+	console.log(row.find('td:eq(1)').text());
+	console.log(row.find('td:eq(2)').text());
+	console.log(row.find('td:eq(3)').text());
+	console.log(row.find('td:eq(4)').text());
+	console.log(row.find('td:eq(5)').text());
+	console.log(row.find('td:eq(6)').text());
+	console.log(Math.floor(row.find('td:eq(6)').text()));
+
+     if(!row.length){
+     	return
+     }
+
+	 var params = {
+				'seqNo':Math.floor(row.find('td:eq(6)').text())
+			};
+	 //.lastIndexOf("5")
+
+	//console.log("----------------------------------------------------------")
+	//console.log(row.find('td:eq(1)').text().substr(row.find('td:eq(1)').text().lastIndexOf(".")));
+	//console.log(row.find('td:eq(1)').text().substr(0, row.find('td:eq(1)').text().lastIndexOf(".")));
+	//console.log("----------------------------------------------------------")
+
+	var form = document.createElement("form");
+
+	form.setAttribute("charset", "UTF-8");
+	form.setAttribute("method", "Post");  //Post 방식
+	form.setAttribute("action", "/fileDownload.do"); //요청 보낼 주소
+
+	var hiddenFieldFileNm = document.createElement("input");
+
+	hiddenFieldFileNm.setAttribute("type", "hidden");
+	hiddenFieldFileNm.setAttribute("name", "fileNm");
+	hiddenFieldFileNm.setAttribute("value", row.find('td:eq(1)').text().substr(0, row.find('td:eq(1)').text().lastIndexOf(".")));
+	form.appendChild(hiddenFieldFileNm);
+
+	var hiddenFieldFileExt = document.createElement("input");
+
+	hiddenFieldFileExt.setAttribute("type", "hidden");
+	hiddenFieldFileExt.setAttribute("name", "fileExt");
+	hiddenFieldFileExt.setAttribute("value", row.find('td:eq(1)').text().substr(row.find('td:eq(1)').text().lastIndexOf(".")+1));
+	form.appendChild(hiddenFieldFileExt);
+
+	var hiddenFieldSeqNo = document.createElement("input");
+
+	hiddenFieldSeqNo.setAttribute("type", "hidden");
+	hiddenFieldSeqNo.setAttribute("name", "seqNo");
+	hiddenFieldSeqNo.setAttribute("value", Math.floor(row.find('td:eq(6)').text()));
+	form.appendChild(hiddenFieldSeqNo);
+
+	document.body.appendChild(form);
+    form.submit();
+
+/*
+	$.ajax({
+			type : 'POST',
+			//data : formData,
+			data : params,
+			//dataType : 'text',
+			url : '/fileDownload2.do',
+			xhrFields: {
+		        responseType: 'blob'
+		    },
+			//contentType : false,
+			//processData : false,
+			success : function (blob) {
+				var link = document.createElement('a');
+			    link.href = window.URL.createObjectURL(blob);
+			    link.download = filename;
+			    link.click();
+			    console.log("파일 다운로드 성공");
+				//var json = JSON.parse(resp);
+				//var result = json.result;
+
+				//$("#alert_msg").html(result.msg);
+				//$('#pop_alert').stop().fadeIn(300);
+
+				//getFileList();
+
+ 			},
+ 			/* error : function(err){
+ 				console.log(err);
+ 			},
+ 			//beforeSend:function(){
+// 				$('#circularG').css('display','block')
+ 			//},
+ 			complete : function(data) {
+ 				//  실패했어도 완료가 되었을 때 처리
+ 				//$('#circularG').css('display','none');
+ 				//alert("cccccccccccc")
+ 			}
+
+	}); */
+
+	//console.log($(this).data())
+	//console.log($('#srnNm').val())
+});
+
 var fileNameChk = $('#file').val();
-
-
-/* var fileInput = document.querySelector('.file');
-var nameInput = document.querySelector('.upload-name'); */
 
 $('#file').on('change', function() {
     var fileName = $(this).val().split('\\').pop(); // 파일 경로에서 이름만 추출
     $('#fileName').text(fileName || "선택된 파일 없음");
 });
 
-/* fileInput.addEventListener('change', function(e){
-  const input = e.target.closest('.file');
-
-  if (!input) return;
-  var fileName = input.value.split('/').pop().split('\\').pop();
-  nameInput.value = fileName;
-
-}); */
-
-/* $(document).on('click', '.pop_alert_close', function() {
-
-    location.reload();
-});
- */
 
 $('#save_faq').on('click', function(){
 
 	var form = $('#fileUploadForm')[0];
 	var formData = new FormData(form);
-
 
 	//console.log("fileValue : ", fileValue, " fileName : ", fileName );
 	//var fileSize = $('#file')[0].files[0].size;
@@ -224,9 +313,11 @@ function valid(){
 	if(!$('#file').val()){
 		cnt += 1;
 		msg += "선택된 파일이 없습니다."
-	} else 	if ($('#file')[0].files[0].size > 524288000) {
+	} else 	if ($('#file')[0].files[0].size > 10485760) {
+		//10485760		/ 10메가
+		//524288000		/ 500메가
 		cnt += 1;
-		msg += "저장할 수 있는 최대 파일 크기는 500MB 입니다.\n"
+		msg += "저장할 수 있는 최대 파일 크기는 10MB 입니다.\n"
 	}
 /*
 	if (fileName.length < 1) {
@@ -234,6 +325,7 @@ function valid(){
 		msg += "선택된 파일이 없습니다."
 	}
 */
+
 	if (cnt > 0) {
 		$("#alert_msg").html(msg);
 		$('#pop_alert').stop().fadeIn(300);
@@ -266,14 +358,15 @@ function getFileList(){
 			result.forEach (function (el, index) {
 				appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 					+'<td align="center" class="listtd">' + el.rowno + '</td>'
-					+'<td align="center" class="listtd">' + el.fileNm + '</td>'
-					+'<td align="left" class="listtd">' + el.filePath + '</td>'
-					+'<td align="left" class="listtd">' + el.fileSize + '</td>'
-					+'<td align="left" class="listtd">' + el.fileType + '</td>'
-					+'<td align="left" class="listtd">' + el.userId + '</td>'
+					+'<td align="left" class="listtd">' + el.fileNm + '</td>'
+					//+'<td align="left" class="listtd">' + el.filePath + '</td>'
+					//+'<td align="left" class="listtd">' + el.fileType + '</td>'
+					+'<td align="right" class="listtd">' + el.fileSize.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '&nbsp;&nbsp;&nbsp; byte </td>'
+					+'<td align="center" class="listtd">' + el.userId + '</td>'
 					+'<td align="center" class="listtd">' + el.insertDate + '</td>'
 					//+'<td align="center" style="display:none;" class="listtd">'+el.regId+'</td>'
 					//+'<td align="center" style="display:none;" class="listtd">'+el.regDt+'</td>'
+					//<fmt:formatNumber value="${result.fileSize}" pattern="#,###" />&nbsp;&nbsp;&nbsp; byte
 					+'</tr>';
 			});
 

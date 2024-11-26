@@ -15,9 +15,16 @@
  */
 package egovframework.zieumtn.system.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,13 +34,19 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -208,7 +221,7 @@ public class FileUploadController {
 */
 
 	@RequestMapping(value = "/upload.do")
-	public void uploadTest(@RequestParam MultipartFile file, HttpServletResponse response, HttpSession session) throws Exception {
+	public void fileUpload(@RequestParam MultipartFile file, HttpServletResponse response, HttpSession session) throws Exception {
 
 
 		AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
@@ -245,12 +258,6 @@ public class FileUploadController {
 		try {
 			Double insertId = fileUploadService.insertFileUpload(fileParam);
 
-			//int iResult = sysDeviceService.insertSysDevice(paramVO);
-/*
-			if (iResult > 0) {
-				System.out.println("success");
-			}
-*/
 			String fileEx = file.getOriginalFilename();
 			fileEx.lastIndexOf(".");
 			fileEx.substring(fileEx.lastIndexOf("."));
@@ -299,6 +306,188 @@ public class FileUploadController {
 
 	}
 
+/*
+	@RequestMapping(value = "/fileDownload.do", method=RequestMethod.POST)
+	public void fileDownload(@RequestParam("seqNo") String fileSeqNo, HttpServletResponse response) throws Exception {
+
+		System.out.println("ddddddddddddddddd");
+		// 업로드된 파일이 저장된 폴더
+	    String uploadFolder = "/mnt/FileUpload";
+
+	    System.out.println("------------------------------file down------------------------------");
+	    System.out.println(fileSeqNo);
+
+	    // 다운로드할 파일의 경로
+	    Path filePath = Paths.get(uploadFolder, fileSeqNo);
+	    Path filePath1 = Paths.get(uploadFolder, "83.pdf");
+
+	    System.out.println("------------------------------file Path------------------------------");
+	    System.out.println(filePath);
+	    System.out.println(filePath1);
+
+	    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+	    System.out.println(Files.exists(filePath));
+	    System.out.println(Files.exists(filePath1));
+	    // 파일 존재 여부 확인
+	    if (!Files.exists(filePath1)) {
+	        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        response.getWriter().write("File not found.");
+	        return;
+	    }
+
+	    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+
+	    //byte[] fileByte = FileUtils.readFileToByteArray(new File(uploadFolder + filePath1));
+	    byte[] fileByte = FileUtils.readFileToByteArray(new File("/mnt/FileUpload/" + "83.pdf"));
+
+	    writeToFile("83.pdf", fileByte);
+
+	    // 파일 다운로드 설정
+	    response.setContentType("application/octet-stream");
+	    //response.setHeader("Content-Disposition", "attachment; filename=\"" + fileSeqNo + "\"");
+	    response.setHeader("Content-Disposition", "attachment; filename=\"" + fileSeqNo + "\"");
+	    response.setHeader("Content-Transfer-Encoding", "binary");
+	    response.setContentLength(fileByte.length);
+	    response.getOutputStream().write(fileByte);
+
+	    System.out.println("################################################################");
+	    response.getOutputStream().close();
+
+	    // 파일 스트림을 통해 다운로드
+	    try (InputStream inputStream = Files.newInputStream(filePath1);
+    		OutputStream outputStream = response.getOutputStream()) {
+
+
+	    	byte[] buffer = new byte[8192];
+	        int bytesRead;
+	        while ((bytesRead = inputStream.read(buffer)) != -1) {
+	            outputStream.write(buffer, 0, bytesRead);
+	        }
+	        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+	        outputStream.flush();
+	        System.out.println("$$$$$$$12123123123123123123");
+	    } catch (IOException e) {
+	    	e.printStackTrace(); // 에러 로그 출력
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        response.getWriter().write("Error occurred while downloading the file.");
+	    }
+
+	}
+*/
+
+/*
+public void writeToFile(String filename, byte[] pData)
+
+	{
+	    if(pData == null){
+	        return;
+	    }
+
+	    int lByteArraySize = pData.length;
+
+	    System.out.println(filename);
+
+	    try{
+
+	        File lOutFile = new File("D:/filedown/" + filename);
+
+	        FileOutputStream lFileOutputStream = new FileOutputStream(lOutFile);
+
+	        lFileOutputStream.write(pData);
+
+	        lFileOutputStream.close();
+
+	    }catch(Throwable e){
+
+	        e.printStackTrace(System.out);
+
+	    }
+
+	}
+*/
+
+
+@RequestMapping(value = "/fileDownload.do", method=RequestMethod.POST)
+public void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	try {
+		//String filePath = (String)request.getParameter("FILE_PATH");
+		//String fileName = (String)request.getParameter("FILE_NAME");
+		//System.out.println(filePath);
+		//System.out.println(fileName);
+		//저장경로, 파일이름
+
+		String fileName = request.getParameter("fileNm");
+
+		String fileExtention = request.getParameter("fileExt");
+
+		//String downFileName = fileName + "." + fileExtention;
+		String chkFileName = request.getParameter("seqNo") + "." + fileExtention;
+		String downFileName = fileName + "." + fileExtention;
+
+		System.out.println("fileName - " + fileName);
+		System.out.println("fileExtention - " + fileExtention);
+		System.out.println("downFileName - " + downFileName);
+
+		//File f = new File("/mnt/FileUpload/" + "83.pdf");
+		File f = new File("/mnt/FileUpload/" + chkFileName);
+
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+
+		byte b[] = new byte[4096];
+		int read = 0;
+
+		//String fileExtention = "pdf";//fileName.substring(fileName.lastIndexOf(".") + 1);
+
+		if(f.isFile()){
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Accept-Ranges", "bytes");
+			//response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("83gfdgf.pdf", "UTF-8") + ";");
+			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(downFileName, "UTF-8") + ";");
+			response.setHeader("Content-Transfer-Encoding", "binary;");
+			response.setCharacterEncoding("UTF-8");
+			switch (fileExtention){
+				case "ppt": response.setContentType("application/vnd.ms-powerpoint; charset=utf-8");break;
+				case "pptx": response.setContentType("application/vnd.openxmlformats-officedocument.presentationml.presentation; charset=utf-8");break;
+				case "xls": response.setContentType("application/vnd.ms-excel; charset=utf-8");break;
+				case "xlsx": response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");break;
+				case "doc": response.setContentType("application/msword; charset=utf-8");break;
+				case "docx": response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document; charset=utf-8");break;
+				case "pdf": response.setContentType("application/pdf; charset=utf-8");break;
+				default :response.setContentType("application/octet-stream; charset=utf-8");break;
+			}
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setContentLength((int)f.length());//size setting
+			try{
+				bis = new BufferedInputStream(new FileInputStream(f));
+				bos = new BufferedOutputStream(response.getOutputStream());
+				while((read = bis.read(b)) != -1){
+					bos.write(b, 0, read);
+				}
+				bis.close();
+				bos.flush();
+				bos.close();
+			}
+			catch(Exception e){
+				throw new Exception(" 파일 생성 에러가 발생하였습니다.");
+			}
+			finally{
+				if(bis != null){
+					bis.close();
+				}
+				//f.delete();
+			}
+		} else {
+			throw new Exception("파일이 잘못 되었습니다.");
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+
+}
 
 
 
