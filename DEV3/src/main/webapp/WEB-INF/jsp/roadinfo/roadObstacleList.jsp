@@ -187,13 +187,12 @@ function getList(){
 		type: "GET",
 		//url: "${authInfo.restApiUrl}/statistics/daily",
 		url: "${authInfo.restApiUrl}/statistics/daily/count",
-		//url: "http://localhost:8081/statistics/daily/count",
+		//url: "http://localhost:8080/statistics/daily/count",
 		async: true,
 		data: {
 			region : region,
 			from: fromDt,
-			to: toDt,
-			coId: '${authInfo.coId}'
+			to: toDt
 		},
 		success: function(resp) {
 

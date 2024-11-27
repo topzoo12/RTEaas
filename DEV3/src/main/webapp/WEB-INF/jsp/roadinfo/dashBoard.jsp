@@ -410,9 +410,10 @@
 				var day = date.getDate() < 10 ? "0" + "" + date.getDate(): date.getDate();
 				var hour = date.getHours() < 10 ? "0" + "" + date.getHours() : date.getHours();
 				var min = date.getMinutes() < 10 ? "0" + "" + date.getMinutes() : date.getMinutes();
-				var sec = date.getSeconds() < 10 ? "0" + "" + date.getSeconds() : date.getSeconds();
+				//var sec = date.getSeconds() < 10 ? "0" + "" + date.getSeconds() : date.getSeconds();
 
-				dateString = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+				dateString = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
+				//+ ":" + sec;
 
 			} else if (format == 'select') {
 
@@ -432,7 +433,7 @@
 			var today = new Date();
 
 			today.setFullYear(today.getFullYear() - 1);
-			today.setDate(today.getDate() - 1);
+			today.setDate(today.getDate() + 1);
 
 			var fromDate = dateFormat(today, 'select');
 			return fromDate.replaceAll('-','');
@@ -559,12 +560,12 @@
 
 			var fromDt = getFromYearDate();
 			var toDt = dateFormat(today, 'select').replaceAll('-','');
+			var coId = '${authInfo.coId}';
 
 			$.ajax({
 				type : "GET",
-				//url : 'http://localhost:8080/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region,
-				url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region,
-				//url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from=20230101&to=20241201&region='+ region, //url : 'http://localhost:8081/dashboard/potholesbyroad?from=20230101&to=20231201&region='+ region,
+				//url : 'http://localhost:8081/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region + "&coId=" + coId,
+				url : '${authInfo.restApiUrl}/dashboard/potholesbyroad?from='+fromDt+'&to='+toDt+'&region='+ region +"&coId=" + coId,
 				async : false,
 				data : {
 
@@ -638,12 +639,15 @@
 
 			var region = '${cdNa}';
 
+			var today = new Date();
 			var fromDt = getFromYearDate();
+			var toDt = dateFormat(today, 'select').replaceAll('-','');
+			var coId = '${authInfo.coId}';
 
 			$.ajax({
 				type : "GET",
-				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&region='+ region,
-				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt +'&region='+ region,
+				//url : 'http://localhost:8081/dashboard/worstroad?from='+ fromDt +'&to='+toDt+'&region='+ region +"&coId=" + coId,
+				url : '${authInfo.restApiUrl}/dashboard/worstroad?from='+ fromDt  +'&to='+toDt +'&region='+ region +"&coId=" + coId,
 				async : false,
 				data : {
 				},
@@ -750,10 +754,11 @@
 			$.ajax({
 				type : "GET",
 				url : "${authInfo.restApiUrl}/statistics/yearly/month/count",
-				//url : "http://localhost:8080/statistics/yearly/month/count",
+				//url : "http://localhost:8081/statistics/yearly/month/count",
 				async : true,
 				data : {
-					region : region
+					region : region,
+					coId : '${authInfo.coId}'
 				},
 				headers : {
 					'Authorization' : 'Bearer '

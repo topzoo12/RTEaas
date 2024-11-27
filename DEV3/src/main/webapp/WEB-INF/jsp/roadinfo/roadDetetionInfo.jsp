@@ -253,7 +253,7 @@ var chkAreaCodeLv2 = '${authInfo.areaCodeLv2}';
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
 
-//console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
+console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
 
 var allData = [];
 var markers = [];
@@ -321,22 +321,16 @@ var blueIcon = L.icon({
 
 var infoList = [];
 var sortDataList= [];
-var deviceIdList = [];
+var deviceIdList;
 
 var deviceKeyValue = [];
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
 	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
-		/* if (deviceIdList == "" ) {
+		if (deviceIdList == "" ) {
 			deviceIdList += '${deList.macAddr}'
 		} else {
 			deviceIdList += ',${deList.macAddr}'
-		}*/
-		var mac = '${deList.macAddr}';
-
-		if (mac.length > 0 && mac != ""){
-			deviceIdList.push(mac);
 		}
-
 </c:forEach>
 
 var statusKeyValue = [];
@@ -398,32 +392,14 @@ $('.btn_search').on("click", function(){
     	$("#pop_alert").stop().fadeIn(300);
 	}
 
-	var startDate = new Date($("#fromDt").val());
-	var endDate = new Date($("#toDt").val());
-
-	var startDateMonth = (startDate.getMonth()+1 ) < 10 ?  "0" + "" +  (startDate.getMonth()+1 ): (startDate.getMonth()+1 );
-	var startDateDay = startDate.getDate() < 10 ?  "0" + "" +  startDate.getDate() : startDate.getDate();
-
-	var endDateMonth = (endDate.getMonth()+1 ) < 10 ?  "0" + "" +  (endDate.getMonth()+1 ): (endDate.getMonth()+1 );
-	var endDateDay = endDate.getDate() < 10 ?  "0" + "" +  endDate.getDate() : endDate.getDate();
-
-	var startDateFormat  = "" + startDate.getFullYear() + startDateMonth + startDateDay;
-	var endDateFormat  = "" + endDate.getFullYear() + endDateMonth + endDateDay;
-
-	//console.log(startDate , " / ", endDate);
-	//console.log(startDateFormat , " / ", endDateFormat);
-
 	$.ajax({
 		type: "GET",
-		//url: "http://localhost:8081/pothole",
 		url: "${authInfo.restApiUrl}/pothole",
-		data:{
-			on_way : false,
-			administrative_id : areaCode,
-			region : region,
-			co_id : '${authInfo.coId}',
-			from : startDateFormat,
-			to : endDateFormat
+		data: {
+			on_way:false,
+			administrative_id: areaCode,
+			region: region,
+			devices: deviceIdList
 		},
 		success: function(response) {
 			allData = response.data;
@@ -861,7 +837,7 @@ function reSearch() {
 		$('.infoListWrap').css('display', 'block');
 	}
 
-	//console.log(allData);
+	console.log(allData);
 	sortDataList = [];
 	infoList = [];
 	markers = [];

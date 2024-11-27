@@ -15,31 +15,18 @@
  */
 package egovframework.zieumtn.system.service.impl;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import egovframework.rte.fdl.idgnr.EgovIdGnrService;
-import egovframework.rte.psl.dataaccess.util.EgovMap;
-import egovframework.zieumtn.common.service.CommonService;
-import egovframework.zieumtn.common.service.CommonVO;
-import egovframework.zieumtn.system.dao.ServiceDAO;
-import egovframework.zieumtn.system.dao.sysDeviceDAO;
-import egovframework.zieumtn.system.service.ServiceService;
-import egovframework.zieumtn.system.service.SysDeviceService;
-import egovframework.zieumtn.system.vo.PageVO;
-import egovframework.zieumtn.system.vo.ServiceVO;
-import egovframework.zieumtn.system.vo.sysDeviceVO;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.zieumtn.system.dao.FileUploadDAO;
+import egovframework.zieumtn.system.service.FileUploadService;
+import egovframework.zieumtn.system.vo.FileVO;
 
 /**
  * @Class Name : EgovSampleServiceImpl.java
@@ -58,26 +45,53 @@ import org.springframework.stereotype.Service;
  *  Copyright (C) by MOPAS All right reserved.
  */
 
-@Service("sysDeviceService")
-public class SysDeviceServiceImpl extends EgovAbstractServiceImpl implements SysDeviceService {
+@Service("fileUploadService")
+public class FileUploadServiceImpl extends EgovAbstractServiceImpl implements FileUploadService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SysDeviceServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadServiceImpl.class);
+
+	@Resource(name = "FileUploadDAO")
+	private FileUploadDAO FileUploadDAO;
 
 	/** SampleDAO */
 	// TODO ibatis 사용
-	@Resource(name = "sysDeviceDAO")
-	private sysDeviceDAO sysDeviceDAO;
+	//@Resource(name = "sysDeviceDAO")
+	//private sysDeviceDAO sysDeviceDAO;
 	// TODO mybatis 사용
 	//  @Resource(name="sampleMapper")
 	//	private SampleMapper sampleDAO;
 
-	@Override
+/*	@Override
 	public List<?> selectDeviceList(sysDeviceVO vo) throws Exception {
 		List<?> rs = sysDeviceDAO.selectDeviceList(vo);
 		return rs;
 	}
+*/
 
 
+/*	@Override
+	public int insertFileUpload() {
+
+		int rs =  FileUploadDAO.insertFile();
+		return rs;
+	}*/
+	@Override
+	public List<?> selectFileList(FileVO FileVO) throws Exception {
+		List<?> rs = FileUploadDAO.selectFileList(FileVO);
+		return rs;
+	}
+
+	@Override
+	public Double insertFileUpload(FileVO FileVO) {
+
+		System.out.println("333333333333333333333333333333");
+		Double rs =  (Double) FileUploadDAO.insertFile(FileVO);
+		return rs;
+	}
+
+
+
+/*
 	@Override
 	public int insertSysDevice(sysDeviceVO paramVO) {
 
@@ -85,34 +99,21 @@ public class SysDeviceServiceImpl extends EgovAbstractServiceImpl implements Sys
 		return rs;
 	}
 
+
 	@Override
 	public int updateSysDevice(sysDeviceVO paramVO) {
 		int rs =  sysDeviceDAO.updateSysDevice(paramVO);
 		return rs;
 	}
 
-	@Override
-	public List<?> selectMacAddrList(sysDeviceVO vo) throws Exception {
-		List<?> rs = sysDeviceDAO.selectMacAddrList(vo);
-		return rs;
-	}
 
 	@Override
-	public List<?> selectMacAddrExcept(sysDeviceVO vo) throws Exception {
-		List<?> rs = sysDeviceDAO.selectMacAddrExcept(vo);
-		return rs;
-	}
-
-	@Override
-	public List<?> selectDevicePK(sysDeviceVO vo) throws Exception {
-		List<?> rs = sysDeviceDAO.selectDevicePK(vo);
-		return rs;
-	}
-
-	/*@Override
 	public int deleteSysDevice(sysDeviceVO paramVO) {
 		int rs =  sysDeviceDAO.deleteSysDevice(paramVO);
 		return rs;
-	}*/
+	}
+
+*/
+
 
 }

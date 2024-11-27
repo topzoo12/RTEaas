@@ -262,7 +262,7 @@ var deviceKeyValue = [];
 var lvColorKeyValue = [];
 
 <c:forEach var="lvList" items="${levelList}" varStatus="status">
-	lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}'})
+	lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}', 'riskLv' : '${lvList.etc3}'})
 </c:forEach>
 
 var statusKeyValue = [];
@@ -614,7 +614,7 @@ function mapInfo(map) {
 
 	$.ajax({
 		type: "GET",
-		//url: "${authInfo.restApiUrl}/pothole",
+		//url: "http://localhost:8081/potholeInArea",
 		url: "${authInfo.restApiUrl}/potholeInArea",
 		data: {
 			on_way:false,
@@ -625,7 +625,7 @@ function mapInfo(map) {
 			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
 			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
 			region:"${authInfo.cdNa}",
-			devices:deviceIdList
+			co_id :"${authInfo.coId}"
 		},
 		success: drawMarker,
 		error: function(request,status,error){
@@ -637,7 +637,7 @@ function mapInfo(map) {
 		complete : function(data) {
 			//  실패했어도 완료가 되었을 때 처리
 			$('#circularG').css('display','none');
-			ttt();
+			getDetectedRoad();
 
 		}
 	})
@@ -646,12 +646,13 @@ function mapInfo(map) {
 
 function drawMarker(response) {
 
+	console.log('심각도 확인', response.data);
 	$("#info").hide();
 	//$('.infoListWrap').css('display', 'block')
 	$('.infoDetailWrap').css('display', 'none')
 	map.closePopup();
 
-	console.log("abc => ", response)
+	//console.log("abc => ", response)
 	allData = response.data;
 
 	sumMarkerSort = [];
@@ -716,11 +717,11 @@ function drawMarker(response) {
 		var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
 		var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
 		var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-		var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
+		//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
 
-		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
-		var addrPoLocality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
+		var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
 
 		var t = L.marker([item.point.latitude, item.point.longitude], {
 			id : item['id'],
@@ -739,7 +740,7 @@ function drawMarker(response) {
 			icon : blueIcon,
 		}).on('click', onMarkerClick);
 
-		console.log("tt -- ", t);
+		//console.log("tt -- ", t);
 		markerCluster.addLayer(t);
 		markers.push(t);
 		//markerId.push(item['id']);
@@ -949,20 +950,19 @@ function detail(id, clusterChk){
 
 }
 
-function ttt() {
+function getDetectedRoad() {
 
 	$.ajax({
 		type: "GET",
 		url: "${authInfo.restApiUrl}/detected-road" ,
-		//url: "${authInfo.restApiUrl}//detected-road-by-date",
 		//url: "http://localhost:8081/detected-road",
 		data: {
-			on_way:false,
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
 			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
 			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
 			south_east:"latitude:" + (map.getBounds().getSouthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-			region:"${authInfo.cdNa}"
+			region:"${authInfo.cdNa}",
+			co_id :"${authInfo.coId}"
 		},
 		success: function(resp) {
 			datas = resp.data
@@ -970,16 +970,20 @@ function ttt() {
 			//console.log('포트홀 데이터 확인-->> ', allData);
 
 			var crackList = [];
+			var crackListLv00 = [];
 			var crackListLv11 = [];
 			var crackListLv22 = [];
 			var crackListLv33 = [];
-			var crackListLv44 = [];
 			var elseddd = [];
 
 			for (var i = 0; i < allData.length; i++) {
 
-				if ( allData[i].risk.level == 1 ) {
+				if ( allData[i].risk.level == 0 ) {
 					//console.log( i + " 번째  riskLv = " + allData[i].risk.level);
+					crackListLv00.push(allData[i].id);
+
+				} else if ( allData[i].risk.level == 1 ) {
+
 					crackListLv11.push(allData[i].id);
 
 				} else if ( allData[i].risk.level == 2 ) {
@@ -989,20 +993,16 @@ function ttt() {
 				} else if ( allData[i].risk.level == 3 ) {
 
 					crackListLv33.push(allData[i].id);
-
-				} else if ( allData[i].risk.level == 4 ) {
-
-					crackListLv44.push(allData[i].id);
 				} else {
 					elseddd.push(allData[i].id);
 				}
 			}
 
 			//var crackList = [];
+			var crackListLv0 = [];
 			var crackListLv1 = [];
 			var crackListLv2 = [];
 			var crackListLv3 = [];
-			var crackListLv4 = [];
 			//var elsedd = [];
 
 			color = lvColorKeyValue.find(item => item.lv === '99').color;
@@ -1052,59 +1052,49 @@ function ttt() {
 			}
 
 
-
 			var cnt = 0;
 
-			var tttcnt = 0;
-
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv1 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-			//for (datas) {
 			for (var a = 0; a < datas.length; a++) {
-				for (var b = 0; b < crackListLv11.length; b++) {
+				for (var b = 0; b < crackListLv00.length; b++) {
 
-					if ( datas[a].id == crackListLv11[b] ) {
+					if ( datas[a].id == crackListLv00[b] ) {
 						//console.log("인덱스 >> ", a , " - ", datas[a]);
-						crackListLv1.push(a);
-						//tttcnt++;
+						crackListLv0.push(a);
 					}
 				}
 
+				for (var b = 0; b < crackListLv11.length; b++) {
 
-				for (var b = 0; b < crackListLv22.length; b++) {
+					if ( datas[a].id == crackListLv11[b] ) {
+						crackListLv1.push(a);
+					}
+				}
 
-					if ( datas[a].id == crackListLv22[b] ) {
+				for (var c = 0; c < crackListLv22.length; c++) {
+
+					if ( datas[a].id == crackListLv22[c] ) {
 						crackListLv2.push(a);
 					}
 				}
 
-				for (var c = 0; c < crackListLv33.length; c++) {
+				for (var d = 0; d < crackListLv33.length; d++) {
 
-					if ( datas[a].id == crackListLv33[c] ) {
+					if ( datas[a].id == crackListLv33[d] ) {
 						crackListLv3.push(a);
 					}
 				}
-
-				for (var d = 0; d < crackListLv44.length; d++) {
-
-					if ( datas[a].id == crackListLv33[d] ) {
-						crackListLv4.push(a);
-					}
-				}
-
-
 			}
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv0 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+			//for (datas) {
 
-			for (var x = 0; x < crackListLv1.length; x++) {
+			for (var x = 0; x < crackListLv0.length; x++) {
 
 				var rangeSumM = 0;
 				var rangeSumP = 0;
 
-				for (var xx = crackListLv1[x]; xx > 0; xx--) {
-					if (xx == 84) {
-						console.log("11")
-					}
+				for (var xx = crackListLv0[x]; xx > 0; xx--) {
 					if (xx > 1) {
 
 						var R = 6371; // Radius of the earth in km
@@ -1132,8 +1122,9 @@ function ttt() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1155,8 +1146,6 @@ function ttt() {
 						if (BAsecond < 10) {
 					        map.addLayer(firstpolyline);
 						} else {
-
-
 					    	break;
 						}
 
@@ -1167,8 +1156,8 @@ function ttt() {
 					    }
 					}
 				}
-				console.log("-----------------------------------------------------------------------------------------------------")
-				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+				//console.log("-----------------------------------------------------------------------------------------------------")
+				for (var xx = crackListLv0[x]; xx < datas.length; xx++) {
 
 					if (xx < datas.length-1) {
 
@@ -1197,8 +1186,141 @@ function ttt() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
+					}
+				}
+			}
+
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv0 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
+
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv1 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+			for (var x = 0; x < crackListLv1.length; x++) {
+
+				var rangeSumM = 0;
+				var rangeSumP = 0;
+
+				for (var xx = crackListLv1[x]; xx > 0; xx--) {
+
+					if (xx > 1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumM = rangeSumM + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
 						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+
+				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1268,9 +1390,10 @@ function ttt() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
+						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1326,9 +1449,10 @@ function ttt() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
+						    //color: 'orange',
 						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1360,6 +1484,7 @@ function ttt() {
 			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
 			// Lv2 리스트 처리 부분
 			// ------------------------------------------------------------------------------------------------------------------------
+
 
 			// ------------------------------------------------------------------------------------------------------------------------
 			// Lv3 리스트 처리 부분
@@ -1398,9 +1523,10 @@ function ttt() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
+						    //color: 'red',
 						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1456,13 +1582,8 @@ function ttt() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
 						    weight: linesize,
 						    //opacity: 0.1,
 						    smoothFactor: 1
@@ -1486,135 +1607,13 @@ function ttt() {
 					}
 				}
 			}
-
 			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
 			// Lv3 리스트 처리 부분
 			// ------------------------------------------------------------------------------------------------------------------------
 
-
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv4 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-			for (var x = 0; x < crackListLv4.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv4[x]; xx > 0; xx--) {
-
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'red',
-						    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
-					}
-				}
-
-				for (var xx = crackListLv4[x]; xx < datas.length; xx++) {
-
-					if (xx < datas.length-1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumP = rangeSumP + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
-					}
-				}
-			}
-
 		},
 		error: function(request,status,error){
-			//console.log("request.status = " + request.status)dddddddddddddddddddddddddd
+			//console.log("request.status = " + request.status);
 		},
 		beforeSend:function(){
 			$('#circularG').css('display','block')

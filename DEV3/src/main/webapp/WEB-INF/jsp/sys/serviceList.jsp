@@ -561,7 +561,7 @@ $('#btn_search').on('click', function () {
 
 		if(!params.areaCodeLv2){
 			cnt += 1;
-			msg += "2레벨의 시까지 필수 선택사항입니다";
+			msg += "지도중심(Level1, Level2)은 필수선택사항입니다.";
 		}
 
 

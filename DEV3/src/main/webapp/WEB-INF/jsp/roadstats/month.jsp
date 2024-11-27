@@ -271,11 +271,12 @@
 		$.ajax({
 			type : "GET",
 			url: "${authInfo.restApiUrl}/statistics/yearly/count",
-			//url: " http://localhost:8080/statistics/yearly/count",
+			//url: "http://localhost:8081/statistics/yearly/count",
 			async : true,
 			data : {
 				year : year,
-				region : region
+				region : region,
+				coId : '${authInfo.coId}'
 			},
 			headers : {
 				'Authorization' : 'Bearer '	+ localStorage.getItem("accessToken"),

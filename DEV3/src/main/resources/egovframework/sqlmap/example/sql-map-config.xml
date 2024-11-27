@@ -23,4 +23,5 @@
 	<sqlMap resource="egovframework/sqlmap/example/sample/Openapi_SQL.xml"/>
 	<sqlMap resource="egovframework/sqlmap/example/sample/Owner_SQL.xml"/>
 	<sqlMap resource="egovframework/sqlmap/example/sample/sysDevice_SQL.xml"/>
+	<sqlMap resource="egovframework/sqlmap/example/sample/FileUpload_SQL.xml"/>
 </sqlMapConfig>

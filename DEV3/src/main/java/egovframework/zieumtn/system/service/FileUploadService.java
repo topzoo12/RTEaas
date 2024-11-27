@@ -18,6 +18,7 @@ package egovframework.zieumtn.system.service;
 import java.util.List;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import egovframework.zieumtn.system.vo.FileVO;
 import egovframework.zieumtn.system.vo.PageVO;
 import egovframework.zieumtn.system.vo.ServiceVO;
 import egovframework.zieumtn.system.vo.sysDeviceVO;
@@ -38,14 +39,19 @@ import egovframework.zieumtn.system.vo.sysDeviceVO;
  *
  *  Copyright (C) by MOPAS All right reserved.
  */
-public interface SysDeviceService {
+public interface FileUploadService {
 
-	List<?> selectDeviceList(sysDeviceVO vo) throws Exception;		// 디바이스 목록 조회
-	int insertSysDevice(sysDeviceVO paramVO);						// 신규 디아비스 등록
-	int updateSysDevice(sysDeviceVO paramVO);						// 디바이스 수정
-	List<?> selectMacAddrList(sysDeviceVO vo) throws Exception;
-	List<?> selectMacAddrExcept(sysDeviceVO vo) throws Exception;
-	List<?> selectDevicePK(sysDeviceVO vo) throws Exception;
-
+	//List<?> selectDeviceList(sysDeviceVO vo) throws Exception;		// 디바이스 목록 조회
+	//int insertSysDevice(sysDeviceVO paramVO);						// 신규 디아비스 등록
+	//int updateSysDevice(sysDeviceVO paramVO);						// 디바이스 수정
 	//int deleteSysDevice(sysDeviceVO paramVO);						// 디바이스 삭제
+
+	//int insertFileUpload(sysDeviceVO paramVO);						// 신규 디아비스 등록
+	//int insertFileUpload();
+
+
+	List<?> selectFileList(FileVO FileVO) throws Exception;		// 디바이스 목록 조회
+
+	Double insertFileUpload(FileVO FileVO);
+
 }

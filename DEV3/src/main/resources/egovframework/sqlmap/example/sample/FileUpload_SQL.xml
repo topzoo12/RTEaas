@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="fileUpload">
+
+	<typeAlias alias="FileVO" type="egovframework.zieumtn.system.vo.FileVO"/>
+
+	<resultMap id="file" class="egovframework.zieumtn.system.vo.FileVO">
+		<result property="rowno" column="rowno"/>
+		<result property="coId" column="coId"/>
+		<result property="userId" column="userId"/>
+		<result property="fileNm" column="fileNm"/>
+		<result property="filePath" column="filePath"/>
+		<result property="fileSize" column="fileSize"/>
+		<result property="insertDate" column="insertDate"/>
+		<result property="fileType" column="fileType"/>
+		<result property="seqNo" column="seqNo"/>
+	</resultMap>
+
+
+<!-- 	<insert id="FileUploadDAO.insertFile">
+	     <![CDATA[
+			insert into tb_file_list (co_id, upd_id, file_nm, file_path, insert_dtm) values ('cc', 'cc', 'cc', 'cc', '2024-09-13')
+		 ]]>
+
+	</insert> -->
+
+	<insert id="FileUploadDAO.insertFile" parameterClass="FileVO">
+		<selectKey keyProperty="seqNo" resultClass="double">
+			select nextval('tb_file_list_check_no'::regclass) as seqNo
+		</selectKey>
+	     <![CDATA[
+		INSERT
+		  INTO PUBLIC.TB_FILE_LIST
+			 ( seq_no,CO_ID, upd_id, file_nm, file_path, file_type, insert_dtm, file_size )
+		VALUES
+		 	 ( #seqNo# ,#coId#, #userId#, #fileNm#, #filePath#, #fileType#, #insertDate#, #fileSize# )
+		 ]]>
+
+	</insert>
+
+	<select id="FileUploadDAO.selectFileList" parameterClass="FileVO" resultMap="file">
+			SELECT
+				ROW_NUMBER() OVER (order by co_id) as rowno,
+				CO_ID as coId,
+				UPD_ID as userId,
+				FILE_NM as fileNm,
+				FILE_PATH as filePath,
+				INSERT_DTM as insertDate,
+				FILE_TYPE as fileType,
+				FILE_SIZE as fileSize,
+				SEQ_NO as seqNo
+			FROM TB_FILE_LIST
+				WHERE CO_ID = #coId#
+    </select>
+
+
+
+
+</sqlMap>

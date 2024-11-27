@@ -17,12 +17,12 @@ package egovframework.zieumtn.system.dao;
 
 import java.util.List;
 
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
-import egovframework.zieumtn.system.vo.ServiceVO;
-import egovframework.zieumtn.system.vo.sysDeviceVO;
-
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
+
+import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.zieumtn.system.vo.FileVO;
+import egovframework.zieumtn.system.vo.sysDeviceVO;
 
 /**
  * @Class Name : SampleDAO.java
@@ -41,15 +41,67 @@ import org.springframework.stereotype.Repository;
  *  Copyright (C) by MOPAS All right reserved.
  */
 
-@Repository("sysDeviceDAO")
-public class sysDeviceDAO extends EgovAbstractDAO {
+@Repository("FileUploadDAO")
+public class FileUploadDAO extends EgovAbstractDAO {
+
+public List<?> selectFileList(FileVO FileVO) throws Exception {
+	return list("FileUploadDAO.selectFileList", FileVO);
+}
+
+public int insertFile() {
+
+		int iResult = 0;
+
+		try {
+			insert("FileUploadDAO.insertFile");
+			iResult = 1;
+
+		}catch(NullPointerException e) {
+			System.err.println("Null 에러 발생::"+e.toString());
+		} catch(DuplicateKeyException e) {
+			System.err.println("KEY값 (디바이스ID) 중복"+e.toString());
+			iResult = -1;
+		}
+		catch(Exception e) {
+			System.err.println("에러 발생::"+e.toString());
+		}
 
 
-	public List<?> selectDeviceList(sysDeviceVO vo) throws Exception {
-		return list("sysDeviceDAO.selectDeviceList", vo);
+		 System.out.println("-----------------------------------");
+		 System.out.println(iResult);
+
+		return iResult;
+	}
+public Object insertFile(FileVO FileVO) {
+
+	int iResult = 0;
+	Object rs = null;
+	try {
+
+		rs = insert("FileUploadDAO.insertFile", FileVO);
+
+		iResult = 1;
+
+	}catch(NullPointerException e) {
+		System.err.println("Null 에러 발생::"+e.toString());
+	} catch(DuplicateKeyException e) {
+		System.err.println("KEY값 (디바이스ID) 중복"+e.toString());
+		iResult = -1;
+	}
+	catch(Exception e) {
+		System.err.println("에러 발생::"+e.toString());
 	}
 
 
+	 System.out.println("-----------------------------------");
+	 System.out.println(iResult);
+
+	return rs;
+}
+
+
+
+/*
 	public int insertSysDevice(sysDeviceVO paramVO) {
 
 		int iResult = 0;
@@ -98,24 +150,13 @@ public class sysDeviceDAO extends EgovAbstractDAO {
 		return iResult;
 	}
 
-	public List<?> selectMacAddrList(sysDeviceVO vo) throws Exception {
-		return list("sysDeviceDAO.selectMacAddrList", vo);
-	}
 
-	public List<?> selectMacAddrExcept(sysDeviceVO vo) throws Exception {
-		return list("sysDeviceDAO.selectMacAddrExcept", vo);
-	}
-
-	public List<?> selectDevicePK(sysDeviceVO vo) throws Exception {
-		return list("sysDeviceDAO.selectDevicePK", vo);
-	}
-/*
 	public int deleteSysDevice(sysDeviceVO paramVO) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 */
+
 
 
 }

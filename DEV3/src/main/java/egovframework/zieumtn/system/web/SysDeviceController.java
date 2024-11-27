@@ -46,6 +46,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
@@ -132,8 +133,7 @@ public class SysDeviceController {
 	}
 
 	@RequestMapping(value = "/getSysDeviceList.do", method = RequestMethod.POST)
-	public void getSysDeviceList(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response, HttpSession session)
-			throws Exception {
+	public void getSysDeviceList(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response, HttpSession session) throws Exception {
 		try {
 
 			AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
@@ -281,6 +281,74 @@ public class SysDeviceController {
 
 		}
 	}
+
+	//신규 등록시 mac 주소 unique 확인
+	@RequestMapping(value = "/getMacAddrList.do", method = RequestMethod.POST)
+	public void getMacAddrList(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> macAddrList = sysDeviceService.selectMacAddrList(searchVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", macAddrList);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		} catch (NullPointerException e) {
+			System.err.println("Null 에러 발생::" + e.toString());
+		} catch (Exception e) {
+			System.err.println("에러 발생::" + e.toString());
+		}
+	}
+
+	//수정 시 mac 주소 unique 확인
+	@RequestMapping(value = "/checkMacAddrList.do", method = RequestMethod.POST)
+	public void checkMacAddrList(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> macAddrList = sysDeviceService.selectMacAddrExcept(searchVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", macAddrList);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		} catch (NullPointerException e) {
+			System.err.println("Null 에러 발생::" + e.toString());
+		} catch (Exception e) {
+			System.err.println("에러 발생::" + e.toString());
+		}
+	}
+
+
+	//디바이스 pk unique 확인
+	@RequestMapping(value = "/checkDuplicateDevicePK.do", method = RequestMethod.POST)
+	public void checkDuplicateDevicePK(@ModelAttribute("serviceVO") sysDeviceVO searchVO, HttpServletResponse response) throws Exception {
+		try {
+
+			List<?> device = sysDeviceService.selectDevicePK(searchVO);
+
+			response.setContentType("text/html; charset=UTF-8");
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", device);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonObject.toString());
+
+		} catch (NullPointerException e) {
+			System.err.println("Null 에러 발생::" + e.toString());
+		} catch (Exception e) {
+			System.err.println("에러 발생::" + e.toString());
+		}
+	}
+
 
 /* 삭제 기능 제거
 	 @RequestMapping(value = "/deleteSysDevice.do", method = RequestMethod.POST)

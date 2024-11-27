@@ -56,7 +56,6 @@
 		<result property="macAddr" column="macAddr"/>
 	</resultMap>
 
-
    	<select id="sysDeviceDAO.selectDeviceList" parameterClass="deviceVO" resultMap="sysDevice">
 			SELECT CO_ID as coId
 				 , DEVICE_ID as deviceId
@@ -70,7 +69,7 @@
 				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
 				 , UPD_ID as updId
 				 , UPD_DTM as updDtm
-				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , ROW_NUMBER() OVER (order by DEVICE_ID) as rowno
 				 , MAC_ADDR as macAddr
 		 	  FROM PUBLIC.TB_DEVICE
 		 	 WHERE CO_ID = #coId#
@@ -80,6 +79,7 @@
         <isNotEmpty property="useYn">
         	   AND USE_YN = #useYn#
         </isNotEmpty>
+        	order by DEVICE_ID
     </select>
 
 
@@ -108,6 +108,67 @@
 	  	 WHERE DEVICE_ID = #deviceId#
 		 ]]>
 	</insert>
+
+	<select id="sysDeviceDAO.selectMacAddrList" parameterClass="deviceVO" resultMap="sysDevice">
+			SELECT CO_ID as coId
+				 , DEVICE_ID as deviceId
+				 , DEVICE_NM as deviceNm
+				 , DEVICE_DIV as deviceDiv
+				 , FW_INFO as fwInfo
+				 , DEVICE_SPEC as deviceSpec
+				 , DEVICE_RMKS as deviceRmks
+				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
+				 , REGPSN_ID as regpsnId
+				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
+				 , UPD_ID as updId
+				 , UPD_DTM as updDtm
+				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , MAC_ADDR as macAddr
+		 	FROM PUBLIC.TB_DEVICE
+		 	WHERE MAC_ADDR = #macAddr#
+    </select>
+
+    <select id="sysDeviceDAO.selectMacAddrExcept" parameterClass="deviceVO" resultMap="sysDevice">
+			SELECT CO_ID as coId
+				 , DEVICE_ID as deviceId
+				 , DEVICE_NM as deviceNm
+				 , DEVICE_DIV as deviceDiv
+				 , FW_INFO as fwInfo
+				 , DEVICE_SPEC as deviceSpec
+				 , DEVICE_RMKS as deviceRmks
+				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
+				 , REGPSN_ID as regpsnId
+				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
+				 , UPD_ID as updId
+				 , UPD_DTM as updDtm
+				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , MAC_ADDR as macAddr
+		 	FROM PUBLIC.TB_DEVICE
+		 	WHERE MAC_ADDR = #macAddr#
+		 	  AND CO_ID != #coId#
+			  AND DEVICE_ID != #deviceId#
+    </select>
+
+
+    <select id="sysDeviceDAO.selectDevicePK" parameterClass="deviceVO" resultMap="sysDevice">
+			SELECT CO_ID as coId
+				 , DEVICE_ID as deviceId
+				 , DEVICE_NM as deviceNm
+				 , DEVICE_DIV as deviceDiv
+				 , FW_INFO as fwInfo
+				 , DEVICE_SPEC as deviceSpec
+				 , DEVICE_RMKS as deviceRmks
+				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
+				 , REGPSN_ID as regpsnId
+				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
+				 , UPD_ID as updId
+				 , UPD_DTM as updDtm
+				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , MAC_ADDR as macAddr
+		 	FROM PUBLIC.TB_DEVICE
+		 	WHERE CO_ID = #coId#
+			  AND DEVICE_ID = #deviceId#
+    </select>
 
 
 

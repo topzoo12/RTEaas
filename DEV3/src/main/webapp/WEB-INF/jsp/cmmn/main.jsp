@@ -252,7 +252,7 @@ var chkAreaCodeLv2 = '${authInfo.areaCodeLv2}';
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
 
-console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
+//console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
 
 var allData = [];
 var markers = [];
@@ -320,16 +320,22 @@ var blueIcon = L.icon({
 
 var infoList = [];
 var sortDataList= [];
-var deviceIdList;
+var deviceIdList = [];
 
 var deviceKeyValue = [];
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
 	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
-		if (deviceIdList == "" ) {
+		/* if (deviceIdList == "" ) {
 			deviceIdList += '${deList.macAddr}'
 		} else {
 			deviceIdList += ',${deList.macAddr}'
+		}*/
+		var mac = '${deList.macAddr}';
+
+		if (mac.length > 0 && mac != ""){
+			deviceIdList.push(mac);
 		}
+
 </c:forEach>
 
 var statusKeyValue = [];
@@ -391,14 +397,32 @@ $('.btn_search').on("click", function(){
     	$("#pop_alert").stop().fadeIn(300);
 	}
 
+	var startDate = new Date($("#fromDt").val());
+	var endDate = new Date($("#toDt").val());
+
+	var startDateMonth = (startDate.getMonth()+1 ) < 10 ?  "0" + "" +  (startDate.getMonth()+1 ): (startDate.getMonth()+1 );
+	var startDateDay = startDate.getDate() < 10 ?  "0" + "" +  startDate.getDate() : startDate.getDate();
+
+	var endDateMonth = (endDate.getMonth()+1 ) < 10 ?  "0" + "" +  (endDate.getMonth()+1 ): (endDate.getMonth()+1 );
+	var endDateDay = endDate.getDate() < 10 ?  "0" + "" +  endDate.getDate() : endDate.getDate();
+
+	var startDateFormat  = "" + startDate.getFullYear() + startDateMonth + startDateDay;
+	var endDateFormat  = "" + endDate.getFullYear() + endDateMonth + endDateDay;
+
+	//console.log(startDate , " / ", endDate);
+	//console.log(startDateFormat , " / ", endDateFormat);
+
 	$.ajax({
 		type: "GET",
+		//url: "http://localhost:8081/pothole",
 		url: "${authInfo.restApiUrl}/pothole",
-		data: {
-			on_way:false,
-			administrative_id: areaCode,
-			region: region,
-			devices: deviceIdList
+		data:{
+			on_way : false,
+			administrative_id : areaCode,
+			region : region,
+			co_id : '${authInfo.coId}',
+			from : startDateFormat,
+			to : endDateFormat
 		},
 		success: function(response) {
 			allData = response.data;
@@ -532,7 +556,7 @@ $(".menu_bar_close").click(function(){
 
 	 //sleep(300);
 	//map.invalidateSize();
-	setTimeout(() => map.invalidateSize(), 5000);
+	setTimeout(() => map.invalidateSize(), 550);
 /* 	if ( $('.infoListWrap').css('display') == 'block' ) {
 		$('.level_list').css('width', '1485px');
         $('.re-search-container').css('width', '1485px');
@@ -716,7 +740,7 @@ $('#sortchk .sorting').on('click', function() {
 			var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
 			dateFormat  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
-			var addrPoLocality = (data[index].way.name == null || data[index].way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : data[index].way.name;
+			var addrPoLocality = (data[index].way == null || data[index].way.name == null || data[index].way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : data[index].way.name;
 			var macAddr = data[index]['device-id'];
 			var id = data[index].id;
 
@@ -836,7 +860,7 @@ function reSearch() {
 		$('.infoListWrap').css('display', 'block');
 	}
 
-	console.log(allData);
+	//console.log(allData);
 	sortDataList = [];
 	infoList = [];
 	markers = [];
@@ -943,11 +967,11 @@ function reSearch() {
 				var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate();
 				var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours();
 				var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes();
-				var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
+				//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
-				var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
+				var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
-				var addrPoLocality = (item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
+				var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
 
 				var t1 = L.marker([item.point.latitude, item.point.longitude], {
 					id : item['id'],
