@@ -140,13 +140,13 @@ $('#table-1 > tbody > tr').on('dblclick', function(){
 	 //console.log(target_pop)
 
 	var row = $('#table-1 > tbody > .on');
-	console.log(row.find('td:eq(1)').text());
-	console.log(row.find('td:eq(2)').text());
-	console.log(row.find('td:eq(3)').text());
-	console.log(row.find('td:eq(4)').text());
-	console.log(row.find('td:eq(5)').text());
-	console.log(row.find('td:eq(6)').text());
-	console.log(Math.floor(row.find('td:eq(6)').text()));
+	//console.log(row.find('td:eq(1)').text());
+	//console.log(row.find('td:eq(2)').text());
+	//console.log(row.find('td:eq(3)').text());
+	//console.log(row.find('td:eq(4)').text());
+	//console.log(row.find('td:eq(5)').text());
+	//console.log(row.find('td:eq(6)').text());
+	//console.log(Math.floor(row.find('td:eq(6)').text()));
 
      if(!row.length){
      	return
@@ -270,6 +270,8 @@ $('#save_faq').on('click', function(){
 				$("#alert_msg").html(result.msg);
 				$('#pop_alert').stop().fadeIn(300);
 
+				$('#file').val('');
+
 				getFileList();
 
 	 			},
@@ -309,7 +311,7 @@ function valid(){
 	var fileValue = $('#file').val().split("\\");
 	var fileName = fileValue[fileValue.length-1]; // 파일명
 	*/
-	console.log($('#file')[0].files);
+	//console.log($('#file')[0].files);
 	if(!$('#file').val()){
 		cnt += 1;
 		msg += "선택된 파일이 없습니다."
