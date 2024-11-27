@@ -69,7 +69,7 @@
 				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
 				 , UPD_ID as updId
 				 , UPD_DTM as updDtm
-				 , ROW_NUMBER() OVER (order by co_id) as rowno
+				 , ROW_NUMBER() OVER (order by DEVICE_ID) as rowno
 				 , MAC_ADDR as macAddr
 		 	  FROM PUBLIC.TB_DEVICE
 		 	 WHERE CO_ID = #coId#
