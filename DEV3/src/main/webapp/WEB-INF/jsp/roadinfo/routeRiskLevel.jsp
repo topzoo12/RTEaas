@@ -646,6 +646,7 @@ function mapInfo(map) {
 
 function drawMarker(response) {
 
+	console.log('심각도 확인', response.data);
 	$("#info").hide();
 	//$('.infoListWrap').css('display', 'block')
 	$('.infoDetailWrap').css('display', 'none')
@@ -720,7 +721,7 @@ function drawMarker(response) {
 
 		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
-		var addrPoLocality = (item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
+		var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
 
 		var t = L.marker([item.point.latitude, item.point.longitude], {
 			id : item['id'],
