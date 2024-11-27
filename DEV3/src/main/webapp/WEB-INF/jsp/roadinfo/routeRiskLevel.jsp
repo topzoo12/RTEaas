@@ -969,16 +969,20 @@ function getDetectedRoad() {
 			//console.log('포트홀 데이터 확인-->> ', allData);
 
 			var crackList = [];
+			var crackListLv00 = [];
 			var crackListLv11 = [];
 			var crackListLv22 = [];
 			var crackListLv33 = [];
-			var crackListLv44 = [];
 			var elseddd = [];
 
 			for (var i = 0; i < allData.length; i++) {
 
-				if ( allData[i].risk.level == 1 ) {
+				if ( allData[i].risk.level == 0 ) {
 					//console.log( i + " 번째  riskLv = " + allData[i].risk.level);
+					crackListLv00.push(allData[i].id);
+
+				} else if ( allData[i].risk.level == 1 ) {
+
 					crackListLv11.push(allData[i].id);
 
 				} else if ( allData[i].risk.level == 2 ) {
@@ -988,20 +992,16 @@ function getDetectedRoad() {
 				} else if ( allData[i].risk.level == 3 ) {
 
 					crackListLv33.push(allData[i].id);
-
-				} else if ( allData[i].risk.level == 4 ) {
-
-					crackListLv44.push(allData[i].id);
 				} else {
 					elseddd.push(allData[i].id);
 				}
 			}
 
 			//var crackList = [];
+			var crackListLv0 = [];
 			var crackListLv1 = [];
 			var crackListLv2 = [];
 			var crackListLv3 = [];
-			var crackListLv4 = [];
 			//var elsedd = [];
 
 			color = lvColorKeyValue.find(item => item.lv === '99').color;
@@ -1054,49 +1054,46 @@ function getDetectedRoad() {
 			var cnt = 0;
 
 			for (var a = 0; a < datas.length; a++) {
+				for (var b = 0; b < crackListLv00.length; b++) {
+
+					if ( datas[a].id == crackListLv00[b] ) {
+						//console.log("인덱스 >> ", a , " - ", datas[a]);
+						crackListLv0.push(a);
+					}
+				}
+
 				for (var b = 0; b < crackListLv11.length; b++) {
 
 					if ( datas[a].id == crackListLv11[b] ) {
-						//console.log("인덱스 >> ", a , " - ", datas[a]);
 						crackListLv1.push(a);
 					}
 				}
 
-				for (var b = 0; b < crackListLv22.length; b++) {
+				for (var c = 0; c < crackListLv22.length; c++) {
 
-					if ( datas[a].id == crackListLv22[b] ) {
+					if ( datas[a].id == crackListLv22[c] ) {
 						crackListLv2.push(a);
 					}
 				}
 
-				for (var c = 0; c < crackListLv33.length; c++) {
-
-					if ( datas[a].id == crackListLv33[c] ) {
-						crackListLv3.push(a);
-					}
-				}
-
-				for (var d = 0; d < crackListLv44.length; d++) {
+				for (var d = 0; d < crackListLv33.length; d++) {
 
 					if ( datas[a].id == crackListLv33[d] ) {
-						crackListLv4.push(a);
+						crackListLv3.push(a);
 					}
 				}
 			}
 			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv1 리스트 처리 부분
+			// Lv0 리스트 처리 부분
 			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
 			//for (datas) {
 
-			for (var x = 0; x < crackListLv1.length; x++) {
+			for (var x = 0; x < crackListLv0.length; x++) {
 
 				var rangeSumM = 0;
 				var rangeSumP = 0;
 
-				for (var xx = crackListLv1[x]; xx > 0; xx--) {
-					if (xx == 84) {
-						console.log("11")
-					}
+				for (var xx = crackListLv0[x]; xx > 0; xx--) {
 					if (xx > 1) {
 
 						var R = 6371; // Radius of the earth in km
@@ -1125,7 +1122,7 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
 						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1147,8 +1144,6 @@ function getDetectedRoad() {
 						if (BAsecond < 10) {
 					        map.addLayer(firstpolyline);
 						} else {
-
-
 					    	break;
 						}
 
@@ -1160,7 +1155,7 @@ function getDetectedRoad() {
 					}
 				}
 				//console.log("-----------------------------------------------------------------------------------------------------")
-				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+				for (var xx = crackListLv0[x]; xx < datas.length; xx++) {
 
 					if (xx < datas.length-1) {
 
@@ -1190,6 +1185,136 @@ function getDetectedRoad() {
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
 						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx].timestamp );
+				        var pointBTime = new Date( datas[xx+1].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumP > 25 ) {
+					    	break;
+					    }
+					}
+				}
+			}
+
+			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+			// Lv0 리스트 처리 부분
+			// ------------------------------------------------------------------------------------------------------------------------
+
+			// ------------------------------------------------------------------------------------------------------------------------
+			// Lv1 리스트 처리 부분
+			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+			for (var x = 0; x < crackListLv1.length; x++) {
+
+				var rangeSumM = 0;
+				var rangeSumP = 0;
+
+				for (var xx = crackListLv1[x]; xx > 0; xx--) {
+
+					if (xx > 1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumM = rangeSumM + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    //color: 'gray',
+						    //color: color,
+						    //color: 'lightgray',
+						    //weight: 15,
+						    weight: linesize,
+						    //opacity: 0.1,
+						    smoothFactor: 1
+
+						    })
+
+				        var pointATime = new Date( datas[xx-1].timestamp );
+				        var pointBTime = new Date( datas[xx].timestamp );
+
+				        var BAsecond = (pointBTime - pointATime) / 1000;
+
+						if (BAsecond < 10) {
+					        map.addLayer(firstpolyline);
+						}
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    if (rangeSumM > 25 ) {
+					    	break;
+					    }
+					}
+				}
+
+				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+
+					if (xx < datas.length-1) {
+
+						var R = 6371; // Radius of the earth in km
+					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+					    //var d = R * c; // Distance in km
+					    var d = (R * c) * 1000; // Distance in km
+
+					    rangeSumP = rangeSumP + d;
+
+					    // -----------------------------------------------------------------------------------------------------
+
+					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+						var pointList = [ pointA, pointB ];
+
+						var linesize = map.getZoom()-7
+
+						var firstpolyline = new L.Polyline(pointList, {
+						    //color: 'blue',
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
 						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
@@ -1260,8 +1385,8 @@ function getDetectedRoad() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    //color: 'orange',
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
 						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
@@ -1318,8 +1443,8 @@ function getDetectedRoad() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    //color: 'orange',
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
 						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
@@ -1352,6 +1477,7 @@ function getDetectedRoad() {
 			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
 			// Lv2 리스트 처리 부분
 			// ------------------------------------------------------------------------------------------------------------------------
+
 
 			// ------------------------------------------------------------------------------------------------------------------------
 			// Lv3 리스트 처리 부분
@@ -1390,8 +1516,8 @@ function getDetectedRoad() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
+						    //color: 'red',
+						    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
 						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
 						    //color: 'gray',
 						    //color: color,
@@ -1448,13 +1574,7 @@ function getDetectedRoad() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
 						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
 						    weight: linesize,
 						    //opacity: 0.1,
 						    smoothFactor: 1
@@ -1478,133 +1598,8 @@ function getDetectedRoad() {
 					}
 				}
 			}
-
 			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
 			// Lv3 리스트 처리 부분
-			// ------------------------------------------------------------------------------------------------------------------------
-
-
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv4 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-			/* for (var x = 0; x < crackListLv4.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv4[x]; xx > 0; xx--) {
-
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'red',
-						    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
-					}
-				}
-
-				for (var xx = crackListLv4[x]; xx < datas.length; xx++) {
-
-					if (xx < datas.length-1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumP = rangeSumP + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel].color,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
-					}
-				}
-			} */
-			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-			// Lv4 리스트 처리 부분
 			// ------------------------------------------------------------------------------------------------------------------------
 
 		},
