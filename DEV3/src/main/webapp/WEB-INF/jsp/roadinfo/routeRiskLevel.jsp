@@ -651,7 +651,7 @@ function drawMarker(response) {
 	$('.infoDetailWrap').css('display', 'none')
 	map.closePopup();
 
-	console.log("abc => ", response)
+	//console.log("abc => ", response)
 	allData = response.data;
 
 	sumMarkerSort = [];
@@ -739,7 +739,7 @@ function drawMarker(response) {
 			icon : blueIcon,
 		}).on('click', onMarkerClick);
 
-		console.log("tt -- ", t);
+		//console.log("tt -- ", t);
 		markerCluster.addLayer(t);
 		markers.push(t);
 		//markerId.push(item['id']);
@@ -1159,7 +1159,7 @@ function getDetectedRoad() {
 					    }
 					}
 				}
-				console.log("-----------------------------------------------------------------------------------------------------")
+				//console.log("-----------------------------------------------------------------------------------------------------")
 				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
 
 					if (xx < datas.length-1) {

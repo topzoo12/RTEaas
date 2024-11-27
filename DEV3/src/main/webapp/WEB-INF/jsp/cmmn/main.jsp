@@ -252,7 +252,7 @@ var chkAreaCodeLv2 = '${authInfo.areaCodeLv2}';
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
 
-console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
+//console.log("chkAreaCodeLv1 : " + chkAreaCodeLv1 + " / chkAreaCodeLv2 : " + chkAreaCodeLv2 + " / baseLat : "  + baseLat + " / baseLng : "  + baseLng);
 
 var allData = [];
 var markers = [];
@@ -409,8 +409,8 @@ $('.btn_search').on("click", function(){
 	var startDateFormat  = "" + startDate.getFullYear() + startDateMonth + startDateDay;
 	var endDateFormat  = "" + endDate.getFullYear() + endDateMonth + endDateDay;
 
-	console.log(startDate , " / ", endDate);
-	console.log(startDateFormat , " / ", endDateFormat);
+	//console.log(startDate , " / ", endDate);
+	//console.log(startDateFormat , " / ", endDateFormat);
 
 	$.ajax({
 		type: "GET",
@@ -860,7 +860,7 @@ function reSearch() {
 		$('.infoListWrap').css('display', 'block');
 	}
 
-	console.log(allData);
+	//console.log(allData);
 	sortDataList = [];
 	infoList = [];
 	markers = [];

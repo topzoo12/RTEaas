@@ -276,7 +276,7 @@ function drawline() {
 		},
 		success: function(resp) {
 			datas = resp.data
-            console.log('탐지도로 데이터 확인--->>', datas);
+            //console.log('탐지도로 데이터 확인--->>', datas);
 
 			// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
 			var date1 = new Date();
