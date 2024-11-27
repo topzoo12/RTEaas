@@ -262,7 +262,7 @@ var deviceKeyValue = [];
 var lvColorKeyValue = [];
 
 <c:forEach var="lvList" items="${levelList}" varStatus="status">
-	lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}'})
+	lvColorKeyValue.push({'lv':'${lvList.cdId}', 'color':'${lvList.etc1}', 'riskNm':'${lvList.cdNm}', 'riskNmEng' : '${lvList.cdNmEng}', 'riskNmJp' : '${lvList.cdNmJp}', 'riskLv' : '${lvList.etc3}'})
 </c:forEach>
 
 var statusKeyValue = [];
@@ -1121,8 +1121,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1184,8 +1185,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'green',
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1256,8 +1258,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1314,8 +1317,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1386,8 +1390,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1444,8 +1449,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1517,8 +1523,9 @@ function getDetectedRoad() {
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'red',
-						    //color: lvColorKeyValue[datas[crackListLv4[x]].riskLevel-1].color,
-						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
 						    //color: 'gray',
 						    //color: color,
 						    //color: 'lightgray',
@@ -1574,7 +1581,8 @@ function getDetectedRoad() {
 						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
-						    color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
 						    weight: linesize,
 						    //opacity: 0.1,
 						    smoothFactor: 1
