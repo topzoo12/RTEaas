@@ -405,7 +405,7 @@
 
 				var pothole = wayDatas[i].pothole;
 				var roadNm = wayDatas[i].name;
-				if (roadNm == null) roadNm = '' //way id는 있으나 도로명 없는 경우
+				if (roadNm == null) roadNm = ''   //way id는 있으나 도로명 없는 경우
 
 				if (status != 'ALL') { // 레벨 맞게 검색
 

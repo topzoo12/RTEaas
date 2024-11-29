@@ -594,7 +594,7 @@
 						//html += '<div class="swiper-slide" onclick="getDetailPage(\'' + fromDt + '\', \'' + toDt + '\', \'' + region + '\', \'' + data.wayName + '\')">';
 
 						html += '<div class="stateSlide_item">';
-						/* html += '<span class="stateLevel level'+ data.level +'"></span>';  평균 위험도 레벨 아이콘*/
+						/* html += '<span class="stateLevel level'+ data.level +'"></span>';    평균 위험도 레벨 아이콘*/
  						html += '<strong><em>' + data.count
 								+ '</em><fmt:message key="COUNT2" bundle="${bundle}"/></strong>';
 						html += '<p>' + data.wayName + '</p>';

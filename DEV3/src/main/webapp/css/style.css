@@ -1814,7 +1814,7 @@ span.noPhoto span{
 }
 .stateSlide_item{
     position: relative;
-    text-align: center;     /* 대시보드 수정 jj*/
+    text-align: center;       /* 대시보드 수정 jj*/
     padding: 32px 24px;
     width: 100%;
 }
