@@ -405,6 +405,7 @@
 
 				var pothole = wayDatas[i].pothole;
 				var roadNm = wayDatas[i].name;
+				if (roadNm == null) roadNm = '' //way id는 있으나 도로명 없는 경우
 
 				if (status != 'ALL') { // 레벨 맞게 검색
 
@@ -752,7 +753,7 @@
 
 			$.ajax({
 				type : "GET",
-				//url : "http://localhost:8081/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus +"&coId=" + coId,
+				//url : "http://localhost:8080/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus +"&coId=" + coId,
 				url : "${authInfo.restApiUrl}/administrative/" + wayId + "/each-way/risk?from=" + fromDt + "&to=" + toDt + "&sortStatus=" + sortStatus +"&coId=" + coId,
 				async : true,
 				data : {
@@ -769,6 +770,7 @@
 					if (!wayDatas) {
 						wayDatas = [];
 					}
+
 				/*
 					//도로 레벨 4 선택시
 					if (searchLv == 4) {
