@@ -741,7 +741,7 @@ $('#sortchk .sorting').on('click', function() {
 			var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
 			dateFormat  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec;
-			var addrPoLocality = (data[index].way.name == null || data[index].way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : data[index].way.name;
+			var addrPoLocality = (data[index].way == null || data[index].way.name == null || data[index].way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : data[index].way.name;
 			var macAddr = data[index]['device-id'];
 			var id = data[index].id;
 
@@ -972,7 +972,7 @@ function reSearch() {
 
 				var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
 
-				var addrPoLocality = (item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
+				var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
 
 				var t1 = L.marker([item.point.latitude, item.point.longitude], {
 					id : item['id'],

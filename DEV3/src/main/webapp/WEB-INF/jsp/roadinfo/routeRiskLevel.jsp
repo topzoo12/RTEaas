@@ -614,7 +614,7 @@ function mapInfo(map) {
 
 	$.ajax({
 		type: "GET",
-		//url: "http://localhost:8081/potholeInArea",
+		//url: "http://localhost:8080/potholeInArea",
 		url: "${authInfo.restApiUrl}/potholeInArea",
 		data: {
 			on_way:false,
@@ -646,7 +646,6 @@ function mapInfo(map) {
 
 function drawMarker(response) {
 
-	console.log('심각도 확인', response.data);
 	$("#info").hide();
 	//$('.infoListWrap').css('display', 'block')
 	$('.infoDetailWrap').css('display', 'none')
