@@ -40,7 +40,7 @@
 				<input type="checkbox" id="${monthColor.etc2}" class="risklist" name="risklist" value="${monthColor.etc3}" checked><label for="${monthColor.etc2}">${monthColor.cdNm}</label>
 				 -->
 				<span id="riskbgcolorLv1" style="background:${lvList.etc1}">&nbsp;</span>
-				<span id="${lvList.cdId}">
+				<span id="${lvList.cdId}" onclick="toggleLayer('${lvList.cdId}')">
 				<%-- ${lvList.cdNm} --%>
 					<c:choose>
 						<c:when test="${nowCdNa eq 'KR'}">${lvList.cdNm}</c:when>
@@ -373,14 +373,55 @@ $(".btn_infoWrap").click(function(){
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function removeLine() {
+/* function removeLine() {
 
-	map.removeLayer(firstpolyline)
+	map.removeLayer(firstpolyline);
 	map.removeLayer(map._layers)
-}
+} */
 
 	//var markers = []
+var layerGroup = L.featureGroup();
+var layerGroup0 = L.featureGroup();
+var layerGroup1 = L.featureGroup();
+var layerGroup2 = L.featureGroup();
+var layerGroup3 = L.featureGroup();
+function toggleLayer(code){
+	//console.log(code);
+	if(code == '00'){
+		if(layerGroup0._map){
+			map.removeLayer(layerGroup0)
+		} else {
+			layerGroup0.addTo(map)
+		}
+	}
+	if(code == '01'){
+		if(layerGroup1._map){
+			map.removeLayer(layerGroup1)
+		} else {
+			layerGroup1.addTo(map)
+		}
+	}
+	if(code == '02'){
+		if(layerGroup2._map){
+			map.removeLayer(layerGroup2)
+		} else {
+			layerGroup2.addTo(map)
+		}
+	}
+	if(code == '03'){
+		if(layerGroup3._map){
+			map.removeLayer(layerGroup3)
+		} else {
+			layerGroup3.addTo(map)
+		}
+	}
 
+
+	layerGroup0.bringToFront();
+	layerGroup1.bringToFront();
+	layerGroup2.bringToFront();
+	layerGroup3.bringToFront();
+}
 function nodata(map) {
 
 	//$("div").show(); //display :none 일떄
@@ -746,38 +787,39 @@ function drawMarker(response) {
 
 		//map.removeLayer(markerCluster);
 
-		// 마커 클러스터 그룹에 클릭 이벤트 추가
-		markerCluster.on('clusterclick', function(event) {
-			var cluster = event.layer;
-			var childMarkers = cluster.getAllChildMarkers();
-
-			// 팝업 내용 생성
-			var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-			//console.log('childMarkers -- ', childMarkers)
-			childMarkers.forEach(function(marker, index) {
-
-				var item = marker.options;
-
-				popupContent += "Marker " + (index + 1) + " : "
-							+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
-							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
-							+ marker.getLatLng().toString()
-							+ "</b><br>";
-
-			});
-
-			//console.log('markerCluster >>> ', markerCluster);
-			// 첫 번째 마커의 위치를 팝업 위치로 사용
-			//var popupLatLng = childMarkers[0].getLatLng();
-			var popupLatLng = cluster.getLatLng();
-
-			// 팝업 생성 및 오픈
-			//cluster.bindPopup(popupContent).openPopup();
-
-			popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
-		});
 
 	}
+
+ 	// 마커 클러스터 그룹에 클릭 이벤트 추가
+	markerCluster.on('clusterclick', function(event) {
+		var cluster = event.layer;
+		var childMarkers = cluster.getAllChildMarkers();
+
+		// 팝업 내용 생성
+		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
+		//console.log('childMarkers -- ', childMarkers)
+		childMarkers.forEach(function(marker, index) {
+
+			var item = marker.options;
+
+			popupContent += "Marker " + (index + 1) + " : "
+						+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
+						+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+						+ marker.getLatLng().toString()
+						+ "</b><br>";
+
+		});
+
+		//console.log('markerCluster >>> ', markerCluster);
+		// 첫 번째 마커의 위치를 팝업 위치로 사용
+		//var popupLatLng = childMarkers[0].getLatLng();
+		var popupLatLng = cluster.getLatLng();
+
+		// 팝업 생성 및 오픈
+		//cluster.bindPopup(popupContent).openPopup();
+
+		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+	});
 
  	map.addLayer(markerCluster);
 
@@ -971,13 +1013,9 @@ function getDetectedRoad() {
 			// ------- api 시작하는 부분------
 
 			//datas = resp.data;
+			//var linesize = map.getZoom()-9;
+			var linesize = 6;
 
-			for (var z = 0; z < resp.data.length; z++) {
-            //console.log('탐지도로 데이터 확인--->> ', datas);
-			//console.log('포트홀 데이터 확인-->> ', allData);
-
-
-			datas = resp.data[z].detectedRoadInfo;
 
 
 			var crackList = [];
@@ -1009,536 +1047,67 @@ function getDetectedRoad() {
 				}
 			}
 
-			//var crackList = [];
-			var crackListLv0 = [];
-			var crackListLv1 = [];
-			var crackListLv2 = [];
-			var crackListLv3 = [];
-			//var elsedd = [];
+			for (var z = 0; z < resp.data.length; z++) {
+            //console.log('탐지도로 데이터 확인--->> ', datas);
+			//console.log('포트홀 데이터 확인-->> ', allData);
+				datas = resp.data[z].detectedRoadInfo;
 
-			color = lvColorKeyValue.find(item => item.lv === '99').color;
-			//lvColorKeyValue.find(item => item.lv === zerolv)
+				//var crackList = [];
+				var crackListLv0 = [];
+				var crackListLv1 = [];
+				var crackListLv2 = [];
+				var crackListLv3 = [];
+				//var elsedd = [];
 
-			function deg2rad(deg) {
-		        return deg * (Math.PI/180)
-		    }
+				color = lvColorKeyValue.find(item => item.lv === '99').color;
+				//lvColorKeyValue.find(item => item.lv === zerolv)
 
-			for (var i = 0; i < datas.length; i++) {
+				function deg2rad(deg) {
+			        return deg * (Math.PI/180)
+			    }
 
-				//var roadInfo = datas[i].detectedRoadInfo;
-				if (i < datas.length-1) {
-					var pointA = new L.LatLng(datas[i].latitude, datas[i].longitude);
-					var pointB = new L.LatLng(datas[i+1].latitude, datas[i+1].longitude);
-
-					var pointList = [ pointA, pointB ];
-
-					var linesize = map.getZoom()-7
-
-					var firstpolyline = new L.Polyline(pointList, {
-					    //color: 'red',
-					    color: color,
-					    //color: color,
-					    //color: 'lightgray',
-					    //weight: 15,
-					    weight: linesize,
-					    //opacity: 0.1,
-					    smoothFactor: 1
-
-					    })//.on('click', function(e) {
-				            //wayMarkerList(response ,wayname)
-
-				        //});;
-
-			        var pointATime = new Date( datas[i].timestamp );
-			        var pointBTime = new Date( datas[i+1].timestamp );
-
-			        //console.log("빼기 ------------------------------" ,(pointBTime - pointATime));
-			        var BAsecond = (pointBTime - pointATime) / 1000;
-
-					if (BAsecond < 10) {
-				        map.addLayer(firstpolyline);
-					}
-				}
-
-			}
+				for (var i = 0; i < datas.length; i++) {
 
 
-			var cnt = 0;
+					for (var b = 0; b < crackListLv00.length; b++) {
 
-			for (var a = 0; a < datas.length; a++) {
-				for (var b = 0; b < crackListLv00.length; b++) {
-
-					if ( datas[a].id == crackListLv00[b] ) {
-						//console.log("인덱스 >> ", a , " - ", datas[a]);
-						crackListLv0.push(a);
-					}
-				}
-
-				for (var b = 0; b < crackListLv11.length; b++) {
-
-					if ( datas[a].id == crackListLv11[b] ) {
-						crackListLv1.push(a);
-					}
-				}
-
-				for (var c = 0; c < crackListLv22.length; c++) {
-
-					if ( datas[a].id == crackListLv22[c] ) {
-						crackListLv2.push(a);
-					}
-				}
-
-				for (var d = 0; d < crackListLv33.length; d++) {
-
-					if ( datas[a].id == crackListLv33[d] ) {
-						crackListLv3.push(a);
-					}
-				}
-			}
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv0 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-			//for (datas) {
-
-			for (var x = 0; x < crackListLv0.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv0[x]; xx > 0; xx--) {
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'green',
-						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-				        //console.log(xx + " : " + pointA + ", " + pointB + " // " + pointBTime + " - " + pointATime + " = " + BAsecond);
-				        //console.log(xx + " : " + pointA + ", " + pointB + " // " + datas[xx-1].timestamp + " - " + datas[xx].timestamp + " = " + BAsecond);
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						} else {
-					    	break;
+						if ( datas[a].id == crackListLv00[b] ) {
+							//console.log("인덱스 >> ", a , " - ", datas[a]);
+							crackListLv0.push(i);
 						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
 					}
-				}
-				//console.log("-----------------------------------------------------------------------------------------------------")
-				for (var xx = crackListLv0[x]; xx < datas.length; xx++) {
 
-					if (xx < datas.length-1) {
+					for (var b = 0; b < crackListLv11.length; b++) {
 
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumP = rangeSumP + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'green',
-						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
+						if ( datas[i].id == crackListLv11[b] ) {
+							crackListLv1.push(i);
 						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
 					}
-				}
-			}
 
-			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-			// Lv0 리스트 처리 부분
-			// ------------------------------------------------------------------------------------------------------------------------
+					for (var c = 0; c < crackListLv22.length; c++) {
 
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv1 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-			for (var x = 0; x < crackListLv1.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv1[x]; xx > 0; xx--) {
-
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
+						if ( datas[i].id == crackListLv22[c] ) {
+							crackListLv2.push(i);
 						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
 					}
-				}
 
-				for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
+					for (var d = 0; d < crackListLv33.length; d++) {
 
-					if (xx < datas.length-1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumP = rangeSumP + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'blue',
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
+						if ( datas[i].id == crackListLv33[d] ) {
+							crackListLv3.push(i);
 						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
 					}
-				}
-			}
 
-			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-			// Lv1 리스트 처리 부분
-			// ------------------------------------------------------------------------------------------------------------------------
-
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv2 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-			for (var x = 0; x < crackListLv2.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv2[x]; xx > 0; xx--) {
-
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+					//var roadInfo = datas[i].detectedRoadInfo;
+					if (i < datas.length-1) {
+						var pointA = new L.LatLng(datas[i].latitude, datas[i].longitude);
+						var pointB = new L.LatLng(datas[i+1].latitude, datas[i+1].longitude);
 
 						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
-					}
-				}
-
-				for (var xx = crackListLv2[x]; xx < datas.length; xx++) {
-
-					if (xx < datas.length-1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumP = rangeSumP + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
-
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: 'orange',
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
-						    //color: 'gray',
-						    //color: color,
-						    //color: 'lightgray',
-						    //weight: 15,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
-
-						    })
-
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
-
-				        var BAsecond = (pointBTime - pointATime) / 1000;
-
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
-						}
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
-					}
-				}
-			}
-
-			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-			// Lv2 리스트 처리 부분
-			// ------------------------------------------------------------------------------------------------------------------------
-
-
-			// ------------------------------------------------------------------------------------------------------------------------
-			// Lv3 리스트 처리 부분
-			// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
-
-			for (var x = 0; x < crackListLv3.length; x++) {
-
-				var rangeSumM = 0;
-				var rangeSumP = 0;
-
-				for (var xx = crackListLv3[x]; xx > 0; xx--) {
-
-					if (xx > 1) {
-
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
-
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
-
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
-
-					    rangeSumM = rangeSumM + d;
-
-					    // -----------------------------------------------------------------------------------------------------
-
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
-
-						var pointList = [ pointA, pointB ];
-
-						var linesize = map.getZoom()-7
 
 						var firstpolyline = new L.Polyline(pointList, {
 						    //color: 'red',
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
-						    //color: 'gray',
+						    color: color,
 						    //color: color,
 						    //color: 'lightgray',
 						    //weight: 15,
@@ -1546,82 +1115,564 @@ function getDetectedRoad() {
 						    //opacity: 0.1,
 						    smoothFactor: 1
 
-						    })
+						    })//.on('click', function(e) {
+					            //wayMarkerList(response ,wayname)
 
-				        var pointATime = new Date( datas[xx-1].timestamp );
-				        var pointBTime = new Date( datas[xx].timestamp );
+					        //});;
 
+				        var pointATime = new Date( datas[i].timestamp );
+				        var pointBTime = new Date( datas[i+1].timestamp );
+
+				        //console.log("빼기 ------------------------------" ,(pointBTime - pointATime));
 				        var BAsecond = (pointBTime - pointATime) / 1000;
 
 						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
+					        //map.addLayer(firstpolyline);
+							layerGroup.addLayer(firstpolyline,true);
 						}
+					}
 
-					    // -----------------------------------------------------------------------------------------------------
+				}
 
-					    if (rangeSumM > 25 ) {
-					    	break;
-					    }
+				//map.addLayer(firstpolyline);
+				///layerGroup1.addLayer(firstpolyline);
+
+
+				layerGroup.addTo(map);
+				//layerGroup2.addTo(map);
+
+				//layerGroup1.bringToFront();
+
+				// ------------------------------------------------------------------------------------------------------------------------
+				// Lv0 리스트 처리 부분
+				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+				//for (datas) {
+
+				for (var x = 0; x < crackListLv0.length; x++) {
+
+					var rangeSumM = 0;
+					var rangeSumP = 0;
+
+					for (var xx = crackListLv0[x]; xx > 0; xx--) {
+						if (xx > 1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumM = rangeSumM + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'green',
+							    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx-1].timestamp );
+					        var pointBTime = new Date( datas[xx].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+					        //console.log(xx + " : " + pointA + ", " + pointB + " // " + pointBTime + " - " + pointATime + " = " + BAsecond);
+					        //console.log(xx + " : " + pointA + ", " + pointB + " // " + datas[xx-1].timestamp + " - " + datas[xx].timestamp + " = " + BAsecond);
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+								layerGroup0.addLayer(firstpolyline);
+							} else {
+						    	break;
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumM > 25 ) {
+						    	break;
+						    }
+						}
+					}
+					//console.log("-----------------------------------------------------------------------------------------------------")
+					for (var xx = crackListLv0[x]; xx < datas.length; xx++) {
+
+						if (xx < datas.length-1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumP = rangeSumP + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'green',
+							    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv0[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv0[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx].timestamp );
+					        var pointBTime = new Date( datas[xx+1].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup0.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumP > 25 ) {
+						    	break;
+						    }
+						}
 					}
 				}
 
-				for (var xx = crackListLv3[x]; xx < datas.length; xx++) {
+				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+				// Lv0 리스트 처리 부분
+				// ------------------------------------------------------------------------------------------------------------------------
 
-					if (xx < datas.length-1) {
+				// ------------------------------------------------------------------------------------------------------------------------
+				// Lv1 리스트 처리 부분
+				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
 
-						var R = 6371; // Radius of the earth in km
-					    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
-					    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+				for (var x = 0; x < crackListLv1.length; x++) {
 
-					    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+					var rangeSumM = 0;
+					var rangeSumP = 0;
 
-					    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-					    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+					for (var xx = crackListLv1[x]; xx > 0; xx--) {
 
-					    //var d = R * c; // Distance in km
-					    var d = (R * c) * 1000; // Distance in km
+						if (xx > 1) {
 
-					    rangeSumP = rangeSumP + d;
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
 
-					    // -----------------------------------------------------------------------------------------------------
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
 
-					    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
-						var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
 
-						var pointList = [ pointA, pointB ];
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
 
-						var linesize = map.getZoom()-7
+						    rangeSumM = rangeSumM + d;
 
-						var firstpolyline = new L.Polyline(pointList, {
-						    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
-						    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
-						    weight: linesize,
-						    //opacity: 0.1,
-						    smoothFactor: 1
+						    // -----------------------------------------------------------------------------------------------------
 
-						    })
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
 
-				        var pointATime = new Date( datas[xx].timestamp );
-				        var pointBTime = new Date( datas[xx+1].timestamp );
+							var pointList = [ pointA, pointB ];
 
-				        var BAsecond = (pointBTime - pointATime) / 1000;
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'blue',
+							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
 
-						if (BAsecond < 10) {
-					        map.addLayer(firstpolyline);
+							    })
+
+					        var pointATime = new Date( datas[xx-1].timestamp );
+					        var pointBTime = new Date( datas[xx].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup1.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumM > 25 ) {
+						    	break;
+						    }
 						}
+					}
 
-					    // -----------------------------------------------------------------------------------------------------
+					for (var xx = crackListLv1[x]; xx < datas.length; xx++) {
 
-					    if (rangeSumP > 25 ) {
-					    	break;
-					    }
+						if (xx < datas.length-1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumP = rangeSumP + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'blue',
+							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv1[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv1[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx].timestamp );
+					        var pointBTime = new Date( datas[xx+1].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup1.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumP > 25 ) {
+						    	break;
+						    }
+						}
 					}
 				}
+
+				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+				// Lv1 리스트 처리 부분
+				// ------------------------------------------------------------------------------------------------------------------------
+
+				// ------------------------------------------------------------------------------------------------------------------------
+				// Lv2 리스트 처리 부분
+				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+				for (var x = 0; x < crackListLv2.length; x++) {
+
+					var rangeSumM = 0;
+					var rangeSumP = 0;
+
+					for (var xx = crackListLv2[x]; xx > 0; xx--) {
+
+						if (xx > 1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumM = rangeSumM + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'orange',
+							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx-1].timestamp );
+					        var pointBTime = new Date( datas[xx].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup2.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumM > 25 ) {
+						    	break;
+						    }
+						}
+					}
+
+					for (var xx = crackListLv2[x]; xx < datas.length; xx++) {
+
+						if (xx < datas.length-1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumP = rangeSumP + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'orange',
+							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv2[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv2[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx].timestamp );
+					        var pointBTime = new Date( datas[xx+1].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup2.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumP > 25 ) {
+						    	break;
+						    }
+						}
+					}
+				}
+
+				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+				// Lv2 리스트 처리 부분
+				// ------------------------------------------------------------------------------------------------------------------------
+
+
+				// ------------------------------------------------------------------------------------------------------------------------
+				// Lv3 리스트 처리 부분
+				// ▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+
+				for (var x = 0; x < crackListLv3.length; x++) {
+
+					var rangeSumM = 0;
+					var rangeSumP = 0;
+
+					for (var xx = crackListLv3[x]; xx > 0; xx--) {
+
+						if (xx > 1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx-1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx-1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumM = rangeSumM + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx-1].latitude, datas[xx-1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: 'red',
+							    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel-1].color,
+							    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
+							    //color: 'gray',
+							    //color: color,
+							    //color: 'lightgray',
+							    //weight: 15,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx-1].timestamp );
+					        var pointBTime = new Date( datas[xx].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup3.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumM > 25 ) {
+						    	break;
+						    }
+						}
+					}
+
+					for (var xx = crackListLv3[x]; xx < datas.length; xx++) {
+
+						if (xx < datas.length-1) {
+
+							var R = 6371; // Radius of the earth in km
+						    var dLat = deg2rad( datas[xx].latitude - datas[xx+1].latitude );  // deg2rad below
+						    var dLon = deg2rad( datas[xx].longitude - datas[xx+1].longitude );
+
+						    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(datas[xx].latitude)) * Math.cos(deg2rad(datas[xx].longitude)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+
+						    //var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+						    var c = 2 * Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1-a)));
+
+						    //var d = R * c; // Distance in km
+						    var d = (R * c) * 1000; // Distance in km
+
+						    rangeSumP = rangeSumP + d;
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    var pointA = new L.LatLng(datas[xx].latitude, datas[xx].longitude);
+							var pointB = new L.LatLng(datas[xx+1].latitude, datas[xx+1].longitude);
+
+							var pointList = [ pointA, pointB ];
+
+							var firstpolyline = new L.Polyline(pointList, {
+							    //color: lvColorKeyValue[datas[crackListLv3[x]].riskLevel+1].color,
+							    color: lvColorKeyValue.find(item => item.riskLv == datas[crackListLv3[x]].riskLevel).color,
+							    weight: linesize,
+							    //opacity: 0.1,
+							    smoothFactor: 1
+
+							    })
+
+					        var pointATime = new Date( datas[xx].timestamp );
+					        var pointBTime = new Date( datas[xx+1].timestamp );
+
+					        var BAsecond = (pointBTime - pointATime) / 1000;
+
+							if (BAsecond < 10) {
+						        //map.addLayer(firstpolyline);
+						        layerGroup3.addLayer(firstpolyline);
+							}
+
+						    // -----------------------------------------------------------------------------------------------------
+
+						    if (rangeSumP > 25 ) {
+						    	break;
+						    }
+						}
+					}
+				}
+				// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+				// Lv3 리스트 처리 부분
+				// ------------------------------------------------------------------------------------------------------------------------
 			}
-			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
-			// Lv3 리스트 처리 부분
-			// ------------------------------------------------------------------------------------------------------------------------
-			}
+
+			layerGroup0.addTo(map);
+			layerGroup1.addTo(map);
+			layerGroup2.addTo(map);
+			layerGroup3.addTo(map);
+
+			layerGroup0.bringToFront();
+			layerGroup1.bringToFront();
+			layerGroup2.bringToFront();
+			layerGroup3.bringToFront();
+
 			// ------- api success 끝나는 부분------
 
 		},

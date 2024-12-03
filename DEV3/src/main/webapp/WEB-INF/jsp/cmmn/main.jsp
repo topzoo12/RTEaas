@@ -993,33 +993,6 @@ function reSearch() {
 				markerCluster.addLayer(t1);
 				markers.push(t1);
 
-				// 마커 클러스터 그룹에 클릭 이벤트 추가
-				markerCluster.on('clusterclick', function(event) {
-					var cluster = event.layer;
-					var childMarkers = cluster.getAllChildMarkers();
-
-					markerIconCheck();
-					onMapClick(map);
-
-					// 팝업 내용 생성
-					var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-
-					childMarkers.forEach(function(marker, index) {
-						var item = marker.options;
-
-						popupContent += "Marker " + (index + 1) + " : "
-										+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
-										+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
-										+ marker.getLatLng().toString()
-										+ "</b><br>";
-
-					});
-
-					var popupLatLng = cluster.getLatLng();
-					//var popup = L.popup({autoPan:false});
-					popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
-				});
-
 				infoList.push("<li><a class='infoListItem'>"
 						+ "<div class='info'><div class='tit'>"
 						+ "<span class='badge sm " + className + "'>" + name + "</span>"
@@ -1037,6 +1010,33 @@ function reSearch() {
   			}
 		}
 	}
+
+	// 마커 클러스터 그룹에 클릭 이벤트 추가
+	markerCluster.on('clusterclick', function(event) {
+		var cluster = event.layer;
+		var childMarkers = cluster.getAllChildMarkers();
+
+		markerIconCheck();
+		onMapClick(map);
+
+		// 팝업 내용 생성
+		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
+
+		childMarkers.forEach(function(marker, index) {
+			var item = marker.options;
+
+			popupContent += "Marker " + (index + 1) + " : "
+							+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
+							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+							+ marker.getLatLng().toString()
+							+ "</b><br>";
+
+		});
+
+		var popupLatLng = cluster.getLatLng();
+		//var popup = L.popup({autoPan:false});
+		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+	});
 
 	map.addLayer(markerCluster);
 
