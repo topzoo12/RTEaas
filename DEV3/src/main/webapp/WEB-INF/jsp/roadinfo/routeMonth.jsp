@@ -212,7 +212,7 @@ $(document).ready(function() {
 
 		//map = L.map('map').setView({lat:37.470613, lng:127.126118}, 14);
 		//map = L.map('map').setView({lat:37.412079, lng:127.135001}, 18);
-		map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 12);
+		map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 13);
 
 		L.control.scale({
 			imperial: true, metric: true
@@ -262,21 +262,35 @@ function drawline() {
 
 	$.ajax({
 		type: "GET",
-		url: "${authInfo.restApiUrl}/detected-road-by-date",
-		//url: "http://localhost:8081/detected-road-by-date",
+		//url: "${authInfo.restApiUrl}/detected-road-by-date",
+		//url: "http://datahub-dev.zieumtn.com/gis/detected-road-by-date",
+		//url: "http://localhost:8080/detected-road-by-date",
+		url: "${authInfo.restApiUrl}/detected-road-by-deviceid",
+		//url: "http://localhost:8081/detected-road-by-deviceid",
+
 		data: {
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
 			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
 			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
 			south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
-			searchMonth:$("#searchYearMonth").data('code'),
+			//searchMonth:$("#searchYearMonth").data('code'),
 			region:"${authInfo.cdNa}",
 			co_id :"${authInfo.coId}"
 
 		},
 		success: function(resp) {
 			datas = resp.data
-            //console.log('탐지도로 데이터 확인--->>', datas);
+            console.log('탐지도로 데이터 확인--->>', datas);
+
+			/* for (var a = 0; a < datas.length; a++) {
+				for (var b = 0; b < datas[a].detectedRoadInfo.length; b++) {
+					if (datas[a].detectedRoadInfo[b]['device-id'] == 'MH2DY2300060') {
+						console.log("MH2DY2300060");
+					} else {
+						console.log("MH2DY2300026");
+					}
+				}
+			} */
 
 			// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
 			var date1 = new Date();

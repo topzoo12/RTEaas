@@ -267,7 +267,7 @@ var scrollH = $(this).height(); //스크롤바를 갖는 div의 높이
 
 var popup = L.popup({autoPan:false});
 
-var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 12);
+var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 13);
 
 L.control.scale({
 	imperial: true, metric: true
@@ -727,7 +727,7 @@ $('#sortchk .sorting').on('click', function() {
 			}
 			cnt++;
 
-			var date = new Date(data[index]['timestamp'])
+			var date = new Date(data[index]['timestamp']);
 
 			var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
 							+ date.getDate() + ' '
@@ -1016,8 +1016,8 @@ function reSearch() {
 					});
 
 					var popupLatLng = cluster.getLatLng();
-
-					popup = L.popup().setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+					//var popup = L.popup({autoPan:false});
+					popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
 				});
 
 				infoList.push("<li><a class='infoListItem'>"

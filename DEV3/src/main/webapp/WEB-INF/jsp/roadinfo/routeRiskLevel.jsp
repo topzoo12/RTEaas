@@ -182,7 +182,7 @@ var popup = L.popup({autoPan:false});
 
 old_id = "";
 
-map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 12);
+map = L.map('map').setView({lat:"${authInfo.wtX}", lng:"${authInfo.wtY}"}, 13);
 
 L.control.scale({
 	imperial: true, metric: true
@@ -876,7 +876,9 @@ function detail(id, clusterChk){
 		if (potholeListData[i].id == id) {
 
 			//var addrName = potholeListData[i].way == null ? "도로정보 없음" : potholeListData[i].way.name
-			var addrName = (potholeListData[i].way.name == null || potholeListData[i].way.name == '' ) ? "도로정보 없음" : potholeListData[i].way.name
+			var addrName = (potholeListData[i].way == null || potholeListData[i].way.name == null || potholeListData[i].way.name == '' ) ? "도로정보 없음" : potholeListData[i].way.name;
+			//var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.way.name;
+
 
 			//var riskLevel = "level level" + (Number(thisData.risk.level)+1);
 			var riskLevel = "level level" + (Number(thisData.risk.level));
@@ -953,8 +955,9 @@ function getDetectedRoad() {
 
 	$.ajax({
 		type: "GET",
-		url: "${authInfo.restApiUrl}/detected-road" ,
+		//url: "${authInfo.restApiUrl}/detected-road" ,
 		//url: "http://localhost:8081/detected-road",
+		url: "${authInfo.restApiUrl}/detected-road-by-deviceid",
 		data: {
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
 			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
@@ -964,9 +967,18 @@ function getDetectedRoad() {
 			co_id :"${authInfo.coId}"
 		},
 		success: function(resp) {
-			datas = resp.data
+
+			// ------- api 시작하는 부분------
+
+			//datas = resp.data;
+
+			for (var z = 0; z < resp.data.length; z++) {
             //console.log('탐지도로 데이터 확인--->> ', datas);
 			//console.log('포트홀 데이터 확인-->> ', allData);
+
+
+			datas = resp.data[z].detectedRoadInfo;
+
 
 			var crackList = [];
 			var crackListLv00 = [];
@@ -1609,19 +1621,24 @@ function getDetectedRoad() {
 			// △△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
 			// Lv3 리스트 처리 부분
 			// ------------------------------------------------------------------------------------------------------------------------
+			}
+			// ------- api success 끝나는 부분------
 
 		},
 		error: function(request,status,error){
 			//console.log("request.status = " + request.status);
 		},
 		beforeSend:function(){
-			$('#circularG').css('display','block')
+			$('#circularG').css('display','block');
 		},
 		complete : function(data) {
 			//  실패했어도 완료가 되었을 때 처리
-			$('#circularG').css('display','none')
+			$('#circularG').css('display','none');
 
 		}
+
+
+
 	})
 }
 
