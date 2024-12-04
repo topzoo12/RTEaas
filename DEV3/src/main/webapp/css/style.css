@@ -562,6 +562,16 @@ input:checked + .slider:before {
     top: 25px !important;
     left: 24px !important;
 }
+.roadinfo .title button.btn_re-search{
+	position: absolute;
+	top: 10px;
+	right: 400px;
+}
+.roadinfo .title button.btn_obstacleList{
+	position: absolute;
+	top: 10px;
+	right: 12px;
+}
 #favorites {
 	display: none;
 }
@@ -1542,7 +1552,14 @@ input:checked + .slider:before {
 	text-align: right;
 	letter-spacing: 0;
 }
-
+.infoListWrap span.fileName{
+	line-height: 170%;
+	display: block;
+	color: var(--color-sub);
+	font-size: 1.5rem;
+	text-align: left;
+	letter-spacing: 0;
+}
 .roadinfo .infoDetailWrap .infoTitle,
 .roadinfo .infoListWrap .infoListTop{
     border-top: 1px solid var(--border);
@@ -1804,6 +1821,33 @@ span.noPhoto span{
 	line-height: 20px;
 	font-weight: 600;
 }
+.infoDetail .itemvalue.roadDeteil{
+	display: flex;
+	flex-wrap: wrap;
+	padding: 24px 0 12px;
+	gap: 8px;
+}
+.infoDetail .itemvalue.roadDeteil span{
+	flex: 1 1 40%;
+	display: flex;
+	flex-direction: row;
+    align-items: center;
+	justify-content: space-between;
+    gap: 4px;
+	background: var(--bg-gray);
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: 500;
+	color: var(--color);
+	padding: 8px 16px;
+	border-radius: 5px;
+}
+.infoDetail .itemvalue.roadDeteil span em{
+	display: block;
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: 600;
+}
 .infoDetail dl{
 	display: block;
 	width: 100%;
@@ -1887,7 +1931,7 @@ span.noPhoto span{
 }
 .stateSlide_item{
     position: relative;
-    text-align: center;       /* 대시보드 수정 jj*/
+    text-align: center;
     padding: 32px 24px;
     width: 100%;
 }

@@ -18,6 +18,7 @@
 
     <ul class="search_box">
         <li>
+			<input type="text" value="" name="" id="" class="input1" placeholder="영상이름">
             <span class="stl"><fmt:message key="PERIOD" bundle="${bundle}"/><span class="remark2"></span></span>
             <span class="date">
                 <input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly> ~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2" readonly>
@@ -25,54 +26,168 @@
             </span>
             <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
         </li>
-        <button class="btn_excel_download">excel</button>
-        <!-- <a id="downloadLink" href="/excel/yearly/download.do" style="display: none;"></a> -->
-		 <a id="downloadLink" href="/excel/download.do" style="display: none;"></a>
+        <button class="btn_subPrimary btn_mapinfo" onclick="location.href='/roadinfo/roadDetetionInfo.do'">지도정보보기</button>
     </ul>
     <ul class="contents">
         <li class="view">
             <table class="table">
                 <colgroup>
-                    <col style="width: 20%">
-                    <col style="width: 16%">
-                    <col style="width: 16%">
-                    <col style="width: 16%">
-                    <col style="width: 16%">
-                    <col style="width: 17%">
+                    <col style="width: 5%">
+                    <col style="width: 15%">
+                    <col style="width: 10%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 5%">
+                    <col style="width: 9%">
                 </colgroup>
                 <thead>
                     <tr>
-                    <th><fmt:message key="BY_DATE" bundle="${bundle}"/></th>
-                    <th><fmt:message key="POTHOLE" bundle="${bundle}"/></th>
-                    <th><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></th>
-                    <th><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></th>
-                    <th><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></th>
-                    <th><fmt:message key="RISK_AVG" bundle="${bundle}"/></th>
+						<th><input class="checkbox" type="checkbox" id="checked"><label for="checked"></label></th>
+						<th>영상이름</th>
+						<th>촬영일자</th>
+						<th>동물</th>
+						<th>보행자</th>
+						<th>공사표지판</th>
+						<th>라바콘</th>
+						<th>낙하물</th>
+						<th>낙석</th>
+						<th>쓰레기</th>
+						<th>맨홀</th>
+						<th>포트홀</th>
+						<th>보수된포트홀</th>
                     </tr>
                 </thead>
             </table>
             <div class="tbody" style="overflow-y:scroll">
                 <table class="table" id="table-1">
                     <colgroup>
-                        <col style="width: 20%">
-                        <col style="width: 16%">
-                        <col style="width: 16%">
-                        <col style="width: 16%">
-                        <col style="width: 16%">
-                        <col style="width: calc(16% - 17px)">
+                        <col style="width: 5%">
+						<col style="width: 15%">
+						<col style="width: 10%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 8%">
                     </colgroup>
-                    <tbody>
-                    <c:forEach var="result" items="${resultList}" varStatus="status">
-                        <tr class="<c:if test="${result.rowno eq '1'}">on</c:if>">
-	                        <td><c:out value="${result.rowno}"/></td>
-	                        <td><c:out value="${result.coId}"/></td>
-	                        <td><c:out value="${result.coNm}"/></td>
-	                        <td><c:out value="${result.usrId}"/></td>
-	                        <td><c:out value="${result.usrNm}"/></td>
-	                        <td><c:out value="${result.loginDtm}"/></td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
+					<tbody>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check1"><label for="check1"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check2"><label for="check2"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check3"><label for="check3"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check4"><label for="check4"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="on">
+							<td><input class="checkbox" type="checkbox" id="check5" checked><label for="check5"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check6"><label for="check6"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr class="">
+							<td><input class="checkbox" type="checkbox" id="check7"><label for="check7"></label></td>
+							<td>수정구로_20241113.dat</td>
+							<td>2024-11-21</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+					</tbody>
                 </table>
             </div>
 

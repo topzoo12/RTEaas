@@ -22,13 +22,17 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 <div class="contents_box item mainpage roadinfo">
-	<p class="title ${fav}">${pageName.srnNm}</p>
-    <div class="contents mainMap">
+	<p class="title ${fav}">
+		${pageName.srnNm}
+		<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+		<button class="btn_bgPrimary btn_obstacleList" onclick="location.href='/roadinfo/roadObstacleList.do'">장애물 목록보기</button>
+	</p>
+    <div class="contents mainMap" style="height: calc(100% - 64px);">
         <div class="mapWrap">
 			<!-- ******************************************************************************************************************* -->
 			<!-- Level List 부분 start -->
 			<!-- ******************************************************************************************************************* -->
-			<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px;">
+			<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px; display: none;">
 				<li>
 					<span class="selectBox resp bottom" id="msgdivCd_span">
 						<button class="label" id="level1" data-code="" data-lat="" data-lng="">Level1</button>
@@ -63,60 +67,22 @@
 			<!-- 결과내재검색패널 -->
 			<div class="re-search-container" id="re-search-container" style="display: none; width: calc(100% - 400px);">
                 <button type="button" id="btn_re-searchWrap" class="btn_re-searchWrap" onclick='btnClick()'></button>
-
 				<div class="group">
 					<dl class="">
-						<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
+						<dt>탐지 객체</dt>
 						<dd>
 							<div class="selectOpt">
-								<c:forEach var="risklist" items="${codeListLv}" varStatus="status">
-									<input type="checkbox" id="${risklist.etc2}" class="risklist" name="risklist" value="${risklist.etc3}" checked><label for="${risklist.etc2}">
-									<c:choose>
-										<c:when test="${nowCdNa eq 'KR'}">${risklist.cdNm}</c:when>
-										<c:when test="${nowCdNa eq 'US'}">${risklist.cdNmEng}</c:when>
-										<c:when test="${nowCdNa eq 'JP'}">${risklist.cdNmJp}</c:when>
-									</c:choose>
-
-									</label>
-								</c:forEach>
-						</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="group">
-					<dl class="">
-						<dt><fmt:message key="TYPE" bundle="${bundle}"/></dt>
-						<dd>
-							<div class="selectOpt">
-								<c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
-									<input type="checkbox" id="${cracklist.etc1}" class="crack" name="crack" value="${cracklist.etc2}" checked><label for="${cracklist.etc1}">
-									<c:choose>
-										<c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
-										<c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
-										<c:when test="${nowCdNa eq 'JP'}">${cracklist.cdNmJp}</c:when>
-									</c:choose>
-
-									</label>
-								</c:forEach>
-							</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="group">
-					<dl class="">
-						<dt><fmt:message key="STATUS" bundle="${bundle}"/></dt>
-						<dd>
-							<div class="selectOpt">
-								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
-									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-										<c:choose>
-											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
-											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
-											<c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
-										</c:choose>
-									</label>
-								</c:forEach>
-								<input type="checkbox" id="ETC" class="statusstat" name="statusstat" value="ETC" checked><label for="ETC"><fmt:message key="UNCLASSIFIED" bundle="${bundle}" /></label>
+								<input type="checkbox" id="allCheck" class="" name="" value=""><label for="allCheck">전체</label>
+								<input type="checkbox" id="object1" class="" name="" value="" checked><label for="object1">동물</label>
+								<input type="checkbox" id="object2" class="" name="" value=""><label for="object2">보행자</label>
+								<input type="checkbox" id="object3" class="" name="" value=""><label for="object3">공사표지판</label>
+								<input type="checkbox" id="object4" class="" name="" value=""><label for="object4">라바콘</label>
+								<input type="checkbox" id="object5" class="" name="" value="" checked><label for="object5">낙하물</label>
+								<input type="checkbox" id="object6" class="" name="" value="" checked><label for="object6">낙석</label>
+								<input type="checkbox" id="object7" class="" name="" value=""><label for="object7">쓰레기</label>
+								<input type="checkbox" id="object8" class="" name="" value=""><label for="object8">맨홀</label>
+								<input type="checkbox" id="object9" class="" name="" value=""><label for="object9">포트홀</label>
+								<input type="checkbox" id="object10" class="" name="" value=""><label for="object10">보수된포트홀</label>
 						</div>
 						</dd>
 					</dl>
@@ -130,7 +96,7 @@
 		<!-- Level List 부분 end -->
 		<!-- ******************************************************************************************************************* -->
 
-		<div class="MapArea">
+		<div class="MapArea" style="height: 100%;">
 			<div class="item map_box">
 				<div class="map" id="map"></div>
 				<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
@@ -147,13 +113,13 @@
 
 	</div>
 	<div class="infoWrap on">
-		<button id="btn_re-search_move" class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+		<!-- <button id="btn_re-search_move" class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button> -->
 		<button type="button" class="btn_infoWrap"></button>
             <!-- 상세설명 -->
-            <div class="infoDetailWrap" style="display: none;">
+            <div class="infoDetailWrap" style="display:;">
                 <div class="infoTitle">
                     <button type="button" class="btn_back" id="btn_Back"></button>
-                    <h2 id="detail_title"></h2>
+                    <h2 id="detail_title">수정구로_20241113.dat</h2>
                 </div>
                 <div class="infoContents">
                     <p class="infoPhoto">
@@ -163,30 +129,29 @@
 						</span>
 					</p>
                     <div class="infoDetail">
-                        <div class="level">
-                            <span id="riskLv"></span>
-                        </div>
-                        <div class="itemvalue">
-                            <span><em id="CntPothole"></em><fmt:message key="포트홀" bundle="${bundle}"/></span>
-                            <span><em id="CntVertical"></em><fmt:message key="수직균열" bundle="${bundle}"/></span>
-                            <span><em id="CntHorizontal"></em><fmt:message key="수평균열" bundle="${bundle}"/></span>
-                            <span><em id="CntAlligators"></em><fmt:message key="피로균열" bundle="${bundle}"/></span>
+                        <div class="itemvalue roadDeteil">
+                            <span>동물<em id="">0</em></span>
+                            <span>보행자<em id="">0</em></span>
+                            <span>공사표지판<em id="">1</em></span>
+                            <span>라바콘<em id="">0</em></span>
+                            <span>낙하물<em id="">0</em></span>
+                            <span>낙석<em id="">0</em></span>
+                            <span>쓰레기<em id="">1</em></span>
+                            <span>맨홀<em id="">0</em></span>
+							<span>포트홀<em id="">1</em></span>
+                            <span>보수된포트홀<em id="">0</em></span>
                         </div>
                         <dl class="">
                             <dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-                            <dd id="detail_device_name"></dd>
+                            <dd id="detail_device_name">SOT1000</dd>
                             <dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-                            <dd id="detail_device_id"></dd>
+                            <dd id="detail_device_id">KR0001</dd>
                             <dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-                            <dd id="detail_latlng"></dd>
-                            <dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-                            <dd id="detail_risk_level"></dd>
+                            <dd id="detail_latlng">위도 37.412396 / 경도 127.133415</dd>
                             <dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-                            <dd id="detail_route_name"></dd>
+                            <dd id="detail_route_name">매화로47번길</dd>
                             <dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
-                            <dd id="detail_ctime"></dd>
-                            <dt><fmt:message key="ROAD_STATUS" bundle="${bundle}"/></dt>
-                            <dd id="detail_state"></dd>
+                            <dd id="detail_ctime">2024.11.22 11:08</dd>
                         </dl>
                     </div>
                 </div>
@@ -199,22 +164,169 @@
             <!-- e:상세설명 -->
 
             <!-- 검색목록 -->
-            <div class="infoListWrap" style="overflow-y:auto;">
+            <div class="infoListWrap" style="overflow-y:auto; display: none;">
                 <div class="infoListTop">
                     <h2 class="hidden">검색목록</h2>
-                    <div class="array-container">
-                        <span class="selectBox text bottom" id="select_asc_sort">
-                        	<button class="label" id="sort" data-code="desc" onchange="changeSortSelect()"><fmt:message key="DATE_DESC" bundle="${bundle}"/></button>
-                            <ul class="optionList" id="sortchk">
-                                <li class="optionItem sorting" id="desc" data-code="desc"><fmt:message key="DATE_DESC" bundle="${bundle}"/></li>
-                                <li class="optionItem sorting" id="asc" data-code="asc"><fmt:message key="DATE_ASC" bundle="${bundle}"/></li>
-                            </ul>
-                        </span>
-                    </div>
+                    <span class="fileName">파일명 : <em>수정구로_20241113.dat</em></span>
                     <p class="itemCount">총 <em>0건</em></p>
                 </div>
 
-                <ul class="infoList"></ul>
+                <ul class="infoList">
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="infoListItem">
+							<div class="info">
+								<ul class="infoContents">
+									<li> 도로명 : 매화로47번길</li>
+									<li> 촬영일시 : 2024.11.22 11:08</li>
+									<li> 탐지객체수  : 5개</li>
+								</ul>
+							</div>
+							<div class="infoThumnail">
+								<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
+							</div>
+						</a>
+					</li>
+				</ul>
             </div>
             <!-- e:검색목록 -->
             <!-- 검색목록 nodata-->
