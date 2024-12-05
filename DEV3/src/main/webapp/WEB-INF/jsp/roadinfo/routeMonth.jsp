@@ -147,9 +147,9 @@
 
 	var popup = L.popup();
 
- 	function removeLine(e) {
+ 	/* function removeLine(e) {
  		map.removeLayer(firstpolyline)
- 	}
+ 	} */
 
 
 /*  	function onClick(e) {
@@ -241,11 +241,11 @@ map.on("moveend", function(){
 
 })
 
-
+/*
 function removeLine() {
 	map.removeLayer(firstpolyline);
 	map.removeLayer(map._layers);
-}
+} */
 
 var lines = [];
 
@@ -310,26 +310,6 @@ function drawline() {
 
 			for (var i = 0; i < datas.length; i++) {
 
-				const givenDate = new Date(datas[i].detectedRoadDate);
-
-				// 현재 날짜
-				const now = new Date();
-
-				// 두 날짜 간의 차이 계산 (밀리초 차이 -> 일수로 변환)
-				const diffInMilliseconds = now - givenDate;
-				const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
-
-				// 30일, 30~60일, 60~90일, 그 이상으로 구분
-				if (diffInDays <= 30) {
-				    color = (monthColorKeyValue.find(item => item.code === 'one')).color;
-				} else if (diffInDays > 30 && diffInDays <= 60) {
-				    color = (monthColorKeyValue.find(item => item.code === 'two')).color;
-				} else if (diffInDays > 60 && diffInDays <= 90) {
-				    color = (monthColorKeyValue.find(item => item.code === 'thre')).color;
-				} else {
-				    color = (monthColorKeyValue.find(item => item.code === 'else')).color;
-				}
-
 				//console.log(`${givenDate}는 현재와 ${diffInDays}일 차이입니다.`);
 
 				/*********************************************************************************************************************/
@@ -349,6 +329,28 @@ function drawline() {
 				var positionDatas = datas[i].detectedRoadInfo;
 
 				for (var x = 1; x < positionDatas.length; x++) {
+
+					const givenDate = new Date(positionDatas[x-1].timestamp);
+
+					// 현재 날짜
+					const now = new Date();
+
+					// 두 날짜 간의 차이 계산 (밀리초 차이 -> 일수로 변환)
+					const diffInMilliseconds = now - givenDate;
+					const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
+
+					// 30일, 30~60일, 60~90일, 그 이상으로 구분
+					if (diffInDays <= 30) {
+					    color = (monthColorKeyValue.find(item => item.code === 'one')).color;
+					} else if (diffInDays > 30 && diffInDays <= 60) {
+					    color = (monthColorKeyValue.find(item => item.code === 'two')).color;
+					} else if (diffInDays > 60 && diffInDays <= 90) {
+					    color = (monthColorKeyValue.find(item => item.code === 'thre')).color;
+					} else {
+					    color = (monthColorKeyValue.find(item => item.code === 'else')).color;
+					}
+
+
 
 					var pointA = new L.LatLng(positionDatas[x-1].latitude, positionDatas[x-1].longitude);
 					var pointB = new L.LatLng(positionDatas[x].latitude, positionDatas[x].longitude);
