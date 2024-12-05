@@ -93,7 +93,13 @@
                     </colgroup>
 					<tbody>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check1"><label for="check1"></label></td>
+							<!-- <td><input class="checkbox" type="checkbox" id="check1"><label for="check1"></label></td> -->
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -108,7 +114,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check2"><label for="check2"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -123,7 +134,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check3"><label for="check3"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -138,7 +154,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check4"><label for="check4"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -153,7 +174,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="on">
-							<td><input class="checkbox" type="checkbox" id="check5" checked><label for="check5"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -168,7 +194,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check6"><label for="check6"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>
@@ -183,7 +214,12 @@
 							<td>0</td>
 						</tr>
 						<tr class="">
-							<td><input class="checkbox" type="checkbox" id="check7"><label for="check7"></label></td>
+							<td>
+								<label class="checkbox">
+									<input class="checkbox" type="checkbox" id="check1">
+									<span class="icon"></span>
+								</label>
+							</td>
 							<td>수정구로_20241113.dat</td>
 							<td>2024-11-21</td>
 							<td>0</td>

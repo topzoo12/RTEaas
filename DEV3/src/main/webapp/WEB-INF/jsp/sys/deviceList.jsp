@@ -238,8 +238,9 @@ var g_isInsert = true;
 
 		g_isInsert = true;
 		let target_pop = $(this).data('pop');
-        $('#pop_'+target_pop).stop().fadeIn(300);
-        if($('.pop_wrap').length){
+        //$('#pop_'+target_pop).stop().fadeIn(300);
+        console.log($('.pop_wrap').length);
+        if($('#pop_'+target_pop)){
             $('#pop_'+target_pop).stop().fadeIn(300);
         }
         popupData(target_pop, '')
