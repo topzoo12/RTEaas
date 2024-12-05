@@ -59,7 +59,7 @@
 			<div onClick="hideCluster()">Marker Off</div> -->
         </div>
         <div class="mapWrap">
-        	<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px;">
+        	<%-- <ul class="search_box level_list" style="min-width: 1170px; margin-top:0px;">
 				<li>
 					<span class="selectBox resp bottom" id="msgdivCd_span">
 						<button class="label" id="level1" data-code="" data-lat="" data-lng="">Level1</button>
@@ -69,7 +69,7 @@
 						<button class="label" id="level2" data-code="" data-lat="" data-lng="">디바이스 리스트</button>
 						<ul class="optionList" id="level2_ul"></ul>
 					</span> -->
-					<%-- <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button> --%>
+					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
 					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
 				</li>
 				<!-- <li>
@@ -82,9 +82,9 @@
 						<option value="6">Tesla</option>
 					</select>
 				</li> -->
-			</ul>
-			<div class="MapArea">
-			<!-- <div class="MapArea NoSearchBar"> -->
+			</ul> --%>
+			<!-- <div class="MapArea"> -->
+			<div class="MapArea NoSearchBar">
 				<div class="item map_box">
 					<div class="map" id="map"></div>
 
@@ -283,8 +283,6 @@ var deviceKeyValue = [];
 
 var deviceForParam = [];
 
-console.log("${deviceList}");
-
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
 	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}', 'useYn':'${deList.useYn}'})
 
@@ -299,9 +297,7 @@ console.log("${deviceList}");
 	}
 
 </c:forEach>
-
-console.log(deviceForParam);
-
+/*
 var node = document.getElementById('level1_ul');
 node.innerHTML = '';
 
@@ -323,7 +319,7 @@ for(var i = 0; i < deviceForParam.length; i++){
 }
 
 node.innerHTML = html;
-
+*/
 var lvColorKeyValue = [];
 
 <c:forEach var="lvList" items="${levelList}" varStatus="status">
@@ -451,7 +447,9 @@ $("#Levelswitch").change(function(){
       } else {
         //console.log('Marker OFF');
         map.removeLayer(markerCluster);
+        map.closePopup();
         // OFF 상태일 때 동작 추가
+        onMapClick();
       }
 
 });
@@ -883,6 +881,9 @@ function drawMarker(response) {
 		var cluster = event.layer;
 		var childMarkers = cluster.getAllChildMarkers();
 
+		markerIconCheck();
+		onMapClick(map);
+
 		// 팝업 내용 생성
 		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
 		//console.log('childMarkers -- ', childMarkers)
@@ -921,7 +922,7 @@ function drawMarker(response) {
 
 }
 
-//클러스터 숨기기
+/* //클러스터 숨기기
 function hideCluster() {
   map.removeLayer(markerCluster);
 }
@@ -929,7 +930,7 @@ function hideCluster() {
 // 클러스터 보이기
 function showCluster() {
   map.addLayer(markerCluster);
-}
+} */
 
 function detail(id, clusterChk){
 

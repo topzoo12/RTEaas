@@ -280,7 +280,7 @@ function drawline() {
 		},
 		success: function(resp) {
 			datas = resp.data
-            console.log('탐지도로 데이터 확인--->>', datas);
+            //console.log('탐지도로 데이터 확인--->>', datas);
 
 			/* for (var a = 0; a < datas.length; a++) {
 				for (var b = 0; b < datas[a].detectedRoadInfo.length; b++) {

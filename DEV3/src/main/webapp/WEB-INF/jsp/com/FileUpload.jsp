@@ -37,7 +37,8 @@
 					<!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
 					<!-- <input type="submit" value="UPLOAD" class="btn_m btn_primary btn_r" id="save_faq"><br/> -->
 
-				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:75%; direction: rtl;">
+				<%-- <form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; direction: rtl;"> --%>
+				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; margin-left:900px; direction: rtl;">
 					<input type="file" name="file" id="file" style="width:100%">
 				</form>
 
