@@ -11,6 +11,16 @@
      form input::file-selector-button {
        display: none;
      }
+
+.btn {
+	height: 32px;
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	font-size: 14px;
+	line-height: 30px;
+	padding: 0 8px;
+}
+
 </style>
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=j5co10chpb"></script>
 
@@ -38,14 +48,16 @@
 					<!-- <input type="submit" value="UPLOAD" class="btn_m btn_primary btn_r" id="save_faq"><br/> -->
 
 				<%-- <form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; direction: rtl;"> --%>
-				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; margin-left:900px; direction: rtl;">
-					<input type="file" name="file" id="file" style="width:100%">
+				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; margin-left:1000px; direction: rtl;">
+					<input type="file" name="file" id="file" style="width:100%" readonly>
 				</form>
 
-				<p class="bbs_btn" style="width:224px;">
-					<label class="btn_m btn_primary btn_r" for="file" style="cursor: pointer">파일 선택하기</label>
+				<p class="bbs_btn">
+					<!-- <label class="btn_m btn_primary btn_r" for="file" style="cursor: pointer">파일 선택하기</label> -->
+					<label class="btn btn_primary" for="file" style="cursor: pointer;">파일 선택하기</label>
 					<!-- <button class="btn_m btn_primary btn_r" id="file">파일 선택</button> -->
-					<button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button>
+					<!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
+					<button class="btn btn_primary" id="save_faq">파일 업로드</button>
 				</p>
 			</div>
 

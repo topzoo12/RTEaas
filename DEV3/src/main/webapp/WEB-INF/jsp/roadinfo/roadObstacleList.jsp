@@ -10,9 +10,8 @@
 
 <!--달력-->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
@@ -37,7 +36,7 @@
             </span>
             <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
         </li>
-        <button class="btn_subPrimary btn_mapinfo" onclick=''>지도정보보기</button>
+        <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
     </ul>
     <ul class="contents">
         <li class="view">
@@ -206,10 +205,10 @@
     </ul>
 
 	<!-- 도로 장애물 탐지 상세정보 -->
-	<div class="contents_box roadinfo roadDetetionInfo" id="" style="display: block;">
+	<div class="contents_box roadinfo roadDetetionInfo" id="mapDetetionInfo" style="display: none;">
 		<div class="btnAreaTop">
 			<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-			<button class="btn_bgPrimary btn_obstacleList" onclick=''>장애물 목록보기</button>
+			<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
 		</div>
 		<div class="contents mainMap">
 			<div class="mapWrap">
@@ -282,7 +281,7 @@
 
 			<div class="MapArea" style="height: 100%;">
 				<div class="item map_box">
-					<div class="map" id="map"></div>
+					<div class="map" id="map" style="height: 100%;"></div>
 					<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
 						<div class="pop_riskPopImg">
 							<div class="photo_area">
@@ -609,11 +608,11 @@ $(function() {
 
 $('.btn_search').on('click', function () {
 
-	getList();
+	//getList();
 });
 
 //jquery-3.3.1 부분 적용
- var newJquery = $.noConflict(true);
+/*  var newJquery = $.noConflict(true);
 
  newJquery('.btn_excel_download').on('click', function() {
 
@@ -634,7 +633,7 @@ $('.btn_search').on('click', function () {
 	    newJquery.ajax({
 	        type: 'POST',
 	        url: '/excel/download.do',
-	        /* url: '/excel/yearly/download.do', */
+	        //url: '/excel/yearly/download.do',
 	        contentType: 'application/json',
 	        data: JSON.stringify({ tableData: tableData, headers: headers }),
 	        xhrFields: {
@@ -652,7 +651,7 @@ $('.btn_search').on('click', function () {
 	            alert('파일 다운로드에 실패했습니다.');
 	        }
 	    });
-	});
+	}); */
 
 function getList(){
 
@@ -752,5 +751,17 @@ function dateFormat(date, format){
 
    return dateString;
 }
+
+function showMap() {
+	$('#mapDetetionInfo').css('display', 'block');
+}
+
+function hideMap() {
+	$('#mapDetetionInfo').css('display', 'none');
+}
+
+
+
+
 
 </script>
