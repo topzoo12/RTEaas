@@ -136,6 +136,8 @@ public class routeRiskLevelController {
 
 		ModelAndView mv = new ModelAndView("/roadinfo/routeRiskLevel");
 
+		mv.addObject("deviceList", deviceList);
+
 
 		List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
 		for(LoginMenuVO fav : favList){

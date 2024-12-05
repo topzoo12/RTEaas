@@ -50,9 +50,41 @@
 				</span>
 			</c:forEach>
         </div>
+        <div class="markerOnOffpopup" >
+        	<input type="checkbox" name="markerOnOff" id="Levelswitch" checked/><label for="Levelswitch"></label>
+        	<!--
+        	<input type="radio" name="markerView" id="markerOn" value="markerOn" class="custom-radio"/><label for="markerOn" onClick="showCluster()">On</label>
+        	<input type="radio" name="markerView" id="markerOff" value="markerOff" class="custom-radio"/><label for="markerOff" onClick="hideCluster()">Off</label> -->
+        	<!-- <div onClick="showCluster()">Marker On</div>
+			<div onClick="hideCluster()">Marker Off</div> -->
+        </div>
         <div class="mapWrap">
-			<div class="MapArea NoSearchBar">
-
+        	<ul class="search_box level_list" style="min-width: 1170px; margin-top:0px;">
+				<li>
+					<span class="selectBox resp bottom" id="msgdivCd_span">
+						<button class="label" id="level1" data-code="" data-lat="" data-lng="">Level1</button>
+						<ul class="optionList" id="level1_ul"></ul>
+					</span>
+					<!-- <span class="selectBox resp bottom" id="msgdivCd_span">
+						<button class="label" id="level2" data-code="" data-lat="" data-lng="">디바이스 리스트</button>
+						<ul class="optionList" id="level2_ul"></ul>
+					</span> -->
+					<%-- <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button> --%>
+					<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
+				</li>
+				<!-- <li>
+					<select name="cars" id="cars" multiple>
+				  		<option value="1">Audi</option>
+						<option selected value="2">BMW</option>
+						<option selected value="3">Mercedes</option>
+						<option value="4">Volvo</option>
+						<option value="5">Lexus</option>
+						<option value="6">Tesla</option>
+					</select>
+				</li> -->
+			</ul>
+			<div class="MapArea">
+			<!-- <div class="MapArea NoSearchBar"> -->
 				<div class="item map_box">
 					<div class="map" id="map"></div>
 
@@ -249,15 +281,48 @@ map.on("moveend", function(){
 
 var deviceKeyValue = [];
 
+var deviceForParam = [];
+
+console.log("${deviceList}");
+
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
-	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
+	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}', 'useYn':'${deList.useYn}'})
 
 	if (deviceIdList == "" ) {
 	      	deviceIdList += '${deList.macAddr}'
 	} else {
 		deviceIdList += ',${deList.macAddr}'
 	}
+
+	if ('${deList.macAddr}'.length > 0 && '${deList.macAddr}' != "" && '${deList.useYn}' == '사용'){
+		deviceForParam.push('${deList.macAddr}');
+	}
+
 </c:forEach>
+
+console.log(deviceForParam);
+
+var node = document.getElementById('level1_ul');
+node.innerHTML = '';
+
+var html = '';
+
+for(var i = 0; i < deviceForParam.length; i++){
+	data = deviceForParam[i];
+	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
+	//html += '<li class="optionItem" data-code="' + data.id + '" data-lat="' + data.center.latitude + '" data-lng="' + data.center.longitude + '">' + data.name + '</li>'
+	//html += '<input type="checkbox" name="deviceList" id="Levelswitch" checked/><label for="Levelswitch"></label>'
+	//html += '<input type="checkbox" id="'  + i + '" name="deviceList"/>' + i
+	//html += '<li class="optionItem" data-code="' + data + '">' + data + '</li>'
+
+	html += '<li class="optionItem" data-code="' + data + '">'
+	html += '<input type="checkbox" id="'  + i + '" name="deviceList" value="' + data + '">'
+	html +=  data + '</li>'
+
+
+}
+
+node.innerHTML = html;
 
 var lvColorKeyValue = [];
 
@@ -367,6 +432,27 @@ $(".btn_infoWrap").click(function(){
         	}
         }
    	}
+
+});
+
+
+$("#Levelswitch").change(function(){
+
+	/* if ($("input[name='markerOnOff']:checked")) {
+		console.log("aaaaaaaaaaaaaaaaaaaaaaa")
+	} else {
+		console.log("bbbbbbbbbbbbbbbbbbbbbbb")
+	} */
+
+	if ($(this).is(':checked')) {
+        //console.log('Marker ON');
+        map.addLayer(markerCluster);
+        // ON 상태일 때 동작 추가
+      } else {
+        //console.log('Marker OFF');
+        map.removeLayer(markerCluster);
+        // OFF 상태일 때 동작 추가
+      }
 
 });
 
@@ -597,9 +683,9 @@ function onMarkerClick(e) {
 
 }
 
-function removeLine(e) {
+/* function removeLine(e) {
 	map.removeLayer(firstpolyline)
-}
+} */
 
 
 function markerIconCheck() {
@@ -639,6 +725,8 @@ function onMapClick(e) {
 	$('.infoDetailWrap').css('display', 'none')
 
 }
+
+
 
 function mapInfo(map) {
 
@@ -821,7 +909,7 @@ function drawMarker(response) {
 		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
 	});
 
- 	map.addLayer(markerCluster);
+ 	//map.addLayer(markerCluster);
 
  	$('.infoList li').remove()
 	$('.infoList div').remove()
@@ -829,6 +917,18 @@ function drawMarker(response) {
 	potholeCnt = response.data.length;
 	potholeListData = response.data;
 
+	$("#Levelswitch").trigger("change");
+
+}
+
+//클러스터 숨기기
+function hideCluster() {
+  map.removeLayer(markerCluster);
+}
+
+// 클러스터 보이기
+function showCluster() {
+  map.addLayer(markerCluster);
 }
 
 function detail(id, clusterChk){

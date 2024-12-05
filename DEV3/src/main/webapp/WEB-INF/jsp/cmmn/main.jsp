@@ -324,7 +324,8 @@ var deviceIdList = [];
 
 var deviceKeyValue = [];
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
-	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
+	//deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}'})
+	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}', 'useYn':'${deList.useYn}'})
 		/* if (deviceIdList == "" ) {
 			deviceIdList += '${deList.macAddr}'
 		} else {
@@ -332,7 +333,7 @@ var deviceKeyValue = [];
 		}*/
 		var mac = '${deList.macAddr}';
 
-		if (mac.length > 0 && mac != ""){
+		if (mac.length > 0 && mac != "" && '${deList.useYn}' == '사용'){
 			deviceIdList.push(mac);
 		}
 
