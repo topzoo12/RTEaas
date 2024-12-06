@@ -39,11 +39,6 @@
         <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
     </ul>
 
-<div class="btnAreaTop">
-	<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-	<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
-</div>
-
     <ul class="contents">
         <li class="view">
             <table class="table">
@@ -285,6 +280,7 @@
 						<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 					</li>
 				</ul> --%>
+
 				<!-- 결과내재검색패널 -->
 				<div class="re-search-container" id="re-search-container" style="display: none; width: calc(100% - 400px);">
 					<button type="button" id="btn_re-searchWrap" class="btn_re-searchWrap" onclick='btnClick()'></button>
@@ -318,7 +314,11 @@
 			<!-- ******************************************************************************************************************* -->
 
 			<!-- <div class="MapArea" style="height: 100%;"> -->
-			<div class="MapArea NoSearchBar">
+			<div class="btnAreaTop">
+				<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+				<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
+			</div>
+			<div class="MapArea">
 				<div class="item map_box">
 					<div class="map" id="map" style="height: 100%;"></div>
 					<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
