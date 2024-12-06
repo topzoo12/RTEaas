@@ -4143,11 +4143,12 @@ span.badge_risk.badge_danger::after{
 .contents_box.roadDetetionInfo{
 	z-index: 999999;
     position: absolute;
-    top: 64px;
+    /* top: 64px; */
+    top: 150px;
     left: 0;
     width: 100%;
-    /* height: 100%; */
-	height: calc(100% - 64px);
+    height: 88%;
+	/* height: calc(100% - 64px); */
 
 	.btnAreaTop {
 		position: absolute;
