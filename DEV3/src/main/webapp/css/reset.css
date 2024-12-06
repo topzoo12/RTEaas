@@ -212,10 +212,10 @@ input[type=button], input[type=submit], input[type=reset], button{
   padding: 8px 0px;
   vertical-align: middle;
 }
-.table td {
-  padding: 5px 0px;
-  vertical-align: middle;
-}
+
+
+
+
 .table th {
 	font-weight: 500;
     font-size: 1.4rem;
@@ -242,6 +242,9 @@ input[type=button], input[type=submit], input[type=reset], button{
   border-right: none;
 }
 .table td {
+  padding: 5px 0px;
+  vertical-align: middle;
+  position: relative;
   font-weight: 400;
   font-size: 1.4rem;
   color: var(--color);
@@ -486,7 +489,7 @@ select {
   border: 1px solid var(--color);
   padding: 0 16px;
   appearance: none;
-  background: url("../img/icon_arrow_down.png") no-repeat center #fff;
+  background: url("../img/icon_arrow_down.png") no-repeat center var(--white);
   background-position-x: 93%;
   color: #888888;
 }
@@ -498,7 +501,7 @@ select.select1 {
   border: 1px solid var(--color);
   padding: 0 20px;
   appearance: none;
-  background: url("../img/icon_arrow_down.png") no-repeat center #fff;
+  background: url("../img/icon_arrow_down.png") no-repeat center var(--white);
   background-position-x: 93%;
   color: #888888;
 }
@@ -509,7 +512,7 @@ input.input1 {
 	border-radius: 3px;
 	border: 1px solid var(--input-border);
 	background-color: var(--input-bg);
-	padding: 0 24px;
+	padding: 0 16px;
 }
 
 input.input9 {
@@ -603,6 +606,7 @@ input:-ms-input-placeholder {
 	margin: 0 0 0 10px;
 }
 /*버튼*/
+.btn_bgPrimary,
 .btn_search {
 	position: relative;
 	display: inline-block;
@@ -612,18 +616,25 @@ input:-ms-input-placeholder {
 	color: var(--white);
 	font-size: 1.4rem;
 	font-weight: 500;
-	background: var(--primary);
+	background: var(--primary-lightBTN);
     border-radius: 3px;
 }
+.btn_bgPrimary::before,
 .btn_search:before {
 	position: absolute;
-	left: 12px;
-    top: 50%;
-	transform: translate(0%, -50%);
-	content: '';
-	width: 20px;
-	height: 20px;
-	background: url(../img/icon_search2.png) no-repeat center center;
+  top: 12px;
+  left: 14px;
+
+  content: "";
+  width: 1.6rem;
+  height: 1.6rem;
+  mask-repeat: no-repeat;
+  mask-position: center left;
+  mask-size: contain;
+  background-color: var(--white);
+}
+.btn_search:before {
+  mask-image: url(../img/search-line.svg);
 }
 #btn_re-search_move {
 	position: absolute;
@@ -631,7 +642,7 @@ input:-ms-input-placeholder {
 	width: 120px;
 	height: 40px;
 	left: -130px;
-	top: 12px;
+	top: 11px;
 	line-height: 40px;
 	padding: 0 12px 0 32px;
 	color: var(--color-sub);
@@ -751,7 +762,8 @@ input:-ms-input-placeholder {
 	background: url(../img/icon_excel_on.png) no-repeat left+10px bottom+5px #314bfe;
 }
 
-.btn_excel_download {
+.btn_excel_download,
+.btn_subPrimary {
 	position: relative;
 	display: inline-block;
 	height: 40px;
@@ -766,10 +778,12 @@ input:-ms-input-placeholder {
 	border: 1px solid var(--border);
 	margin-left: auto;
 }
-.btn_excel_download:hover{
+.btn_excel_download:hover,
+.btn_subPrimary:hover{
     background: var(--primary-bg);
 }
-.btn_excel_download::before {
+.btn_excel_download::before,
+.btn_subPrimary::before{
     position: absolute;
     top: 8px;
     left: 12px;
@@ -780,9 +794,17 @@ input:-ms-input-placeholder {
     mask-position: center left;
     mask-size: contain;
     background-color: var(--primary-stress);
-    mask-image: url(../img/ico_excel.svg);
-}
 
+}
+.btn_excel_download::before {
+  mask-image: url(../img/ico_excel.svg);
+}
+.btn_mapinfo::before {
+  mask-image: url(../img/map-line.svg);
+}
+.btn_obstacleList::before{
+  mask-image: url(../img/list-check-3.svg);
+}
 .btn_close {
 	cursor: pointer;
 	display: inline-block;
@@ -969,7 +991,41 @@ input[type=checkbox]+ .icon{ position: relative; display:inline-block; width:18p
 
 input[type=checkbox]+ .icon em {font-size: 0.7rem}
 input[type=checkbox]:checked + .icon { border:1px solid #3c4cf8;  z-index: 2; background: #fff url("../img/icon_checkbox.png") no-repeat center center; background-size: 12px 12px;}
-
+/*input[type="checkbox"]{
+	display: none;
+  }
+input[type="checkbox"].checkbox + label {
+	position: absolute;
+    top: 8px;
+    left: 12px;
+    content: "";
+    width: 2.4rem;
+    height: 2.4rem;
+    mask-repeat: no-repeat;
+    mask-position: center left;
+    mask-size: contain;
+    background-color: #a4aab1;
+    mask-image: url(../img/checkbox-blank-line.svg);
+    z-index: 1;
+}
+input[type="checkbox"].checkbox:checked + label {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    content: "";
+    width: 2.4rem;
+    height: 2.4rem;
+    mask-repeat: no-repeat;
+    mask-position: center left;
+    mask-size: contain;
+    background-color: var(--primary-stress);
+    mask-image: url(../img/checkbox-fill.svg);
+    z-index: 200;
+}
+table tr.on input[type="checkbox"].checkbox:checked + label{
+  background-color: var(--white);
+}
+  */
 /*라디오박스 커스텀*/
 input[type=radio]{position:absolute; width:20px; height:20px; z-index: 1; -webkit-appearance: none; -moz-appearance: none; appearance: none; left:-10000%}
 input[type=radio]:focused {-webkit-appearance: none; -moz-appearance: none; appearance: none; border:0}
@@ -1088,6 +1144,7 @@ input[type=number]{ border: 1px solid #1A1A22;}
 :root{
     --primary: #229470;
     --primary-stress: #229470;
+    --primary-lightBTN: #05B98C;
     --primary-light: #05B98C;
     --primary-deepbg: #CEEAE1;
     --primary-bg: #EBF7F3;
@@ -1123,6 +1180,7 @@ input[type=number]{ border: 1px solid #1A1A22;}
 [data-theme="dark"] {
     --primary: #333744;
     --primary-stress: #fff;
+    --primary-lightBTN: #333744;
     --primary-light: #21242D;
     --primary-deepbg: #1A1A22;
     --primary-bg: #21242D;
