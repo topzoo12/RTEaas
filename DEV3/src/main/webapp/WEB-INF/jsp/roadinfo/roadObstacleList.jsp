@@ -26,7 +26,7 @@
 <div class="contentsWrap">
     <p class="title ${fav}">${pageName.srnNm}</p>
 
-    <ul class="search_box">
+    <ul>
         <li>
 			<input type="text" value="" name="" id="" class="input1" placeholder="영상이름">
             <span class="stl"><fmt:message key="PERIOD" bundle="${bundle}"/><span class="remark2"></span></span>
@@ -38,6 +38,12 @@
         </li>
         <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
     </ul>
+
+<div class="btnAreaTop">
+	<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+	<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
+</div>
+
     <ul class="contents">
         <li class="view">
             <table class="table">
@@ -242,10 +248,6 @@
 
 	<!-- 도로 장애물 탐지 상세정보 -->
 	<div class="contents_box roadinfo roadDetetionInfo" id="mapDetetionInfo" style="display: none;">
-		<div class="btnAreaTop">
-			<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-			<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
-		</div>
 		<div class="contents mainMap">
 			<div class="mapWrap">
 				<!-- ******************************************************************************************************************* -->
@@ -315,7 +317,8 @@
 			<!-- Level List 부분 end -->
 			<!-- ******************************************************************************************************************* -->
 
-			<div class="MapArea" style="height: 100%;">
+			<!-- <div class="MapArea" style="height: 100%;"> -->
+			<div class="MapArea NoSearchBar">
 				<div class="item map_box">
 					<div class="map" id="map" style="height: 100%;"></div>
 					<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
@@ -335,7 +338,7 @@
 			<!-- <button id="btn_re-search_move" class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button> -->
 			<button type="button" class="btn_infoWrap"></button>
 				<!-- 상세설명 -->
-				<div class="infoDetailWrap" style="display:;">
+				<div class="infoDetailWrap" style="display:none;">
 					<div class="infoTitle">
 						<button type="button" class="btn_back" id="btn_Back"></button>
 						<h2 id="detail_title">수정구로_20241113.dat</h2>
@@ -383,7 +386,7 @@
 				<!-- e:상세설명 -->
 
 				<!-- 검색목록 -->
-				<div class="infoListWrap" style="overflow-y:auto; display: none;">
+				<div class="infoListWrap" style="overflow-y:auto; display: block;">
 					<div class="infoListTop">
 						<h2 class="hidden">검색목록</h2>
 						<span class="fileName">파일명 : <em>수정구로_20241113.dat</em></span>
@@ -568,21 +571,7 @@
 
 <script language="javascript">
 
-var baseLat = '${authInfo.wtX}';
-var baseLng = '${authInfo.wtY}';
 
-var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 12);
-
-L.control.scale({
-	imperial: true, metric: true
-}).addTo(map);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	minZoom: '${authInfo.mapMinSize}',
-	maxZoom: '${authInfo.mapMaxSize}',
-	attribution: '© OpenStreetMap',
-	stylers:[{visibility:'off'}]
-}).addTo(map);
 
 //결과내재검색패널
 function btnClick() {
@@ -761,6 +750,7 @@ $(document).ready(function () {
  	//getList();
 
 
+
 })
 ///////////////////// 날짜관련
 function dateFormat(date, format){
@@ -790,12 +780,223 @@ function dateFormat(date, format){
 
 function showMap() {
 	$('#mapDetetionInfo').css('display', 'block');
+	var baseLat = '${authInfo.wtX}';
+	var baseLng = '${authInfo.wtY}';
+
+	var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 12);
+
+	L.control.scale({
+		imperial: true, metric: true
+	}).addTo(map);
+
+	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		minZoom: '${authInfo.mapMinSize}',
+		maxZoom: '${authInfo.mapMaxSize}',
+		attribution: '© OpenStreetMap',
+		stylers:[{visibility:'off'}]
+	}).addTo(map);
+	//mapInfo(map);
 }
 
 function hideMap() {
 	$('#mapDetetionInfo').css('display', 'none');
 }
 
+function mapInfo(map) {
+
+	var lat = map.getCenter().lat;
+	var lng = map.getCenter().lng;
+
+	markerList = [];
+
+	map.eachLayer(function (layer) {
+	    if (!(layer instanceof L.TileLayer)) {
+	        map.removeLayer(layer);
+	    }
+	});
+
+	$.ajax({
+		type: "GET",
+		//url: "http://localhost:8080/potholeInArea",
+		url: "${authInfo.restApiUrl}/potholeInArea",
+		data: {
+			on_way:false,
+			//administrative_id: areaCode,
+			//administrative_id: "2409180", //성남시
+			north_west:"latitude:" + map.getBounds().getNorthWest().lat + ",longitude:" + map.getBounds().getNorthWest().lng,
+			north_east:"latitude:" + map.getBounds().getNorthEast().lat + ",longitude:" + map.getBounds().getNorthEast().lng,
+			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
+			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
+			region:"${authInfo.cdNa}",
+			co_id :"${authInfo.coId}"
+		},
+		success: drawMarker,
+		error: function(request,status,error){
+			//console.log("request.status = " + request.status)
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block')
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none');
+			getDetectedRoad();
+
+		}
+	})
+
+}
+
+function drawMarker(response) {
+
+	$("#info").hide();
+	//$('.infoListWrap').css('display', 'block')
+	$('.infoDetailWrap').css('display', 'none')
+	map.closePopup();
+
+	//console.log("abc => ", response)
+	allData = response.data;
+
+	sumMarkerSort = [];
+
+	for (var i = 0; i < lines.length; i++) {
+		map.removeLayer(lines[i])
+	}
+
+	for (var i = 0; i < markers.length; i++) {
+		map.removeLayer(markers[i])
+	}
+
+	markers = []
+
+	point = []
+
+	var lvColorKeyValue = [];
+	var riskText = '';
+
+	// riskLv1
+	//obj.css("color","색상");
+	for (var i = 1; i <= lvColorKeyValue.length; i++) {
+		$('#riskbgcolorLv' + i).css("background-color", lvColorKeyValue[i-1].color)
+		$('#riskLv' + i).text(lvColorKeyValue[i].lvNm);
+	}
+
+	markerCluster = L.markerClusterGroup({
+		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
+		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
+		iconCreateFunction: function(cluster) {
+			var count = cluster.getChildCount();
+			return L.divIcon({
+				html: '<div>' + count + '</div>',
+				className: 'mycluster',
+				iconSize: L.point(40, 40)
+			});
+		},
+		spiderfyOnMaxZoom: false,
+		zoomToBoundsOnClick: false,
+		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+	});
+
+ 	for (var i = 0 ; i < response.data.length ; i++) {
+
+		var markerdate = new Date(response.data[i].timestamp);
+
+		var item = response.data[i];
+
+		var deviceId = fn_device_id(item['device-id'])
+		var deviceNm = fn_device_name(item['device-id'])
+
+		var lat = item.point['latitude'];
+		var lng = item.point['longitude'];
+
+		var date = new Date(item['timestamp'])
+
+		var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
+						+ date.getDate() + ' '
+						+ date.getHours() + ':' + date.getMinutes() ;
+
+		var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
+		var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
+		var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
+		var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
+		//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
+
+		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
+
+		var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
+
+		var t = L.marker([item.point.latitude, item.point.longitude], {
+			id : item['id'],
+			lat : item.point['latitude'],
+			lng : item.point['longitude'],
+			ctime : cTime,
+			deviceId : deviceId,
+			deviceName : deviceNm,
+			addrName : addrPoLocality,
+			level : item.risk.level,
+			status : item.status,
+			potholes : item.risk['count-of-potholes'],
+			vertical : item.risk['count-of-vertical-cracks'],
+			horizontal : item.risk['count-of-horizontal-cracks'],
+			alligators : item.risk['count-of-alligators'],
+			icon : blueIcon,
+		}).on('click', onMarkerClick);
+
+		//console.log("tt -- ", t);
+		markerCluster.addLayer(t);
+		markers.push(t);
+		//markerId.push(item['id']);
+
+		//map.removeLayer(markerCluster);
+
+
+	}
+
+ 	// 마커 클러스터 그룹에 클릭 이벤트 추가
+	markerCluster.on('clusterclick', function(event) {
+		var cluster = event.layer;
+		var childMarkers = cluster.getAllChildMarkers();
+
+		markerIconCheck();
+		onMapClick(map);
+
+		// 팝업 내용 생성
+		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
+		//console.log('childMarkers -- ', childMarkers)
+		childMarkers.forEach(function(marker, index) {
+
+			var item = marker.options;
+
+			popupContent += "Marker " + (index + 1) + " : "
+						+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
+						+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+						+ marker.getLatLng().toString()
+						+ "</b><br>";
+
+		});
+
+		//console.log('markerCluster >>> ', markerCluster);
+		// 첫 번째 마커의 위치를 팝업 위치로 사용
+		//var popupLatLng = childMarkers[0].getLatLng();
+		var popupLatLng = cluster.getLatLng();
+
+		// 팝업 생성 및 오픈
+		//cluster.bindPopup(popupContent).openPopup();
+
+		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+	});
+
+ 	//map.addLayer(markerCluster);
+
+ 	$('.infoList li').remove()
+	$('.infoList div').remove()
+
+	potholeCnt = response.data.length;
+	potholeListData = response.data;
+
+	$("#Levelswitch").trigger("change");
+
+}
 
 
 
