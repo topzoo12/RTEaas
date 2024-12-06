@@ -4144,10 +4144,10 @@ span.badge_risk.badge_danger::after{
     top: 64px;
     left: 0;
     width: 100%;
-     height: 100%;
-	/*height: calc(100% - 64px);*/
-}
-.btnAreaTop {
+    /* height: 100%; */
+	height: calc(100% - 64px);
+
+	.btnAreaTop {
 		position: absolute;
 		top: -53px;
 		right: 16px;

@@ -212,10 +212,6 @@ input[type=button], input[type=submit], input[type=reset], button{
   padding: 8px 0px;
   vertical-align: middle;
 }
-
-
-
-
 .table th {
 	font-weight: 500;
     font-size: 1.4rem;
@@ -624,7 +620,6 @@ input:-ms-input-placeholder {
 	position: absolute;
   top: 12px;
   left: 14px;
-
   content: "";
   width: 1.6rem;
   height: 1.6rem;
@@ -794,7 +789,6 @@ input:-ms-input-placeholder {
     mask-position: center left;
     mask-size: contain;
     background-color: var(--primary-stress);
-
 }
 .btn_excel_download::before {
   mask-image: url(../img/ico_excel.svg);
@@ -991,7 +985,7 @@ input[type=checkbox]+ .icon{ position: relative; display:inline-block; width:18p
 
 input[type=checkbox]+ .icon em {font-size: 0.7rem}
 input[type=checkbox]:checked + .icon { border:1px solid #3c4cf8;  z-index: 2; background: #fff url("../img/icon_checkbox.png") no-repeat center center; background-size: 12px 12px;}
-/*input[type="checkbox"]{
+/* input[type="checkbox"]{
 	display: none;
   }
 input[type="checkbox"].checkbox + label {
@@ -1024,8 +1018,8 @@ input[type="checkbox"].checkbox:checked + label {
 }
 table tr.on input[type="checkbox"].checkbox:checked + label{
   background-color: var(--white);
-}
-  */
+} */
+
 /*라디오박스 커스텀*/
 input[type=radio]{position:absolute; width:20px; height:20px; z-index: 1; -webkit-appearance: none; -moz-appearance: none; appearance: none; left:-10000%}
 input[type=radio]:focused {-webkit-appearance: none; -moz-appearance: none; appearance: none; border:0}
