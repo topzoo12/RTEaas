@@ -571,7 +571,21 @@
 
 <script language="javascript">
 
+var baseLat = '${authInfo.wtX}';
+var baseLng = '${authInfo.wtY}';
 
+var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 12);
+
+L.control.scale({
+	imperial: true, metric: true
+}).addTo(map);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	minZoom: '${authInfo.mapMinSize}',
+	maxZoom: '${authInfo.mapMaxSize}',
+	attribution: '© OpenStreetMap',
+	stylers:[{visibility:'off'}]
+}).addTo(map);
 
 //결과내재검색패널
 function btnClick() {
@@ -746,9 +760,7 @@ $(document).ready(function () {
 	   // $('#fromDt').val(dateFormat(date2, 'select'))
 	   $('#fromDt').val('2023-10-01')
 
-
  	//getList();
-
 
 
 })
@@ -758,11 +770,11 @@ function dateFormat(date, format){
 
    if (format == 'list'){
       // 2023.01.01 14:03:01
-      var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
-      var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
-      var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
-      var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-      var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
+      var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 );
+      var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate();
+      var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours();
+      var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes();
+      var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
       dateString  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec
 
@@ -780,21 +792,7 @@ function dateFormat(date, format){
 
 function showMap() {
 	$('#mapDetetionInfo').css('display', 'block');
-	var baseLat = '${authInfo.wtX}';
-	var baseLng = '${authInfo.wtY}';
-
-	var map = L.map('map').setView({lat:baseLat, lng:baseLng}, 12);
-
-	L.control.scale({
-		imperial: true, metric: true
-	}).addTo(map);
-
-	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		minZoom: '${authInfo.mapMinSize}',
-		maxZoom: '${authInfo.mapMaxSize}',
-		attribution: '© OpenStreetMap',
-		stylers:[{visibility:'off'}]
-	}).addTo(map);
+	map.invalidateSize();
 	//mapInfo(map);
 }
 

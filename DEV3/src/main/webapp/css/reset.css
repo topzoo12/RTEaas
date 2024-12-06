@@ -443,25 +443,26 @@ textarea {
 }
 .table_write th {
 	font-weight: 500;
-    background-color: var(--Optnormal);
-    color: var(--color);
-    font-size: 1.3rem;
-    line-height: 1.8rem;
-    border-bottom: 8px solid var(--bg-contents);
-    padding: 12px 16px;
-    vertical-align: middle;
-    width: 160px;
-    min-width: 160px;
-    text-align: left;
+  background-color: var(--Optnormal);
+  color: var(--color);
+  font-size: 1.3rem;
+  line-height: 1.8rem;
+  border-bottom: 8px solid var(--bg-contents);
+  padding: 12px 16px;
+  vertical-align: middle;
+  width: 160px;
+  min-width: 160px;
+  text-align: left;
 }
 
 .table_write td {
+  position: relative;
 	border-bottom: 6px solid var(--bg-contents);
-    color: #666666;
-    padding: 0 8px;
-    vertical-align: middle;
-    text-align: left;
-    border-radius: .3rem;
+  color: #666666;
+  padding: 0 8px;
+  vertical-align: middle;
+  text-align: left;
+  border-radius: .3rem;
 }
 
 /*기본 값*/
@@ -980,45 +981,23 @@ input[type=checkbox]{position:absolute; width:20px; height:20px; z-index: 1; -we
 input[type=checkbox]:focused {-webkit-appearance: none; -moz-appearance: none; appearance: none; border:0}
 input[type=checkbox]+.none{ padding:0 0 0 0; }
 input[type=checkbox]+.none .icon{ display: none; }
-
-input[type=checkbox]+ .icon{ position: relative; display:inline-block; width:18px; height:18px; border:1px solid #c6c6c6; border-radius:3px; background: #fff; z-index: 2;}
-
+input[type=checkbox]+ .icon{ position: relative; display: inline-block; width: 1.8rem; height: 1.8rem; border: 2px solid #a4aab1; border-radius: 2px; background: transparent; z-index: 2;}
 input[type=checkbox]+ .icon em {font-size: 0.7rem}
-input[type=checkbox]:checked + .icon { border:1px solid #3c4cf8;  z-index: 2; background: #fff url("../img/icon_checkbox.png") no-repeat center center; background-size: 12px 12px;}
-/* input[type="checkbox"]{
-	display: none;
-  }
-input[type="checkbox"].checkbox + label {
-	position: absolute;
-    top: 8px;
-    left: 12px;
-    content: "";
-    width: 2.4rem;
-    height: 2.4rem;
-    mask-repeat: no-repeat;
-    mask-position: center left;
-    mask-size: contain;
-    background-color: #a4aab1;
-    mask-image: url(../img/checkbox-blank-line.svg);
-    z-index: 1;
-}
-input[type="checkbox"].checkbox:checked + label {
-    position: absolute;
-    top: 8px;
-    left: 12px;
-    content: "";
-    width: 2.4rem;
-    height: 2.4rem;
-    mask-repeat: no-repeat;
-    mask-position: center left;
-    mask-size: contain;
-    background-color: var(--primary-stress);
-    mask-image: url(../img/checkbox-fill.svg);
-    z-index: 200;
-}
+input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z-index: 2;
+  background-color: var(--primary-stress);
+  background-position: center 3px;
+  background-repeat: no-repeat;
+  background-size: 11px 9px;
+  background-image: var(--checkicon);
+ }
+
+input[type="checkbox"]{	display: none;}
+input[type="checkbox"].checkbox + label { position: absolute; top: 8px; left: 12px; content: ""; width: 2.4rem; height: 2.4rem; mask-repeat: no-repeat; mask-position: center left;   mask-size: contain; background-color: #a4aab1; mask-image: url(../img/checkbox-blank-line.svg); z-index: 1;}
+input[type="checkbox"].checkbox:checked + label { position: absolute; top: 8px; left: 12px; content: ""; width: 2.4rem; height: 2.4rem; mask-repeat: no-repeat; mask-position: center left; mask-size: contain; background-color: var(--primary-stress); mask-image: url(../img/checkbox-fill.svg); z-index: 200;}
+
 table tr.on input[type="checkbox"].checkbox:checked + label{
   background-color: var(--white);
-} */
+}
 
 /*라디오박스 커스텀*/
 input[type=radio]{position:absolute; width:20px; height:20px; z-index: 1; -webkit-appearance: none; -moz-appearance: none; appearance: none; left:-10000%}
@@ -1026,7 +1005,7 @@ input[type=radio]:focused {-webkit-appearance: none; -moz-appearance: none; appe
 input[type=radio]+.none{ padding:0 0 0 0; }
 input[type=radio]+.none .icon{ display: none; }
 
-input[type=radio]+ .icon{ position: relative; display:inline-block; width:18px; height:18px; background: #fff; z-index: 2;background: url("../img/icon_radio.png") no-repeat center center; background-size: 16px 16px;}
+input[type=radio]+ .icon{ position: relative; display:inline-block; width:18px; height:18px; background: #fff; z-index: 2; background: url("../img/icon_radio.png") no-repeat center center; background-size: 16px 16px;}
 
 input[type=radio]+ .icon em {font-size: 0.7rem}
 input[type=radio]:checked + .icon { z-index: 2; background: url("../img/icon_radio_on.png") no-repeat center center; background-size: 16px 16px;}
@@ -1162,9 +1141,10 @@ input[type=number]{ border: 1px solid #1A1A22;}
     --themeicon: url(../img/ico_light_on.png) no-repeat left+8px center #05B98C;
     --themetxt: "Light";
     --themebg: url(../img/ico_dark_off.png) no-repeat right+8px center #fff;
+    --checkicon: url(../img/icon_checkbox.png);
     --input-bg: #fff;
     --input-border: #D9DFE4;
-	--shadow-light: 2px 4px 6px rgb(0 0 0 / 4%);
+	  --shadow-light: 2px 4px 6px rgb(0 0 0 / 4%);
 
     --table-thead: #EBF7F3;
     --table-trodd: #F9F9F9;
@@ -1198,6 +1178,7 @@ input[type=number]{ border: 1px solid #1A1A22;}
     --themeicon: url(../img/ico_dark_on.png) no-repeat left+8px center #6B757E;
     --themetxt: "Dark";
     --themebg: url(../img/ico_light_on.png) no-repeat left+8px center #1A1A22;
+    --checkicon: url(../img/icon_checkbox_dark.png);
     --input-bg: #252832;
     --input-border: #1A1A22;
 
