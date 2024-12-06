@@ -25,8 +25,23 @@
 
 <div class="contentsWrap">
     <p class="title ${fav}">${pageName.srnNm}</p>
-
-    <ul>
+		<ul class="search_box" style="min-width: 1390px;">
+			<li>
+				<input type="text" value="" name="" id="" class="input1" placeholder="영상이름">
+				<span class="stl"><fmt:message key="PERIOD" bundle="${bundle}"/><span class="remark2"></span></span>
+				<span class="date">
+                	<input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly> ~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2" readonly>
+                	<button class="search_calender" id="search_calender"></button>
+            	</span>
+            <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
+        </li>
+        <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
+        <div class="btnAreaTop">
+			<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+			<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
+		</div>
+		</ul>
+    <%-- <ul>
         <li>
 			<input type="text" value="" name="" id="" class="input1" placeholder="영상이름">
             <span class="stl"><fmt:message key="PERIOD" bundle="${bundle}"/><span class="remark2"></span></span>
@@ -37,29 +52,30 @@
             <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
         </li>
         <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
-    </ul>
+    </ul> --%>
 
     <ul class="contents">
         <li class="view">
             <table class="table">
                 <colgroup>
-                    <col style="width: 5%">
-                    <col style="width: 15%">
-                    <col style="width: 10%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 5%">
-                    <col style="width: 9%">
+                    <col style="width: 50px">
+                    <col style="width: *">
+                    <col style="width: 180px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 100px">
+                    <col style="width: 150px">
                 </colgroup>
                 <thead>
                     <tr>
-						<th><input class="checkbox" type="checkbox" id="checked"><label for="checked"></label></th>
+						<!-- <th><input class="checkbox" type="checkbox" id="checked"><label for="checked"></label></th> -->
+						<th></th>
 						<th>영상이름</th>
 						<th>촬영일자</th>
 						<th>동물</th>
@@ -78,19 +94,19 @@
             <div class="tbody" style="overflow-y:scroll; height: 610px;">
                 <table class="table" id="table-1">
                     <colgroup>
-                        <col style="width: 5%">
-						<col style="width: 15%">
-						<col style="width: 10%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 5%">
-						<col style="width: 8%">
+                        <col style="width: 50px">
+						<col style="width: *">
+						<col style="width: 180px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: 100px">
+						<col style="width: calc(150px - 14px)">
                     </colgroup>
 					<tbody>
 						<tr class="">
@@ -314,10 +330,7 @@
 			<!-- ******************************************************************************************************************* -->
 
 			<!-- <div class="MapArea" style="height: 100%;"> -->
-			<div class="btnAreaTop">
-				<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-				<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
-			</div>
+
 			<div class="MapArea">
 				<div class="item map_box">
 					<div class="map" id="map" style="height: 100%;"></div>
