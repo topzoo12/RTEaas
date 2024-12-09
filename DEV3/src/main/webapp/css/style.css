@@ -938,6 +938,7 @@ input:checked + .slider:before {
 }
 .selectOpt {
 	display: flex;
+	flex-wrap: warp;
 	align-items: center;
 	justify-content: flex-start;
 	gap: 8px;
@@ -961,6 +962,7 @@ input:checked + .slider:before {
     background-color: var(--Optnormal);
     border: 1px solid var(--border);
     color: var(--color-sub);
+    word-break: keep-all;
 	/* box-shadow: inset var(--color-sub) 0px 0px 1px 0px; */
 }
 /* .selectOpt input[type=radio]+label::before,
