@@ -35,11 +35,8 @@
             	</span>
             <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
         </li>
-        <button class="btn_subPrimary btn_mapinfo" onclick='showMap()'>지도정보보기</button>
-        <div class="btnAreaTop">
-			<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-			<button class="btn_bgPrimary btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
-		</div>
+        <button class="btn_subPrimary btn_mapinfo" id ="btn_mapinfo" onclick='showMap()'>지도정보보기</button>
+
 		</ul>
     <%-- <ul>
         <li>
@@ -82,7 +79,7 @@
 						<th>보행자</th>
 						<th>공사표지판</th>
 						<th>라바콘</th>
-						<th>낙하물</th>
+						<th>상자</th>
 						<th>낙석</th>
 						<th>쓰레기</th>
 						<th>맨홀</th>
@@ -130,126 +127,6 @@
 							<td>0</td>
 							<td>0</td>
 						</tr>
-						<tr class="">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr class="">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr class="">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr class="on">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr class="">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr class="">
-							<td>
-								<label class="checkbox">
-									<input class="checkbox" type="checkbox" id="check1">
-									<span class="icon"></span>
-								</label>
-							</td>
-							<td>수정구로_20241113.dat</td>
-							<td>2024-11-21</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
 					</tbody>
                 </table>
             </div>
@@ -259,6 +136,10 @@
 
 	<!-- 도로 장애물 탐지 상세정보 -->
 	<div class="contents_box roadinfo roadDetetionInfo" id="mapDetetionInfo" style="display: none;">
+		 <div class="btnAreaTop" style="display:none">
+			<button class="btn_re-search" id ="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
+			<button class="btn_bgPrimary btn_obstacleList" id ="btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
+		</div>
 		<div class="contents mainMap">
 			<div class="mapWrap">
 				<!-- ******************************************************************************************************************* -->
@@ -584,6 +465,9 @@
 
 <script language="javascript">
 
+var selectedId = '';
+var selectedVideoName ='';
+
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
 
@@ -600,6 +484,35 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	stylers:[{visibility:'off'}]
 }).addTo(map);
 
+
+map.on('click', onMapClick);
+
+map.on('zoomend', function() {
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	} else if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "block") {
+		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
+	}
+
+    markerIconCheck();
+
+	map.closePopup();
+});
+
+var redIcon = L.icon({
+	iconUrl: '/img/pin_select.png',
+	iconSize:     [32, 32], 	// size of the icon
+	iconAnchor:   [16, 32], 	// point of the icon which will correspond to marker's location
+});
+
+var blueIcon = L.icon({
+	iconUrl: '/img/pin_default.png',
+	iconSize:     [32, 32], 	// size of the icon
+	iconAnchor:   [16, 32], 	// point of the icon which will correspond to marker's location
+});
+
+
 //결과내재검색패널
 function btnClick() {
   const searchOpt = document.getElementById('re-search-container');
@@ -609,6 +522,7 @@ function btnClick() {
   } else {
     searchOpt.style.display = 'none';
   }
+
 }
 
 
@@ -659,121 +573,541 @@ $(function() {
 
 
 $('.btn_search').on('click', function () {
-
-	//getList();
+	getList();
 });
-
-//jquery-3.3.1 부분 적용
-/*  var newJquery = $.noConflict(true);
-
- newJquery('.btn_excel_download').on('click', function() {
-
-	    let tableData = [];
-	    newJquery('#table-1 tbody tr').each(function() {
-	        let rowData = {};
-	        newJquery(this).find('td').each(function(index) {
-	            rowData['col' + index] = newJquery(this).text();
-	        });
-	        tableData.push(rowData);
-	    });
-
-	    let headers = [];
-	    newJquery('.table thead th').each(function() {
-	        headers.push($(this).text());
-	    });
-
-	    newJquery.ajax({
-	        type: 'POST',
-	        url: '/excel/download.do',
-	        //url: '/excel/yearly/download.do',
-	        contentType: 'application/json',
-	        data: JSON.stringify({ tableData: tableData, headers: headers }),
-	        xhrFields: {
-	            responseType: 'blob'
-	        },
-	        success: function(response) {
-	            // Blob으로 받은 응답을 다운로드 링크로 변환
-	            let a = document.createElement('a');
-	            a.href = window.URL.createObjectURL(response);
-	            a.download = 'period_statistics.xlsx'; // 파일 이름 설정
-	            a.click();
-	            window.URL.revokeObjectURL(a.href); // 메모리 해제
-	        },
-	        error: function() {
-	            alert('파일 다운로드에 실패했습니다.');
-	        }
-	    });
-	}); */
 
 function getList(){
 
-	var region = "${authInfo.cdNa}"
-	var fromDt = $('#fromDt').val().replaceAll('-','');
-	var toDt  = $('#toDt').val().replaceAll('-','');
+	var params = {
+			'videoName': ''
+			,'from': $('#fromDt').val().replaceAll('-','')
+			,'to': $('#toDt').val().replaceAll('-','')
+			,'coId': "${authInfo.cdNa}"
+	};
 
 	$.ajax({
-		type: "GET",
-		//url: "${authInfo.restApiUrl}/statistics/daily",
-		url: "${authInfo.restApiUrl}/statistics/daily/count",
-		//url: "http://localhost:8080/statistics/daily/count",
-		async: true,
-		data: {
-			region : region,
-			from: fromDt,
-			to: toDt
+		type : "GET",
+		//url : "http://localhost:8080/obs/video/list",
+		url : "${authInfo.restApiUrl}/obs/video/list",
+		async : false,
+		data : params ,
+		headers : {
+			'Authorization' : 'Bearer '
+					+ localStorage.getItem("accessToken"),
+			'Refresh-Token' : localStorage
+					.getItem("Refresh-Token")
 		},
-		success: function(resp) {
+		beforeSend : function() {
+			$('#circularG').css('display', 'block')
+		},
+		complete : function() {
+			$('#circularG').css('display', 'none')
 
+		},
+		error : function(err){
+			$('#circularG').css('display', 'none')
+			console.log(err);
+		},
+		success : function(resp) {
 			$('#table-1 tbody tr').remove();
+			//var result = resp.data[0];
+
+			console.log('비디오 결과', resp.data);
+
+			var result = resp.data;
 
  			var appendRow = "";
-			for (var i = 0;  i < resp.data.length; i++){
 
-				var list = resp.data[i]
+ 			result.forEach (function (el, index) {
 
-				var day = list["statistics-date"].substr(0,4) + "." + list["statistics-date"].substr(4,2) + "." + list["statistics-date"].substr(6,2);
-
-				appendRow += '<tr class="'+(i==0?'on':'')+'">'
-		 				//+'<td align="center" class="listtd">'  + list["statistics-date"] +'</td>'
-		 				+'<td align="center" class="listtd">'  + day +'</td>'
-		 				+'<td align="center" class="listtd">'  + list["count-of-potholes"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  +'</td>'           //.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") 숫자 정규식(콤마)
-		 				+'<td align="center" class="listtd">'  + list["count-of-vertical-cracks"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  +'</td>'
-		 				+'<td align="center" class="listtd">'  + list["count-of-horizontal-cracks"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  +'</td>'
-		 				+'<td align="center" class="listtd">'  + list["count-of-alligators"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  +'</td>'
-		 				+'<td align="center" class="listtd">'  + Math.round(list["level"]) +'</td>'
-		 				+ '</tr>'
-
-				/* for( var j =0 ; j<12; j++){
-					appendRow += '<td align="center" class="listtd">'  + val[j] +'</td>'
-				} */
-			}
+				appendRow += '<tr>'
+					+'<td><label class="checkbox"><input class="checkbox" type="checkbox" id="'+ el.id +'" name ="videolist"><span class="icon"></span></label></td>'
+					+'<td align="center" class="listtd">'+el.videoName+'</td>'
+					//+'<td align="center" class="listtd">'+el.videoStartTime+'</td>'
+					+'<td align="center" class="listtd">'+dateFormat(new Date(el.videoStartTime), 'list')+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoAnimalsCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoPersonCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoConstructionSignsCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoTrafficConeCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoBoxCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoStoneCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoGarbageBagCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoManholeCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoPotholeCnt+'</td>'
+					+'<td align="center" class="listtd">'+el.obstacleVideo.videoFilledPotholeCnt+'</td>'
+					+'</tr>'
+			});
 
 			$('#table-1 > tbody').append(appendRow);
+			//$('#totCnt').text(result.length);
 
 			$('#table-1 > tbody > tr').on('click', function(){
-			   	$(this).parent().children().removeClass('on');
-			   	$(this).addClass('on');
-			   });
-
+				$(this).parent().children().removeClass('on');
+				$(this).addClass('on');
+			});
 
 		}
-
-	})
- 
+	});
 
 }
 
+function mapClosePopup() {
+	map.closePopup();
+}
+
+function getVideoImageList(){
+
+	markers = [];
+	markerList = [];
+
+	markerCluster = L.markerClusterGroup({
+		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
+		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
+		iconCreateFunction: function(cluster) {
+			var count = cluster.getChildCount();
+			return L.divIcon({
+				html: '<div>' + count + '</div>',
+				className: 'mycluster',
+				iconSize: L.point(40, 40)
+			});
+		},
+		spiderfyOnMaxZoom: false,
+		zoomToBoundsOnClick: false,
+		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+	});
+
+/* 	var riskChk = $("input[name='risklist']:checked");
+	var crackChk = $("input[name='crack']:checked");
+	var statusChk = $("input[name='statusstat']:checked"); */
+
+	map.eachLayer(function(layer) {
+		if ((layer instanceof L.Marker) || (layer instanceof L.MarkerCluster) || (layer instanceof L.MarkerClusterGroup)) {
+			map.removeLayer(layer);
+		};
+	});
+
+	mapClosePopup();
+
+	$('.infoDetailWrap').css('display', 'none');
+	$('.infoListWrap').css('display', 'block');
+
+
+/////////////////////////여기다가 마커 추가해보자!
+/*
+	for ( var i = 0; i < allData.length; i++ ) {
+		var boolRisk = false;
+		var boolCrack = false;
+		var boolStatus = false;
+
+		// 위험도
+		for ( var r = 0; r < riskChk.length; r++ ) {
+			if (allData[i].risk.level == riskChk[r].value) {
+				boolRisk = true;
+			}
+		}
+
+		for ( var c = 0; c < crackChk.length; c++ ) {
+			if (allData[i].risk[crackChk[c].value] > 0 ) {
+				boolCrack = true;
+			}
+		}
+
+		for ( var d = 0; d < statusChk.length; d++ ) {
+
+			var statusValueChk = "ETC";
+
+			if (allData[i].status == null) {
+				statusValueChk = "ETC";
+			} else {
+				statusValueChk = allData[i].status;
+			}
+
+			if ( statusValueChk == statusChk[d].id ) {
+				boolStatus = true;
+			}
+		}
+
+		if(boolRisk && boolCrack && boolStatus){
+			markerList.push(i);
+		}
+	}
+ */
+////////////////////////////
+	var videoIds = []; // 추후 다중 선택을 위해 숫자형 배열로 전달
+	videoIds.push(selectedId);
+
+	console.log('비디오 네임 확인', selectedVideoName);
+	console.log('비디오 아이디 확인', selectedId );
+
+	$('.infoListTop .fileName em').remove();
+	$('.infoList li').remove();
+	$('.infoListTop .fileName').append('<em>' + selectedVideoName + '</em>');
+
+    var params = {
+        'videoIds': videoIds.join(',')  // 배열을 쉼표로 구분하여 문자열로 변환
+    };
+
+	$.ajax({
+		type : "GET",
+		//url : "http://localhost:8080/obs/image/list",
+		url : "${authInfo.restApiUrl}/obs/image/list",
+		async : false,
+		data : params ,
+		headers : {
+			'Authorization' : 'Bearer '
+					+ localStorage.getItem("accessToken"),
+			'Refresh-Token' : localStorage
+					.getItem("Refresh-Token")
+		},
+		beforeSend : function() {
+			$('#circularG').css('display', 'block')
+		},
+		complete : function() {
+			$('#circularG').css('display', 'none')
+
+		},
+		error : function(err){
+			$('#circularG').css('display', 'none')
+			console.log(err);
+		},
+		success : function(resp) {
+			console.log('이미지 결과', resp);
+
+			var result = resp.data;
+
+ 			var appendRow = "";
+
+ 			result.forEach (function (el, index) {
+
+ 				var sum = 0;
+ 				var totalObjects = Object.values(el.obstacleImage).reduce((sum, item) => sum + item, 0);
+
+ 				console.log('토탈 개수', totalObjects);
+
+				appendRow += "<li><a class='infoListItem'>"
+					+ "<div class='info'>"
+					+ "<ul class='infoContents'>"
+					+ "<li onClick=\"detail('" + el.id + "', 'N')\"'> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + el.wayName + "</li>"
+					+ "<li> <fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat(new Date(el.systemTime), 'list') + "</li>"
+					+ "<li> 탐지객체수 : " +totalObjects +"</li>"
+					+ "</ul>"
+					+ "</div>"
+					+ "<div class='infoThumnail'>"
+					//+ "<img src='${authInfo.restApiUrl}/obs/" + el.id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + el.id + "')\">"   // 배포시 ajax
+					+ "<img src='http://localhost:8080/obs/" + el.id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + el.id + "')\">"
+					+ "</div>"
+					+ "</li>"
+			});
+
+ 			$(".infoList").append(appendRow);
+
+ 			$(".infoListWrap .infoListTop p").text("<fmt:message key="TOTAL" bundle="${bundle}"/> " + result.length + " <fmt:message key="COUNT2" bundle="${bundle}"/>")
+
+		}
+	});
+
+}
+
+function markerIconCheck() {
+
+	markerCluster.eachLayer(function(layer) {
+		if (layer.options.iconChanged) {
+			layer.setIcon(blueIcon);
+			layer.options.iconChanged = false;
+		}
+	});
+}
+
+function onMapClick(e) {
+
+	markerIconCheck();
+
+	const searchOpt = document.getElementById('re-search-container');
+
+	if(searchOpt.style.display === 'block') {
+		searchOpt.style.display = 'none';
+	};
+
+	$("#info").hide();
+
+	if (!$('.btn_infoWrap').hasClass('off')) {
+		$(".btn_infoWrap").click();
+	}
+
+	if ( $('.infoDetailWrap').css('display') == 'block' ) {
+		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
+	}
+}
+
+
+
+function onMarkerClick(e) {
+
+	// 마커 클릭 이벤트
+	// e.target.options.id
+	//marker.setIcon(redIcon);
+	markerIconCheck();
+
+	// 이전에 클릭된 마커가 있으면 원래 아이콘(blueIcon)으로 변경
+    /* if (activeMarker) {
+        activeMarker.setIcon(blueIcon);
+    } */
+
+	this.setIcon(redIcon);
+
+	// 현재 클릭된 마커를 추적
+    //activeMarker = this;
+    detail(e.target.options.id, 'N');
+
+	/* detail(e.target.options.id
+			, e.target.options.deviceName
+			, e.target.options.deviceId
+			, e.target.options.addrName
+			, e.target.options.ctime
+			, e.latlng.lat
+			, e.latlng.lng
+			, 'N'
+		) */
+}
+
+function detail(id, clusterChk){
+
+	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
+
+/* 	markerIconCheck();
+	markerCluster.eachLayer(function(layer) {
+		if (layer.options.id === id) {
+			layer.setIcon(redIcon);
+			layer.options.iconChanged = true;
+
+			deviceNm = layer.options.deviceName;
+			deviceId = layer.options.deviceId;
+			addrPoLocality = layer.options.addrName;
+			dateFormat = layer.options.ctime;
+			lat = layer.options.lat;
+			lng = layer.options.lng;
+			level = layer.options.level;
+			status = layer.options.status;
+			potholes = layer.options.potholes;
+			vertical = layer.options.vertical;
+			horizontal = layer.options.horizontal;
+			alligators = layer.options.alligators;
+		}
+	});
+
+	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
+				+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
+				+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
+ */
+	var lat = Number(lat);
+	var lng = Number(lng);
+
+	var position = [lat, lng];
+
+/* 	if (clusterChk == 'N') {
+		popup.setLatLng(position)
+			.setContent(popuptxt)
+			.openOn(map);
+	}
+ */
+
+	if ( $('.menu_bar_close').css('display') == 'block' ) {
+    	$('.re-search-container').css('width', 'calc(100% - 400px)');
+    	$('.btn_infoWrap').removeClass("off");
+    	$('.btn_infoWrap').addClass("on");
+
+	} else if ( $('.menu_bar_close').css('display') == 'none' ) {
+    	$('.re-search-container').css('width', 'calc(100% - 400px)');
+	}
+
+	$('.btn_infoWrap').removeClass("off");
+
+	$(".infoWrap").addClass("on");
+ 	$(".infoListWrap p").css('display', 'block');
+
+ 	$("#info").hide();
+	$('.infoListWrap').css('display', 'none');
+	$('.infoDetailWrap').css('display', 'block');
+
+
+	///// item contents
+	$("#detail_img").attr("src", "http://localhost:8080/obs/"  + id + "/thumbnail");
+	//$("#detail_img").attr("src", "${authInfo.restApiUrl}/obs/"  + id + "/thumbnail");  //개발 배포 ajax
+
+	$("#detail_img").removeAttr("onClick");
+	$("#detail_img").attr("onclick", "originalimg('" + id + "')");
+
+
+	$("#riskLv").text("LEVEL" + level + ". " + riskText);
+
+	// 포트홀
+	$("#CntPothole").text(potholes)
+	// 수직균열
+	$("#CntVertical").text(vertical + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
+	// 수평균열
+	$("#CntHorizontal").text(horizontal + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
+	// 피로균열
+	$("#CntAlligators").text(alligators + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
+
+	// detail영역
+	$("#detail_title").text();
+	// 디바이스 name
+	$("#detail_device_name").text(deviceNm);
+	// 디바이스 ID
+	$("#detail_device_id").text(deviceId);
+	// 좌표
+	$("#detail_latlng").text("<fmt:message key="LATITUDE" bundle="${bundle}"/> " + lat + " / <fmt:message key="LONGITUDE" bundle="${bundle}"/> " + lng);
+	// 위험도
+	$("#detail_risk_level").text(riskText);
+	// 도로명
+	$("#detail_route_name").text(addrPoLocality);
+
+	// 촬영일시
+	$("#detail_ctime").text(dateFormat);
+
+	// 현재상태
+	$("#detail_state").text(statusName(status));
+
+}
+
+$('.infoList').on('scroll', function(){
+
+	var scrol_position = document.querySelector('.infoList').scrollTop;
+	var scrol_height = document.querySelector('.infoList').scrollHeight;
+	var scrol_h = document.querySelector('.infoList').clientHeight;
+
+	if (scrol_position + scrol_h > scrol_height - 10) {
+
+		var startNum = $('.infoListItem').length;
+
+		for (var i = startNum; i < infoList.length; i++) {
+			if (i == (startNum + 10)) {
+				break;
+			}else {
+				$(".infoList").append(infoList[i]);
+			}
+		}
+	}
+});
+
+//좌측 메뉴바 동작
+$(".menu_bar_close").click(function(){
+
+	setTimeout(() => map.invalidateSize(), 550);
+
+});
+
+function originalimg(id) {
+
+	var popupimg = document.getElementById("pop_wrap");
+
+	var modalImg = document.getElementById("pop_img");
+
+	$('#pop_riskPopImg').css('display', 'block')
+
+	//$("#pop_img").attr("src", "${authInfo.restApiUrl}/obs/" + id + "/image");   // 배포시 ajax
+	$("#pop_img").attr("src", "http://localhost:8080/obs/" + id + "/image");
+}
+
+
+$(".btn_iconTXT, #btn_Back").click(function(){
+	map.closePopup();
+	markerIconCheck();
+
+	$('.infoDetailWrap').css('display', 'none');
+	$('.infoListWrap').css('display', 'block');
+
+});
+
+//우측 패널 펼치기
+$(".btn_infoWrap").click(function(){
+
+    if($(".infoWrap").hasClass("on")){
+    	// 접음
+        $('.infoWrap').removeClass('on');
+        $('.infoWrap').addClass('off');
+    	$('.infoDetailWrap').css('display', 'none');
+    	$('.infoListWrap').css('display', 'none');
+    	$(".infoListWrap p").css('display', 'hidden');
+    	$('.infoListWrapNoData').css('display', 'none');
+
+		if ( $('.menu_bar_close').css('display') == 'block' ) {
+			//$('.level_list').css('width', 'calc(100% - 40px)');
+        	$('.re-search-container').css('width', 'calc(100% - 40px)');
+		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
+			//$('.level_list').css('width', 'calc(100% - 40px)');
+        	$('.re-search-container').css('width', 'calc(100% - 40px)');
+		}
+
+        $('.btn_infoWrap').addClass("off");
+
+        map.closePopup();
+    	markerIconCheck();
+    } else{
+
+ 		if ( $('.menu_bar_close').css('display') == 'block' ) {
+			//$('.level_list').css('width', 'calc(100% - 400px)');
+        	$('.re-search-container').css('width', 'calc(100% - 400px)');
+		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
+			//$('.level_list').css('width', 'calc(100% - 180px)');
+        	$('.re-search-container').css('width', 'calc(100% - 400px)');
+		}
+
+        $('.btn_infoWrap').removeClass("off");
+
+        // 펼침
+        $('.infoWrap').addClass('on');
+        $('.infoListWrap').css('display', 'block');
+    	if($('.infoListItem').length < 1) {
+    		$('.infoListWrapNoData').css('display', 'block')
+    	}
+
+    	lorem.scrollTop = 0;
+    }
+
+});
+
+
 $(document).ready(function () {
 
-	   // 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
-	   var date1  = new Date();
+   // 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
+   var date1  = new Date();
 
-	    $('#toDt').val(dateFormat(date1, 'select'))
-	   var date2 = new Date(date1.setDate(date1.getDate()-30));
-	   // $('#fromDt').val(dateFormat(date2, 'select'))
-	   $('#fromDt').val('2023-10-01')
+    $('#toDt').val(dateFormat(date1, 'select'))
+   var date2 = new Date(date1.setDate(date1.getDate()-30));
+   // $('#fromDt').val(dateFormat(date2, 'select'))
+   //$('#fromDt').val('2023-10-01');
 
- 	//getList();
+    $('#fromDt').val(getThreeMonthAgo())
+
+ 	getList();
+
+	//체크박스 컨트롤
+    $("input:checkbox[name='videolist']").on('click', function() {
+        var checkboxName = $(this).attr('name');
+        var checkedCount = $('input[name="' + checkboxName + '"]:checked').length;
+
+        selectedId = $(this).attr('id');  // 선택된 체크박스의 ID
+
+		 // 선택된 체크박스와 동일한 ID를 가진 tr 행을 찾기
+		 var selectedRow = $('#table-1 tbody tr').filter(function() {
+		     return $(this).find('input:checkbox').attr('id') === selectedId;
+		 });
+
+		 // 선택된 행에서 비디오 이름을 추출
+		 if (selectedRow.length > 0) {
+		     selectedVideoName = selectedRow.find('td').eq(1).text();
+		 }
+
+		 // 체크된 개수가 1보다 크면, 모든 체크박스를 해제하고 클릭된 체크박스만 체크되게 설정
+		 if (checkedCount > 1) {
+		     $('input[name="' + checkboxName + '"]').prop('checked', false);
+		     $(this).prop('checked', true);
+		 }
+    });
+
+
 
 
 })
@@ -803,14 +1137,43 @@ function dateFormat(date, format){
    return dateString;
 }
 
+function getThreeMonthAgo(){
+
+	var today = new Date();
+
+	today.setDate(today.getDate() + 1);
+	today.setMonth(today.getMonth() - 3);
+
+	var fromDate = dateFormat(today, 'select');
+	return fromDate;
+
+}
+
 function showMap() {
-	$('#mapDetetionInfo').css('display', 'block');
+	var checkedCount = $('input[name="videolist"]:checked').length;
+
+	if (checkedCount == 0) {
+		$("#alert_msg").html("비디오를 1개 이상 선택해주세요.");
+		$("#pop_alert").stop().fadeIn(300);
+		return false;
+	}
+
+    $('#mapDetetionInfo').css('display', 'block');
+	$('.btnAreaTop').css('display', 'block');
+
+	$('#btn_mapinfo').css('display', 'none');
+
+	//getVideoImageList();
+
 	map.invalidateSize();
+
 	//mapInfo(map);
 }
 
 function hideMap() {
 	$('#mapDetetionInfo').css('display', 'none');
+	$('.btnAreaTop').css('display', 'none');
+	$('#btn_mapinfo').css('display', 'block');
 }
 
 function mapInfo(map) {
