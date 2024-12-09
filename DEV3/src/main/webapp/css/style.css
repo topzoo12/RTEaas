@@ -2296,10 +2296,10 @@ button.beefup__head[aria-disabled], .beefup__head > button[aria-disabled] {
 	box-sizing: border-box;
 }
 
-.btn_r{ border-radius: .3rem;}
+.btn_r{ border-radius: .3rem; word-break: keep-all;}
 
 .btn_TXT{ color: var(--color); line-height: 2.4rem;}
-.btn_iconTXT{ display: flex; align-items: center; color: var(--color); line-height: 2.4rem;}
+.btn_iconTXT{ display: flex; align-items: center; color: var(--color); line-height: 2.4rem; word-break: keep-all;}
 .btn_iconTXT span{ color: var(--color); margin-right: .6rem;}
 
 .btn_primary{ background-color: var(--submit); color: var(--white); }
