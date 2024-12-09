@@ -674,6 +674,7 @@ input:-ms-input-placeholder {
 	position: relative;
 	display: inline-block;
 	height: 40px;
+	right: 250px;
 	line-height: 40px;
 	padding: 0 12px 0 32px;
 	color: var(--color-sub);
