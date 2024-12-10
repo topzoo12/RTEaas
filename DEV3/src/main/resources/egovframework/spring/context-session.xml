@@ -34,6 +34,7 @@
     <interceptors>
         <interceptor>
             <mapping path="/**.do"/>
+            <exclude-mapping path="/jsonTest.do"/>
             <exclude-mapping path="/login.do"/>
             <exclude-mapping path="/loginGPKI.do"/>
             <exclude-mapping path="/logout.do"/>

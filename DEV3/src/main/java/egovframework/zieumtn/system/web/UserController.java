@@ -460,9 +460,11 @@ public class UserController {
 		try {
 			AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
 
+			String password = "abc1234!";
 			paramVO.setSessionCoId(authInfo.getSessionCoId());
 			paramVO.setSessionUserId(authInfo.getSessionUserId());
-			paramVO.setSectNo(randomWord());
+			//paramVO.setSectNo(randomWord());
+			paramVO.setSectNo(password);
 			int iResult = userService.updateUserPwd(paramVO);
 
 			response.setContentType("text/html; charset=UTF-8");

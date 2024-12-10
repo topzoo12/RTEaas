@@ -543,7 +543,7 @@ input:checked + .slider:before {
 }
 
 .contents_box {
-    transition: left 0.3s;
+    transition: 0.3s;
 }
 
 .contents_box .contentsWrap{
@@ -2422,9 +2422,7 @@ span.badge.sm2.badge_primary::before{	/* 복구완료 */
 }
 
 .main .container .contents_box.on {
-	position:relative;
-	left:200px;
-
+	transform: translateX(200px);
 }
 
 /*날씨 속도*/

@@ -161,6 +161,7 @@
 							</tr>
 						</tbody>
 					</table>
+					※ <fmt:message key="USER_PWD_RULE" bundle="${bundle}"/>
 
 					<div class="pop_btn">
 						<span class="btn_m btn_darkline btn_r pop_pop_close" id="pch_close-1"><fmt:message key="CANCEL" bundle="${bundle}"/></span>    <!-- 취소 -->
@@ -341,7 +342,8 @@ function validPwdChg(params){
 	var bool = true;
 
 
-	var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,16}$/;
+	//var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,16}$/;
+	var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-z]{2,50}).{8,}$/;
 
 	var pwdChk = params.sectNo;
 
