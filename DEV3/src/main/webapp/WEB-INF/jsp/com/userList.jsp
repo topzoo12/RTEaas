@@ -358,6 +358,17 @@ var g_idCheck = false;
 				var json = JSON.parse(resp);
 				var result = json.result;
 
+				$("#alert_msg").html(result.msg);
+				$('#pop_alert').stop().fadeIn(300);
+	        	$('#pop_alert').stop().fadeIn(300);
+
+				if(result.code == 0000){
+					// 성공시 창닫기
+					$('#pop_write-1').hide();
+    				$('.btn_search').click();
+
+				}
+
 			},
 			error : function(err) {
 				console.log(err);
