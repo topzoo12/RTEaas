@@ -245,6 +245,17 @@ public class LoginController {
 
 			session.setAttribute("codeListNa", codeListNa);
 
+
+			// 장애물 객체 ( )
+			CodeVO codeVO_OB = new CodeVO();
+			codeVO_OB.setSessionCoId(authVO.getCoId());
+			codeVO_OB.setCdgrpId("OB");
+			List<?> codeListOb = codeService.selectCommCodeList(codeVO_OB);
+
+			session.setAttribute("codeListOb", codeListOb);
+
+
+
 			// ------------------------------------------------------------------------------------------
 
 			mv.addObject("resultList", sampleList);

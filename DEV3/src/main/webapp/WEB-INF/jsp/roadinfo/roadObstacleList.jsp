@@ -5,8 +5,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="bundleName" value="bundles.lang_${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
+<c:set var="bundleName"	value="bundles.lang_${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
 <fmt:setBundle basename="${bundleName}" var="bundle" />
+
+<c:set var="nowCdNa" value="${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
+
 
 <!--달력-->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -27,7 +30,7 @@
     <p class="title ${fav}">${pageName.srnNm}</p>
 		<ul class="search_box" style="min-width: 1390px;">
 			<li>
-				<input type="text" value="" name="" id="" class="input1" placeholder="영상이름">
+				<input type="text" value="" name="" id="inputVideoName" class="input1" placeholder="<fmt:message key="VIDEO_NAME" bundle="${bundle}"/>">
 				<span class="stl"><fmt:message key="PERIOD" bundle="${bundle}"/><span class="remark2"></span></span>
 				<span class="date">
                 	<input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly> ~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2" readonly>
@@ -35,7 +38,7 @@
             	</span>
             <button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
         </li>
-        <button class="btn_subPrimary btn_mapinfo" id ="btn_mapinfo" onclick='showMap()'>지도정보보기</button>
+        <button class="btn_subPrimary btn_mapinfo" id ="btn_mapinfo" onclick='showMap()'><fmt:message key="MAP_INFO" bundle="${bundle}"/></button>
 
 		</ul>
     <%-- <ul>
@@ -73,18 +76,18 @@
                     <tr>
 						<!-- <th><input class="checkbox" type="checkbox" id="checked"><label for="checked"></label></th> -->
 						<th></th>
-						<th>영상이름</th>
-						<th>촬영일자</th>
-						<th>동물</th>
-						<th>보행자</th>
-						<th>공사표지판</th>
-						<th>라바콘</th>
-						<th>상자</th>
-						<th>낙석</th>
-						<th>쓰레기</th>
-						<th>맨홀</th>
-						<th>포트홀</th>
-						<th>보수된포트홀</th>
+						<th><fmt:message key="VIDEO_NAME" bundle="${bundle}"/></th>
+						<th><fmt:message key="VIDEO_DATE" bundle="${bundle}"/></th>
+						<th><fmt:message key="ANIMALS" bundle="${bundle}"/></th>
+						<th><fmt:message key="PERSON" bundle="${bundle}"/></th>
+						<th><fmt:message key="CONSTRUCTION_SIGNS" bundle="${bundle}"/></th>
+						<th><fmt:message key="TRAFFIC_CONE" bundle="${bundle}"/></th>
+						<th><fmt:message key="BOX" bundle="${bundle}"/></th>
+						<th><fmt:message key="STONE" bundle="${bundle}"/></th>
+						<th><fmt:message key="GARBAGE_BAG" bundle="${bundle}"/></th>
+						<th><fmt:message key="MANHOLE" bundle="${bundle}"/></th>
+						<th><fmt:message key="POTHOLE" bundle="${bundle}"/></th>
+						<th><fmt:message key="FILLED_POTHOLE" bundle="${bundle}"/></th>
                     </tr>
                 </thead>
             </table>
@@ -138,14 +141,14 @@
 	<div class="contents_box roadinfo roadDetetionInfo" id="mapDetetionInfo" style="display: none;">
 		 <div class="btnAreaTop" style="display:none">
 			<button class="btn_re-search" id ="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
-			<button class="btn_bgPrimary btn_obstacleList" id ="btn_obstacleList" onclick='hideMap()'>장애물 목록보기</button>
+			<button class="btn_bgPrimary btn_obstacleList" id ="btn_obstacleList" onclick='hideMap()'><fmt:message key="OBS_LIST_INFO" bundle="${bundle}"/></button>
 		</div>
 		<div class="contents mainMap">
 			<div class="mapWrap">
 				<!-- ******************************************************************************************************************* -->
 				<!-- Level List 부분 start -->
 				<!-- ******************************************************************************************************************* -->
-				<%-- <ul class="search_box level_list" style="min-width: 1170px; margin-top:0px; display: none;">
+				 <ul class="search_box level_list" style="min-width: 1170px; margin-top:0px; display: none;">
 					<li>
 						<span class="selectBox resp bottom" id="msgdivCd_span">
 							<button class="label" id="level1" data-code="" data-lat="" data-lng="">Level1</button>
@@ -167,8 +170,8 @@
 								<span class="remark2"></span>
 						</span>
 						<span class="date">
-							<input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly>
-							~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2"readonly>
+							<input type="text" value="${fromDt}" name="start" id="fromDt2" class="input2" readonly>
+							~ <input type="text" value="${toDt}" name="end" id="toDt2" class="input2"readonly>
 							<button class="search_calender" id="search_calender"></button>
 						</span>
 						<button class="btn_search"><fmt:message key="SEARCH" bundle="${bundle}"/></button>
@@ -176,27 +179,38 @@
 					<li>
 						<button class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 					</li>
-				</ul> --%>
+				</ul>
 
 				<!-- 결과내재검색패널 -->
 				<div class="re-search-container" id="re-search-container" style="display: none; width: calc(100% - 400px);">
 					<button type="button" id="btn_re-searchWrap" class="btn_re-searchWrap" onclick='btnClick()'></button>
 					<div class="group">
 						<dl class="">
-							<dt>탐지 객체</dt>
+							<dt><fmt:message key="DETECTED_OBJ" bundle="${bundle}"/></dt>
 							<dd>
 								<div class="selectOpt">
+								<c:forEach var="obslist" items="${codeListOb}" varStatus="status">
+									<input type="checkbox" id="${obslist.etc1}" class="obslist" name="obslist" value="${obslist.etc1}" checked><label for="${obslist.etc1}">
+									<c:choose>
+										<c:when test="${nowCdNa eq 'KR'}">${obslist.cdNm}</c:when>
+										<c:when test="${nowCdNa eq 'US'}">${obslist.cdNmEng}</c:when>
+										<c:when test="${nowCdNa eq 'JP'}">${obslist.cdNmJp}</c:when>
+									</c:choose>
+
+									</label>
+								</c:forEach>
+								<!--
 									<input type="checkbox" id="allCheck" class="" name="" value=""><label for="allCheck">전체</label>
 									<input type="checkbox" id="object1" class="" name="" value="" checked><label for="object1">동물</label>
 									<input type="checkbox" id="object2" class="" name="" value=""><label for="object2">보행자</label>
 									<input type="checkbox" id="object3" class="" name="" value=""><label for="object3">공사표지판</label>
 									<input type="checkbox" id="object4" class="" name="" value=""><label for="object4">라바콘</label>
-									<input type="checkbox" id="object5" class="" name="" value="" checked><label for="object5">낙하물</label>
+									<input type="checkbox" id="object5" class="" name="" value="" checked><label for="object5">상자</label>
 									<input type="checkbox" id="object6" class="" name="" value="" checked><label for="object6">낙석</label>
 									<input type="checkbox" id="object7" class="" name="" value=""><label for="object7">쓰레기</label>
 									<input type="checkbox" id="object8" class="" name="" value=""><label for="object8">맨홀</label>
 									<input type="checkbox" id="object9" class="" name="" value=""><label for="object9">포트홀</label>
-									<input type="checkbox" id="object10" class="" name="" value=""><label for="object10">보수된포트홀</label>
+									<input type="checkbox" id="object10" class="" name="" value=""><label for="object10">보수된포트홀</label> -->
 							</div>
 							</dd>
 						</dl>
@@ -246,16 +260,16 @@
 						</p>
 						<div class="infoDetail">
 							<div class="itemvalue roadDeteil">
-								<span>동물<em id="">0</em></span>
-								<span>보행자<em id="">0</em></span>
-								<span>공사표지판<em id="">1</em></span>
-								<span>라바콘<em id="">0</em></span>
-								<span>낙하물<em id="">0</em></span>
-								<span>낙석<em id="">0</em></span>
-								<span>쓰레기<em id="">1</em></span>
-								<span>맨홀<em id="">0</em></span>
-								<span>포트홀<em id="">1</em></span>
-								<span>보수된포트홀<em id="">0</em></span>
+								<span><fmt:message key="ANIMALS" bundle="${bundle}"/><em id="animalsCnt">0</em></span>
+								<span><fmt:message key="PERSON" bundle="${bundle}"/><em id="personCnt">0</em></span>
+								<span><fmt:message key="CONSTRUCTION_SIGNS" bundle="${bundle}"/><em id="constructionSignsCnt">0</em></span>
+								<span><fmt:message key="TRAFFIC_CONE" bundle="${bundle}"/><em id="trafficConeCnt">0</em></span>
+								<span><fmt:message key="BOX" bundle="${bundle}"/><em id="boxCnt">0</em></span>
+								<span><fmt:message key="STONE" bundle="${bundle}"/><em id="stoneCnt">0</em></span>
+								<span><fmt:message key="GARBAGE_BAG" bundle="${bundle}"/><em id="garbageBagCnt">0</em></span>
+								<span><fmt:message key="MANHOLE" bundle="${bundle}"/><em id="manholeCnt">0</em></span>
+								<span><fmt:message key="POTHOLE" bundle="${bundle}"/><em id="potholeCnt">0</em></span>
+								<span><fmt:message key="FILLED_POTHOLE" bundle="${bundle}"/><em id="filledPotholeCnt">0</em></span>
 							</div>
 							<dl class="">
 								<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
@@ -267,7 +281,7 @@
 								<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
 								<dd id="detail_route_name">매화로47번길</dd>
 								<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
-								<dd id="detail_ctime">2024.11.22 11:08</dd>
+								<dd id="detail_stime">2024.11.22 11:08</dd>
 							</dl>
 						</div>
 					</div>
@@ -283,123 +297,11 @@
 				<div class="infoListWrap" style="overflow-y:auto; display: block;">
 					<div class="infoListTop">
 						<h2 class="hidden">검색목록</h2>
-						<span class="fileName">파일명 : <em>수정구로_20241113.dat</em></span>
+						<span class="fileName"><fmt:message key="FILE_NAME" bundle="${bundle}"/> : <em>수정구로_20241113.dat</em></span>
 						<p class="itemCount">총 <em>0건</em></p>
 					</div>
 
 					<ul class="infoList">
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
-						<li>
-							<a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li> 도로명 : 매화로47번길</li>
-										<li> 촬영일시 : 2024.11.22 11:08</li>
-										<li> 탐지객체수  : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail" alt="대표이미지" onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-							</a>
-						</li>
 						<li>
 							<a class="infoListItem">
 								<div class="info">
@@ -465,8 +367,18 @@
 
 <script language="javascript">
 
+var requiredMsg = '<fmt:message key="CONTENTS_REQUIRED" bundle="${bundle}"/>';
+
 var selectedId = '';
 var selectedVideoName ='';
+var allData = [];
+var infoList = [];
+var markers = [];
+var markerList = [];
+
+var popup = L.popup({autoPan:false});
+
+var lorem = document.querySelector(".infoList");
 
 var baseLat = '${authInfo.wtX}';
 var baseLng = '${authInfo.wtY}';
@@ -483,7 +395,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '© OpenStreetMap',
 	stylers:[{visibility:'off'}]
 }).addTo(map);
-
 
 map.on('click', onMapClick);
 
@@ -513,6 +424,17 @@ var blueIcon = L.icon({
 });
 
 
+var deviceKeyValue = [];
+
+<c:forEach var="deList" items="${deviceList}" varStatus="status">
+	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}', 'useYn':'${deList.useYn}'})
+		var mac = '${deList.macAddr}';
+		/* if (mac.length > 0 && mac != "" && '${deList.useYn}' == '사용'){
+			deviceIdList.push(mac);
+		}
+ 		*/
+</c:forEach>
+
 //결과내재검색패널
 function btnClick() {
   const searchOpt = document.getElementById('re-search-container');
@@ -525,6 +447,18 @@ function btnClick() {
 
 }
 
+$("input:checkbox[name='obslist']").on('click', function() {
+
+	var checkboxName = $(this).attr('name');
+	//var checkboxLength = $('input:checkbox[name="' + checkboxName + '"]').length;
+	var checkedCount = $('input[name="' + checkboxName + '"]:checked').length;
+
+	if (checkedCount == 0) {
+		$("#alert_msg").html(requiredMsg);
+		$("#pop_alert").stop().fadeIn(300);
+		return false;
+    }
+})
 
 $(function() {
 
@@ -578,11 +512,12 @@ $('.btn_search').on('click', function () {
 
 function getList(){
 
+ var vname = $('#inputVideoName').val();
 	var params = {
-			'videoName': ''
+			'videoName': $('#inputVideoName').val()
 			,'from': $('#fromDt').val().replaceAll('-','')
 			,'to': $('#toDt').val().replaceAll('-','')
-			,'coId': "${authInfo.cdNa}"
+			,'coId': "${authInfo.coId}"
 	};
 
 	$.ajax({
@@ -610,9 +545,6 @@ function getList(){
 		},
 		success : function(resp) {
 			$('#table-1 tbody tr').remove();
-			//var result = resp.data[0];
-
-			console.log('비디오 결과', resp.data);
 
 			var result = resp.data;
 
@@ -620,11 +552,13 @@ function getList(){
 
  			result.forEach (function (el, index) {
 
+ 				var startDate = dateFormat(new Date(el.videoStartTime), 'select').replaceAll('-', '.');
+
 				appendRow += '<tr>'
 					+'<td><label class="checkbox"><input class="checkbox" type="checkbox" id="'+ el.id +'" name ="videolist"><span class="icon"></span></label></td>'
 					+'<td align="center" class="listtd">'+el.videoName+'</td>'
 					//+'<td align="center" class="listtd">'+el.videoStartTime+'</td>'
-					+'<td align="center" class="listtd">'+dateFormat(new Date(el.videoStartTime), 'list')+'</td>'
+					+'<td align="center" class="listtd">'+ startDate +'</td>'
 					+'<td align="center" class="listtd">'+el.obstacleVideo.videoAnimalsCnt+'</td>'
 					+'<td align="center" class="listtd">'+el.obstacleVideo.videoPersonCnt+'</td>'
 					+'<td align="center" class="listtd">'+el.obstacleVideo.videoConstructionSignsCnt+'</td>'
@@ -639,7 +573,34 @@ function getList(){
 			});
 
 			$('#table-1 > tbody').append(appendRow);
-			//$('#totCnt').text(result.length);
+
+			// 체크박스 상태 초기화
+            $("input:checkbox[name='videolist']").prop('checked', false);
+
+            // 체크박스 클릭 이벤트 설정
+            $("input:checkbox[name='videolist']").on('click', function() {
+                var checkboxName = $(this).attr('name');
+                var checkedCount = $('input[name="' + checkboxName + '"]:checked').length;
+
+                selectedId = $(this).attr('id');  // 선택된 체크박스의 ID
+
+                // 선택된 체크박스와 동일한 ID를 가진 tr 행을 찾기
+                var selectedRow = $('#table-1 tbody tr').filter(function() {
+                    return $(this).find('input:checkbox').attr('id') == selectedId;
+                });
+
+                // 선택된 행에서 비디오 이름을 추출
+                if (selectedRow.length > 0) {
+                    selectedVideoName = selectedRow.find('td').eq(1).text();
+                }
+
+                // 체크된 개수가 1보다 크면, 모든 체크박스를 해제하고 클릭된 체크박스만 체크되게 설정
+                if (checkedCount > 1) {
+                    $('input[name="' + checkboxName + '"]').prop('checked', false);  // 모든 체크박스 해제
+                    $(this).prop('checked', true);  // 클릭된 체크박스만 선택
+                }
+            });
+
 
 			$('#table-1 > tbody > tr').on('click', function(){
 				$(this).parent().children().removeClass('on');
@@ -657,91 +618,20 @@ function mapClosePopup() {
 
 function getVideoImageList(){
 
-	markers = [];
-	markerList = [];
+	infoList = [];
 
-	markerCluster = L.markerClusterGroup({
-		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
-		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
-		iconCreateFunction: function(cluster) {
-			var count = cluster.getChildCount();
-			return L.divIcon({
-				html: '<div>' + count + '</div>',
-				className: 'mycluster',
-				iconSize: L.point(40, 40)
-			});
-		},
-		spiderfyOnMaxZoom: false,
-		zoomToBoundsOnClick: false,
-		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
-	});
-
-/* 	var riskChk = $("input[name='risklist']:checked");
-	var crackChk = $("input[name='crack']:checked");
-	var statusChk = $("input[name='statusstat']:checked"); */
-
-	map.eachLayer(function(layer) {
-		if ((layer instanceof L.Marker) || (layer instanceof L.MarkerCluster) || (layer instanceof L.MarkerClusterGroup)) {
-			map.removeLayer(layer);
-		};
-	});
-
-	mapClosePopup();
-
-	$('.infoDetailWrap').css('display', 'none');
-	$('.infoListWrap').css('display', 'block');
-
-
-/////////////////////////여기다가 마커 추가해보자!
-/*
-	for ( var i = 0; i < allData.length; i++ ) {
-		var boolRisk = false;
-		var boolCrack = false;
-		var boolStatus = false;
-
-		// 위험도
-		for ( var r = 0; r < riskChk.length; r++ ) {
-			if (allData[i].risk.level == riskChk[r].value) {
-				boolRisk = true;
-			}
-		}
-
-		for ( var c = 0; c < crackChk.length; c++ ) {
-			if (allData[i].risk[crackChk[c].value] > 0 ) {
-				boolCrack = true;
-			}
-		}
-
-		for ( var d = 0; d < statusChk.length; d++ ) {
-
-			var statusValueChk = "ETC";
-
-			if (allData[i].status == null) {
-				statusValueChk = "ETC";
-			} else {
-				statusValueChk = allData[i].status;
-			}
-
-			if ( statusValueChk == statusChk[d].id ) {
-				boolStatus = true;
-			}
-		}
-
-		if(boolRisk && boolCrack && boolStatus){
-			markerList.push(i);
-		}
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
 	}
- */
-////////////////////////////
+
+	map.eachLayer(function (layer) {
+	    if (!(layer instanceof L.TileLayer)) {
+	        map.removeLayer(layer);
+	    }
+	});
+
 	var videoIds = []; // 추후 다중 선택을 위해 숫자형 배열로 전달
 	videoIds.push(selectedId);
-
-	console.log('비디오 네임 확인', selectedVideoName);
-	console.log('비디오 아이디 확인', selectedId );
-
-	$('.infoListTop .fileName em').remove();
-	$('.infoList li').remove();
-	$('.infoListTop .fileName').append('<em>' + selectedVideoName + '</em>');
 
     var params = {
         'videoIds': videoIds.join(',')  // 배열을 쉼표로 구분하여 문자열로 변환
@@ -771,40 +661,199 @@ function getVideoImageList(){
 			console.log(err);
 		},
 		success : function(resp) {
-			console.log('이미지 결과', resp);
-
-			var result = resp.data;
-
- 			var appendRow = "";
-
- 			result.forEach (function (el, index) {
-
- 				var sum = 0;
- 				var totalObjects = Object.values(el.obstacleImage).reduce((sum, item) => sum + item, 0);
-
- 				console.log('토탈 개수', totalObjects);
-
-				appendRow += "<li><a class='infoListItem'>"
-					+ "<div class='info'>"
-					+ "<ul class='infoContents'>"
-					+ "<li onClick=\"detail('" + el.id + "', 'N')\"'> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + el.wayName + "</li>"
-					+ "<li> <fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat(new Date(el.systemTime), 'list') + "</li>"
-					+ "<li> 탐지객체수 : " +totalObjects +"</li>"
-					+ "</ul>"
-					+ "</div>"
-					+ "<div class='infoThumnail'>"
-					//+ "<img src='${authInfo.restApiUrl}/obs/" + el.id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + el.id + "')\">"   // 배포시 ajax
-					+ "<img src='http://localhost:8080/obs/" + el.id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + el.id + "')\">"
-					+ "</div>"
-					+ "</li>"
-			});
-
- 			$(".infoList").append(appendRow);
-
- 			$(".infoListWrap .infoListTop p").text("<fmt:message key="TOTAL" bundle="${bundle}"/> " + result.length + " <fmt:message key="COUNT2" bundle="${bundle}"/>")
+			allData = resp.data;
+			reSearch();
 
 		}
 	});
+
+}
+
+function reSearch() {
+
+	infoList = [];
+	markers = [];
+	markerList = [];
+
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	} else if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "block") {
+		$('.infoDetailWrap').css('display', 'none');
+		$('.infoListWrap').css('display', 'block');
+	}
+
+	markerCluster = L.markerClusterGroup({
+		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
+		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
+		iconCreateFunction: function(cluster) {
+			var count = cluster.getChildCount();
+			return L.divIcon({
+				html: '<div>' + count + '</div>',
+				className: 'mycluster',
+				iconSize: L.point(40, 40)
+			});
+		},
+		spiderfyOnMaxZoom: false,
+		zoomToBoundsOnClick: false,
+		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+	});
+
+	map.eachLayer(function(layer) {
+		if ((layer instanceof L.Marker) || (layer instanceof L.MarkerCluster) || (layer instanceof L.MarkerClusterGroup)) {
+			map.removeLayer(layer);
+		};
+	});
+
+	mapClosePopup();
+
+	$('.infoDetailWrap').css('display', 'none');
+	$('.infoListWrap').css('display', 'block');
+
+	$('.infoListTop .fileName em').remove();
+	$('.infoList li').remove();
+	$('.infoListTop .fileName').append('<em>' + selectedVideoName + '</em>');
+
+	/* 재검색 패널 */
+	var obsChk = $("input[name='obslist']:checked");
+
+	for (var i = 0; i < allData.length; i++) {
+
+	    for (var j = 0; j < obsChk.length; j++) {
+	        var check = obsChk[j].value;
+
+	        for (var key in allData[i].obstacleImage) {
+	            if (allData[i].obstacleImage.hasOwnProperty(key)) {
+	                // 속성 이름이 체크박스 값과 일치하고 값이 0 이상인 경우
+	                if (key === check && allData[i].obstacleImage[key] > 0) {
+	                    // markerList에 i가 이미 존재하지 않으면 추가
+	                    if (!markerList.includes(i)) {
+	                        markerList.push(i);
+	                    }
+	                    break;
+	                }
+	            }
+	        }
+	    }
+	}
+
+	for (var i = 0; i < allData.length; i++) {
+		for (var x = 0 ; x < markerList.length ; x++ ) {
+
+   			if (markerList[x] == i) {
+   				var item = allData[i];
+   				var id = item.id;
+
+				//sortDataList.push(item); 정렬
+
+				var macAddr = item['deviceId'];
+				var deviceId = "";
+				var deviceNm = "";
+
+				for ( var s = 0; s < deviceKeyValue.length; s++ ) {
+					if (deviceKeyValue[s].macAddr == macAddr){
+						deviceId = deviceKeyValue[s].deviceId;
+						deviceNm = deviceKeyValue[s].deviceNm;
+
+					}
+				}
+
+				var addrPoLocality = ( item.wayName == null || item.wayName == '') ? "<fmt:message key="ROAD_INFO_NOT_EXISTS" bundle="${bundle}"/>" : item.wayName;
+
+				var t1 = L.marker([item.latitude, item.longitude], {
+					id : item['id'],
+					lat : item['latitude'],
+					lng : item['longitude'],
+					stime : dateFormat(new Date(item.systemTime), 'list'),
+					deviceId : deviceId,
+					deviceName : deviceNm,
+					addrName : addrPoLocality,
+				 	animals : item.obstacleImage['imageAnimalsCnt'],
+					person : item.obstacleImage['imagePersonCnt'],
+					garbageBag : item.obstacleImage['imageGarbageBagCnt'],
+					constructionSign : item.obstacleImage['imageConstructionSignsCnt'],
+					trafficCone : item.obstacleImage['imageTrafficConeCnt'],
+					box : item.obstacleImage['imageBoxCnt'],
+					stone : item.obstacleImage['imageStoneCnt'],
+					pothole : item.obstacleImage['imagePotholeCnt'],
+					filledPothole : item.obstacleImage['imageFilledPotholeCnt'],
+					manhole : item.obstacleImage['imageManholeCnt'],
+					icon : blueIcon,
+				}).on('click', onMarkerClick);
+
+				markerCluster.addLayer(t1);
+				markers.push(t1);
+
+				var sum = 0;
+				var totalObjects = Object.values(item.obstacleImage).reduce((sum, i) => sum + i, 0);
+
+				infoList.push("<li><a class='infoListItem'>"
+					+ "<div class='info'>"
+					+ "<ul class='infoContents'>"
+					+ "<li style='cursor: pointer;' onClick=\"detail('" + id + "', 'N')\"> <fmt:message key='ROAD_NAME' bundle='${bundle}'/> : " + addrPoLocality + "</li>"
+					+ "<li> <fmt:message key='PHOTO_DATETIME' bundle='${bundle}'/> : " + dateFormat(new Date(item.systemTime), 'list') + "</li>"
+					+ "<li> <fmt:message key='DETECTED_OBJ_CNT' bundle='${bundle}'/> : " +totalObjects +"</li>"
+					+ "</ul>"
+					+ "</div>"
+					+ "<div class='infoThumnail'>"
+					+ "<img src='${authInfo.restApiUrl}/obs/" + id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + id + "')\">"   // 배포시 ajax
+					//+ "<img src='http://localhost:8080/obs/" + id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + id + "')\">"
+					+ "</div>"
+					+ "</li>"
+				);
+
+  			}
+		}
+	}
+
+	// 마커 클러스터 그룹에 클릭 이벤트 추가
+	markerCluster.on('clusterclick', function(event) {
+		var cluster = event.layer;
+		var childMarkers = cluster.getAllChildMarkers();
+
+		markerIconCheck();
+		onMapClick(map);
+
+		// 팝업 내용 생성
+		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
+
+		childMarkers.forEach(function(marker, index) {
+			var item = marker.options;
+
+			popupContent += "Marker " + (index + 1) + " : "
+							+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
+							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+							+ marker.getLatLng().toString()
+							+ "</b><br>";
+
+		});
+
+		var popupLatLng = cluster.getLatLng();
+
+		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
+
+	});
+
+	map.addLayer(markerCluster);
+
+	for (var i = 0; i < infoList.length; i++) {
+		if ( i < 10 ) {
+			$(".infoList").append(infoList[i])
+		}
+	}
+
+	$(".infoList").scrollTop = 0;
+
+	if ($('.infoListItem').length < 1 && $(".infoWrap").hasClass("on")) {
+		$('.infoListWrapNoData').css('display', 'block')
+	} else {
+		$('.infoListWrapNoData').css('display', 'none');
+	}
+
+	$(".infoListWrap p").text("<fmt:message key="TOTAL" bundle="${bundle}"/> "+ infoList.length + " <fmt:message key="COUNT2" bundle="${bundle}"/>");
+
+	/* if ($('#sort').data('code') == 'asc') {
+		$('#sortchk .sorting').click();
+	} */
 
 }
 
@@ -840,77 +889,61 @@ function onMapClick(e) {
 	}
 }
 
-
-
 function onMarkerClick(e) {
-
-	// 마커 클릭 이벤트
-	// e.target.options.id
-	//marker.setIcon(redIcon);
 	markerIconCheck();
-
-	// 이전에 클릭된 마커가 있으면 원래 아이콘(blueIcon)으로 변경
-    /* if (activeMarker) {
-        activeMarker.setIcon(blueIcon);
-    } */
-
 	this.setIcon(redIcon);
 
-	// 현재 클릭된 마커를 추적
-    //activeMarker = this;
     detail(e.target.options.id, 'N');
-
-	/* detail(e.target.options.id
-			, e.target.options.deviceName
-			, e.target.options.deviceId
-			, e.target.options.addrName
-			, e.target.options.ctime
-			, e.latlng.lat
-			, e.latlng.lng
-			, 'N'
-		) */
 }
 
 function detail(id, clusterChk){
 
-	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
+	var deviceNm, deviceId, addrPoLocality, lat, lng, dateFormat;
+	var imageAnimalsCnt, imagePersonCnt, imageGarbageBagCnt, imageConstructionSignsCnt, imageTrafficConeCnt, imageBoxCnt, imageStoneCnt, imagePotholeCnt, imageFilledPotholeCnt, imageManholeCnt;
 
-/* 	markerIconCheck();
-	markerCluster.eachLayer(function(layer) {
-		if (layer.options.id === id) {
+ 	markerIconCheck();
+
+ 	markerCluster.eachLayer(function(layer) {
+		if (layer.options.id == id) {
+
 			layer.setIcon(redIcon);
 			layer.options.iconChanged = true;
 
 			deviceNm = layer.options.deviceName;
 			deviceId = layer.options.deviceId;
 			addrPoLocality = layer.options.addrName;
-			dateFormat = layer.options.ctime;
+			dateFormat = layer.options.stime;
 			lat = layer.options.lat;
 			lng = layer.options.lng;
-			level = layer.options.level;
-			status = layer.options.status;
-			potholes = layer.options.potholes;
-			vertical = layer.options.vertical;
-			horizontal = layer.options.horizontal;
-			alligators = layer.options.alligators;
+
+			imageAnimalsCnt = layer.options.animals;
+			imagePersonCnt = layer.options.person;
+			imageGarbageBagCnt = layer.options.garbageBag;
+			imageConstructionSignsCnt = layer.options.constructionSign;
+			imageTrafficConeCnt = layer.options.trafficCone;
+			imageBoxCnt = layer.options.box;
+			imageStoneCnt = layer.options.stone;
+			imagePotholeCnt = layer.options.pothole;
+			imageFilledPotholeCnt = layer.options.filledPothole;
+			imageManholeCnt = layer.options.manhole;
 		}
 	});
 
 	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
-				+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
-				+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
- */
+					+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
+					+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
+
 	var lat = Number(lat);
 	var lng = Number(lng);
 
 	var position = [lat, lng];
 
-/* 	if (clusterChk == 'N') {
+ 	if (clusterChk == 'N') {
 		popup.setLatLng(position)
 			.setContent(popuptxt)
 			.openOn(map);
 	}
- */
+
 
 	if ( $('.menu_bar_close').css('display') == 'block' ) {
     	$('.re-search-container').css('width', 'calc(100% - 400px)');
@@ -930,44 +963,39 @@ function detail(id, clusterChk){
 	$('.infoListWrap').css('display', 'none');
 	$('.infoDetailWrap').css('display', 'block');
 
-
 	///// item contents
-	$("#detail_img").attr("src", "http://localhost:8080/obs/"  + id + "/thumbnail");
-	//$("#detail_img").attr("src", "${authInfo.restApiUrl}/obs/"  + id + "/thumbnail");  //개발 배포 ajax
+	//$("#detail_img").attr("src", "http://localhost:8080/obs/"  + id + "/thumbnail");
+	$("#detail_img").attr("src", "${authInfo.restApiUrl}/obs/"  + id + "/thumbnail");  //개발 배포 ajax
 
 	$("#detail_img").removeAttr("onClick");
 	$("#detail_img").attr("onclick", "originalimg('" + id + "')");
 
+	$("#animalsCnt").text(imageAnimalsCnt);
+	$("#personCnt").text(imagePersonCnt);
+	$("#constructionSignsCnt").text(imageConstructionSignsCnt);
+	$("#trafficConeCnt").text(imageTrafficConeCnt);
 
-	$("#riskLv").text("LEVEL" + level + ". " + riskText);
-
-	// 포트홀
-	$("#CntPothole").text(potholes)
-	// 수직균열
-	$("#CntVertical").text(vertical + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
-	// 수평균열
-	$("#CntHorizontal").text(horizontal + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
-	// 피로균열
-	$("#CntAlligators").text(alligators + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
+	$("#boxCnt").text(imageBoxCnt);
+	$("#stoneCnt").text(imageStoneCnt);
+	$("#garbageBagCnt").text(imageGarbageBagCnt);
+	$("#manholeCnt").text(imageManholeCnt);
+	$("#potholeCnt").text(imagePotholeCnt);
+	$("#filledPotholeCnt").text(imageFilledPotholeCnt);
 
 	// detail영역
-	$("#detail_title").text();
+	$("#detail_title").text(selectedVideoName);
 	// 디바이스 name
 	$("#detail_device_name").text(deviceNm);
 	// 디바이스 ID
 	$("#detail_device_id").text(deviceId);
 	// 좌표
 	$("#detail_latlng").text("<fmt:message key="LATITUDE" bundle="${bundle}"/> " + lat + " / <fmt:message key="LONGITUDE" bundle="${bundle}"/> " + lng);
-	// 위험도
-	$("#detail_risk_level").text(riskText);
+
 	// 도로명
 	$("#detail_route_name").text(addrPoLocality);
 
 	// 촬영일시
-	$("#detail_ctime").text(dateFormat);
-
-	// 현재상태
-	$("#detail_state").text(statusName(status));
+	$("#detail_stime").text(dateFormat);
 
 }
 
@@ -1006,8 +1034,8 @@ function originalimg(id) {
 
 	$('#pop_riskPopImg').css('display', 'block')
 
-	//$("#pop_img").attr("src", "${authInfo.restApiUrl}/obs/" + id + "/image");   // 배포시 ajax
-	$("#pop_img").attr("src", "http://localhost:8080/obs/" + id + "/image");
+	$("#pop_img").attr("src", "${authInfo.restApiUrl}/obs/" + id + "/image");   // 배포시 ajax
+	//$("#pop_img").attr("src", "http://localhost:8080/obs/" + id + "/image");
 }
 
 
@@ -1033,10 +1061,8 @@ $(".btn_infoWrap").click(function(){
     	$('.infoListWrapNoData').css('display', 'none');
 
 		if ( $('.menu_bar_close').css('display') == 'block' ) {
-			//$('.level_list').css('width', 'calc(100% - 40px)');
         	$('.re-search-container').css('width', 'calc(100% - 40px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-			//$('.level_list').css('width', 'calc(100% - 40px)');
         	$('.re-search-container').css('width', 'calc(100% - 40px)');
 		}
 
@@ -1047,10 +1073,8 @@ $(".btn_infoWrap").click(function(){
     } else{
 
  		if ( $('.menu_bar_close').css('display') == 'block' ) {
-			//$('.level_list').css('width', 'calc(100% - 400px)');
         	$('.re-search-container').css('width', 'calc(100% - 400px)');
 		} else if ( $('.menu_bar_close').css('display') == 'none' ) {
-			//$('.level_list').css('width', 'calc(100% - 180px)');
         	$('.re-search-container').css('width', 'calc(100% - 400px)');
 		}
 
@@ -1075,15 +1099,11 @@ $(document).ready(function () {
    var date1  = new Date();
 
     $('#toDt').val(dateFormat(date1, 'select'))
-   var date2 = new Date(date1.setDate(date1.getDate()-30));
-   // $('#fromDt').val(dateFormat(date2, 'select'))
-   //$('#fromDt').val('2023-10-01');
-
     $('#fromDt').val(getThreeMonthAgo())
 
  	getList();
 
-	//체크박스 컨트롤
+/* 	//체크박스 컨트롤
     $("input:checkbox[name='videolist']").on('click', function() {
         var checkboxName = $(this).attr('name');
         var checkedCount = $('input[name="' + checkboxName + '"]:checked').length;
@@ -1092,7 +1112,7 @@ $(document).ready(function () {
 
 		 // 선택된 체크박스와 동일한 ID를 가진 tr 행을 찾기
 		 var selectedRow = $('#table-1 tbody tr').filter(function() {
-		     return $(this).find('input:checkbox').attr('id') === selectedId;
+		     return $(this).find('input:checkbox').attr('id') == selectedId;
 		 });
 
 		 // 선택된 행에서 비디오 이름을 추출
@@ -1105,15 +1125,12 @@ $(document).ready(function () {
 		     $('input[name="' + checkboxName + '"]').prop('checked', false);
 		     $(this).prop('checked', true);
 		 }
-    });
-
-
-
+    }); */
 
 })
+
 ///////////////////// 날짜관련
 function dateFormat(date, format){
-
 
    if (format == 'list'){
       // 2023.01.01 14:03:01
@@ -1121,9 +1138,9 @@ function dateFormat(date, format){
       var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate();
       var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours();
       var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes();
-      var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
+      //var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds();
 
-      dateString  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min + ":" + sec
+      dateString  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min
 
    } else if (format == 'select'){
 
@@ -1153,7 +1170,7 @@ function showMap() {
 	var checkedCount = $('input[name="videolist"]:checked').length;
 
 	if (checkedCount == 0) {
-		$("#alert_msg").html("비디오를 1개 이상 선택해주세요.");
+		$("#alert_msg").html("<fmt:message key="VIDEO_SELECT_REQUIRED" bundle="${bundle}"/>");
 		$("#pop_alert").stop().fadeIn(300);
 		return false;
 	}
@@ -1163,7 +1180,7 @@ function showMap() {
 
 	$('#btn_mapinfo').css('display', 'none');
 
-	//getVideoImageList();
+	getVideoImageList();
 
 	map.invalidateSize();
 
@@ -1174,205 +1191,29 @@ function hideMap() {
 	$('#mapDetetionInfo').css('display', 'none');
 	$('.btnAreaTop').css('display', 'none');
 	$('#btn_mapinfo').css('display', 'block');
-}
 
-function mapInfo(map) {
-
-	var lat = map.getCenter().lat;
-	var lng = map.getCenter().lng;
-
-	markerList = [];
-
-	map.eachLayer(function (layer) {
-	    if (!(layer instanceof L.TileLayer)) {
-	        map.removeLayer(layer);
-	    }
+	//결과 내 재검색 선택초기화
+	$("input[name='obslist']").each(function() {
+		$(this).prop('checked', true);
 	});
 
-	$.ajax({
-		type: "GET",
-		//url: "http://localhost:8080/potholeInArea",
-		url: "${authInfo.restApiUrl}/potholeInArea",
-		data: {
-			on_way:false,
-			//administrative_id: areaCode,
-			//administrative_id: "2409180", //성남시
-			north_west:"latitude:" + map.getBounds().getNorthWest().lat + ",longitude:" + map.getBounds().getNorthWest().lng,
-			north_east:"latitude:" + map.getBounds().getNorthEast().lat + ",longitude:" + map.getBounds().getNorthEast().lng,
-			south_west:"latitude:" + map.getBounds().getSouthWest().lat + ",longitude:" + map.getBounds().getSouthWest().lng,
-			south_east:"latitude:" + map.getBounds().getSouthEast().lat + ",longitude:" + map.getBounds().getSouthEast().lng,
-			region:"${authInfo.cdNa}",
-			co_id :"${authInfo.coId}"
-		},
-		success: drawMarker,
-		error: function(request,status,error){
-			//console.log("request.status = " + request.status)
-		},
-		beforeSend:function(){
-			$('#circularG').css('display','block')
-		},
-		complete : function(data) {
-			//  실패했어도 완료가 되었을 때 처리
-			$('#circularG').css('display','none');
-			getDetectedRoad();
-
-		}
-	})
-
+	const searchOpt = document.getElementById('re-search-container');
+	searchOpt.style.display = 'none';
 }
 
-function drawMarker(response) {
+//선택초기화 버튼 이벤트 ( 결과 내 재검색 옵션 )
+function optionReset() {
 
-	$("#info").hide();
-	//$('.infoListWrap').css('display', 'block')
-	$('.infoDetailWrap').css('display', 'none')
-	map.closePopup();
-
-	//console.log("abc => ", response)
-	allData = response.data;
-
-	sumMarkerSort = [];
-
-	for (var i = 0; i < lines.length; i++) {
-		map.removeLayer(lines[i])
-	}
-
-	for (var i = 0; i < markers.length; i++) {
-		map.removeLayer(markers[i])
-	}
-
-	markers = []
-
-	point = []
-
-	var lvColorKeyValue = [];
-	var riskText = '';
-
-	// riskLv1
-	//obj.css("color","색상");
-	for (var i = 1; i <= lvColorKeyValue.length; i++) {
-		$('#riskbgcolorLv' + i).css("background-color", lvColorKeyValue[i-1].color)
-		$('#riskLv' + i).text(lvColorKeyValue[i].lvNm);
-	}
-
-	markerCluster = L.markerClusterGroup({
-		disableClusteringAtZoom: 19, // 줌 레벨 15 이상에서 클러스터 해제
-		maxClusterRadius: 30,        // 클러스터링 반경 50px로 설정
-		iconCreateFunction: function(cluster) {
-			var count = cluster.getChildCount();
-			return L.divIcon({
-				html: '<div>' + count + '</div>',
-				className: 'mycluster',
-				iconSize: L.point(40, 40)
-			});
-		},
-		spiderfyOnMaxZoom: false,
-		zoomToBoundsOnClick: false,
-		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
+	$("input[name='obslist']").each(function() {
+		$(this).prop('checked', true);
 	});
 
- 	for (var i = 0 ; i < response.data.length ; i++) {
-
-		var markerdate = new Date(response.data[i].timestamp);
-
-		var item = response.data[i];
-
-		var deviceId = fn_device_id(item['device-id'])
-		var deviceNm = fn_device_name(item['device-id'])
-
-		var lat = item.point['latitude'];
-		var lng = item.point['longitude'];
-
-		var date = new Date(item['timestamp'])
-
-		var dateFormat = date.getFullYear() + '.' + (date.getMonth()+1) + '.'
-						+ date.getDate() + ' '
-						+ date.getHours() + ':' + date.getMinutes() ;
-
-		var month = (date.getMonth()+1 ) < 10 ?  "0" + "" +  (date.getMonth()+1 ): (date.getMonth()+1 )
-		var day = date.getDate() < 10 ?  "0" + "" +  date.getDate() : date.getDate()
-		var hour = date.getHours() < 10 ?  "0" + "" +  date.getHours() : date.getHours()
-		var min = date.getMinutes() < 10 ?  "0" + "" +  date.getMinutes() : date.getMinutes()
-		//var sec = date.getSeconds() < 10 ?  "0" + "" +  date.getSeconds() : date.getSeconds()
-
-		var cTime  = date.getFullYear() + '.' + month + '.' + day + " " + hour + ":" + min;
-
-		var addrPoLocality = (item.way == null || item.way.name == null || item.way.name == '') ? "도로정보 없음" : item.way.name;
-
-		var t = L.marker([item.point.latitude, item.point.longitude], {
-			id : item['id'],
-			lat : item.point['latitude'],
-			lng : item.point['longitude'],
-			ctime : cTime,
-			deviceId : deviceId,
-			deviceName : deviceNm,
-			addrName : addrPoLocality,
-			level : item.risk.level,
-			status : item.status,
-			potholes : item.risk['count-of-potholes'],
-			vertical : item.risk['count-of-vertical-cracks'],
-			horizontal : item.risk['count-of-horizontal-cracks'],
-			alligators : item.risk['count-of-alligators'],
-			icon : blueIcon,
-		}).on('click', onMarkerClick);
-
-		//console.log("tt -- ", t);
-		markerCluster.addLayer(t);
-		markers.push(t);
-		//markerId.push(item['id']);
-
-		//map.removeLayer(markerCluster);
-
-
-	}
-
- 	// 마커 클러스터 그룹에 클릭 이벤트 추가
-	markerCluster.on('clusterclick', function(event) {
-		var cluster = event.layer;
-		var childMarkers = cluster.getAllChildMarkers();
-
-		markerIconCheck();
-		onMapClick(map);
-
-		// 팝업 내용 생성
-		var popupContent = '<b>Cluster contains ' + childMarkers.length + ' markers:</b><br>';
-		//console.log('childMarkers -- ', childMarkers)
-		childMarkers.forEach(function(marker, index) {
-
-			var item = marker.options;
-
-			popupContent += "Marker " + (index + 1) + " : "
-						+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
-						+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
-						+ marker.getLatLng().toString()
-						+ "</b><br>";
-
-		});
-
-		//console.log('markerCluster >>> ', markerCluster);
-		// 첫 번째 마커의 위치를 팝업 위치로 사용
-		//var popupLatLng = childMarkers[0].getLatLng();
-		var popupLatLng = cluster.getLatLng();
-
-		// 팝업 생성 및 오픈
-		//cluster.bindPopup(popupContent).openPopup();
-
-		popup = L.popup({autoPan:false}).setLatLng(popupLatLng).setContent(popupContent).openOn(map);
-	});
-
- 	//map.addLayer(markerCluster);
-
- 	$('.infoList li').remove()
-	$('.infoList div').remove()
-
-	potholeCnt = response.data.length;
-	potholeListData = response.data;
-
-	$("#Levelswitch").trigger("change");
-
+	reSearch();
 }
 
-
+$(".obslist").change(function(){
+    reSearch();
+});
 
 
 </script>

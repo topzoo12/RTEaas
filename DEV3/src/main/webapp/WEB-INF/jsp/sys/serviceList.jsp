@@ -552,7 +552,7 @@ $('#btn_search').on('click', function () {
 
 		if(!CheckEmail(params.emailAddr)){
 			cnt += 1;
-			msg += "유효하지 않은 이메일 주소입니다.<br>";
+			msg += "<fmt:message key="INVALID_EMAIL" bundle="${bundle}"/><br>";
 		}
 
 		//, 'centerCode' : $('#level2').data('code')
@@ -561,7 +561,7 @@ $('#btn_search').on('click', function () {
 
 		if(!params.areaCodeLv2){
 			cnt += 1;
-			msg += "지도중심(Level1, Level2)은 필수선택사항입니다.";
+			msg += "<fmt:message key="MAP_CENTER_REQUIRED" bundle="${bundle}"/>";
 		}
 
 

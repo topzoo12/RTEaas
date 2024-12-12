@@ -91,7 +91,6 @@
 
 function valid(params){
 
-	console.log('authinfo 확인: ${authInfo.usrId}, usrNm');
 	var cnt = 0;
 	var msg = "";
 	var bool = true;
