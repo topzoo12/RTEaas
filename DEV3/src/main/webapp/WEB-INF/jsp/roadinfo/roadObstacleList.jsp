@@ -109,9 +109,10 @@
 						<col style="width: calc(150px - 14px)">
                     </colgroup>
 					<tbody>
-						<tr class="">
-							<!-- <td><input class="checkbox" type="checkbox" id="check1"><label for="check1"></label></td> -->
-							<td>
+						<!-- <tr class="">
+							<td><input class="checkbox" type="checkbox" id="check1"><label for="check1"></label></td>
+
+							 <td>
 								<label class="checkbox">
 									<input class="checkbox" type="checkbox" id="check1">
 									<span class="icon"></span>
@@ -129,7 +130,7 @@
 							<td>0</td>
 							<td>0</td>
 							<td>0</td>
-						</tr>
+						</tr> -->
 					</tbody>
                 </table>
             </div>
@@ -226,8 +227,8 @@
 
 			<!-- <div class="MapArea" style="height: 100%;"> -->
 
-			<div class="MapArea">
-				<div class="item map_box">
+			<div class="MapArea" style="height: 100%;">
+				<div class="item map_box" >
 					<div class="map" id="map" style="height: 100%;"></div>
 					<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
 						<div class="pop_riskPopImg">
@@ -547,6 +548,7 @@ function getList(){
 			$('#table-1 tbody tr').remove();
 
 			var result = resp.data;
+
 
  			var appendRow = "";
 
