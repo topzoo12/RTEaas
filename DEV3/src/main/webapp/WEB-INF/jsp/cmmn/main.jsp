@@ -995,9 +995,11 @@ function reSearch() {
 				markers.push(t1);
 
 				infoList.push("<li><a class='infoListItem'>"
-						+ "<div class='info'><div class='tit'>"
+						//+ "<div class='info'><div class='tit'>"
+						+ "<div class='info' onClick=\"detail('" + id + "', 'N')\" style=\"cursor:pointer\"'><div class='tit'>"
 						+ "<span class='badge sm " + className + "'>" + name + "</span>"
-						+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
+						//+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
+						+ "<h3 class='infoTitle'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
 						+ "<ul class='infoContents'>"
 						+ "<li> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + "</li>"
 						+ "<li> <fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + cTime + "</li>"

@@ -79,7 +79,7 @@
         <isNotEmpty property="useYn">
         	   AND USE_YN = #useYn#
         </isNotEmpty>
-        	order by DEVICE_ID
+        	order by regDtm desc, DEVICE_ID
     </select>
 
 

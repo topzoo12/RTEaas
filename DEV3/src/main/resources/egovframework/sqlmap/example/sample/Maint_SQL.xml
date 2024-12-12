@@ -77,7 +77,7 @@
 	<select id="maintDAO.selectDeviceMngList" parameterClass="fcltsMngVO" resultMap="fcltsMng">
         <![CDATA[
         	SELECT
-				ROW_NUMBER() OVER (order by seq_no) as rowno
+				ROW_NUMBER() OVER (order by check_dt desc) as rowno
 				,seq_no as checkNo
 				,device_id as fcltsUuid
 				,check_nm as checkNm
@@ -91,7 +91,7 @@
 				,upd_dtm as updDt
 			FROM tb_device_as a
 			where device_id = #fcltsUuid#
-			order by seq_no
+			order by checkDt desc
 		]]>
     </select>
 
