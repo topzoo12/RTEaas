@@ -428,6 +428,7 @@ var blueIcon = L.icon({
 var deviceKeyValue = [];
 
 <c:forEach var="deList" items="${deviceList}" varStatus="status">
+
 	deviceKeyValue.push({'macAddr':'${deList.macAddr}', 'deviceId':'${deList.deviceId}', 'deviceNm':'${deList.deviceNm}', 'useYn':'${deList.useYn}'})
 		var mac = '${deList.macAddr}';
 		/* if (mac.length > 0 && mac != "" && '${deList.useYn}' == '사용'){
@@ -663,7 +664,44 @@ function getVideoImageList(){
 			console.log(err);
 		},
 		success : function(resp) {
-			allData = resp.data;
+			beforeCheckAllData = resp.data;
+
+			for (var i=0; i <beforeCheckAllData.length; i++){
+
+				var data = beforeCheckAllData[i];
+
+				//이미지 파일 존재여부 체크
+				$.ajax({
+					type : "GET",
+					//url : "http://localhost:8080/obs/" + data.id + "/image/check",
+					url : "${authInfo.restApiUrl}/obs/" + data.id + "/image/check",
+					async : false,
+					headers : {
+						'Authorization' : 'Bearer '
+								+ localStorage.getItem("accessToken"),
+						'Refresh-Token' : localStorage
+								.getItem("Refresh-Token")
+					},
+					beforeSend : function() {
+						$('#circularG').css('display', 'block')
+					},
+					complete : function() {
+						$('#circularG').css('display', 'none')
+					},
+					error : function(err){
+						$('#circularG').css('display', 'none')
+						console.log(err);
+					},
+					success : function(resp) {
+
+						if (resp) {
+							allData.push(data);
+						}
+
+					}
+				});
+			}
+
 			reSearch();
 
 		}
