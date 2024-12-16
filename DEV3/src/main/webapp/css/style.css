@@ -704,18 +704,18 @@ input:checked + .slider:before {
     width: 100%;
     text-align: center;
     line-height: 52px;
-    color: #191919;
+    color: var(--bg);
     font-size: 1.8rem;
     font-weight: 700;
     border-radius: 5px;
-    background: #fff;
+    background: var(--primary-stress);
 	transition: 0.3s;
 }
 .login_wrap .login_box .login_button:hover,
 .login_wrap .login_box .login_button:active,
 .login_wrap .login_box .login_button:focus{
-	color: #fff;
-	background: #00888A;
+	/* color: #fff;
+	background: #00888A; */
 }
 
 .login_wrap .login_box .info {
@@ -4632,4 +4632,50 @@ span.badge_risk.badge_danger::after{
 	color: red;
 	cursor:pointer;
 	font-weight: 1600;
+}
+
+/* 파일업로드 */
+.fileUploadwrap{
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	padding: 4px 4px 4px 8px;
+	width: 500px;
+	display: flex;
+	justify-content: space-between;
+}
+.fileUploadwrap form{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.fileUploadwrap input{
+	flex: 1;
+}
+.fileUploadwrap input[type=file]::file-selector-button {
+	height: 32px;
+    border: 1px solid var(--border);
+	background-color: var(--bg);
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--color-sub);
+    line-height: 30px;
+    padding: 0 8px;
+}
+.fileUploadwrap input[type=file]::file-selector-button:hover {
+	background-color: var(--bg-gray);
+	color: var(--color);
+}
+.btn_uploadFile::before{
+	position: absolute;
+    top: 12px;
+    left: 14px;
+    content: "";
+    width: 1.6rem;
+    height: 1.6rem;
+    mask-repeat: no-repeat;
+    mask-position: center left;
+    mask-size: contain;
+    background-color: var(--white);
+    mask-image: url(../img/upload-cloud-line.svg);
 }
