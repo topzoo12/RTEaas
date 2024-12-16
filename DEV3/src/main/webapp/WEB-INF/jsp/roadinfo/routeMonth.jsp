@@ -66,6 +66,8 @@
 		</div>
 	</div>
 
+	<div class="infoWrap">
+	</div>
 </div>
 <!-- 로딩중 맵용 -->
 <div id="circularG">

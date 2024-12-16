@@ -1378,7 +1378,7 @@ input:checked + .slider:before {
 	padding: 0;
 }
 .contents_box.roadinfo .contents.mainMap{
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
 }
 .contents.mainMap .mapWrap {
 	position: relative;
@@ -1449,7 +1449,7 @@ input:checked + .slider:before {
 .contents.mainMap .mapWrap .MapArea{
 	width: 100%;
 	/* height: calc(100% - 64px - 20px);`*/
-	height: calc(100% - 64px);
+	height: calc(100% - 63px);
 	/* height: 100%; */
 	overflow: hidden;
 }
