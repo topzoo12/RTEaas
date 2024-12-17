@@ -828,8 +828,8 @@ function reSearch() {
 
 				infoList.push("<li><a class='infoListItem'>"
 					+ "<div class='info'>"
-					+ "<ul class='infoContents'>"
-					+ "<li style='cursor: pointer;' onClick=\"detail('" + id + "', 'N')\"> <fmt:message key='ROAD_NAME' bundle='${bundle}'/> : " + addrPoLocality + "</li>"
+					+ "<ul class='infoContents' style='cursor: pointer;' onClick=\"detail('" + id + "', 'N')\">"
+					+ "<li> <fmt:message key='ROAD_NAME' bundle='${bundle}'/> : " + addrPoLocality + "</li>"
 					+ "<li> <fmt:message key='PHOTO_DATETIME' bundle='${bundle}'/> : " + dateFormat(new Date(item.systemTime), 'list') + "</li>"
 					+ "<li> <fmt:message key='DETECTED_OBJ_CNT' bundle='${bundle}'/> : " +totalObjects +"</li>"
 					+ "</ul>"
