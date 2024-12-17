@@ -129,11 +129,13 @@ public class FileUploadController {
 		paramVO.setCoId(authInfo.getSessionCoId());
 		paramVO.setSessionUserId(authInfo.getSessionUserId());
 
+		String path = System.getProperty("user.dir");
 
 		ModelAndView mv = new ModelAndView("/com/FileUpload");
 
 		List<?> list = ownerService.getOpenList(null);
 		mv.addObject("serviceList", list);
+		mv.addObject("pathtest", path);
 
 		List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
 		for (LoginMenuVO fav : favList) {
