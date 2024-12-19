@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DcsDasRoad_SQL">
+
+<typeAlias alias="DcsServiceapiVO" type="egovframework.zieumtn.openapi.vo.DcsServiceapiVO"/>
+
+<!-- 	<select id="authgrpMenuDAO.selectAuthgrpMenuList" parameterClass="authgrpMenuVO" resultMap="authgrpMenu">
+
+    </select> -->
+
+<!--     <insert id="deviceDAO.insertDevice" parameterClass="fcltsInfoVO">
+		<![CDATA[
+			insert into das_road
+				(meta_fname)
+			VALUES
+				('test')
+		]]>
+	</insert> -->
+
+	<insert id="dcsServiceDAO.insertDataTest">
+		 <![CDATA[
+		insert into das_road
+				(meta_fname)
+			VALUES
+				('test')
+		 ]]>
+
+	</insert>
+
+		<insert id="dcsServiceDAO.insertData" parameterClass="DcsServiceapiVO">
+		<![CDATA[
+			insert into das_road
+				(path
+				,meta_fname
+				,img_fname
+				,url
+				,device_id
+				,frm_cnt
+				,img_cnt,
+				result,
+				msg)
+			values
+				(#path#
+				,#fname#
+				,#imgNames#
+				,#url#
+				,#deviceId#
+				,#frmCnt#
+				,#imgCnt#
+				,true
+				,null
+				)
+		]]>
+	</insert>
+
+</sqlMap>

@@ -40,6 +40,11 @@
 		<property name="jndiName" value="java:/comp/env/jdbc/zieumdbDS" />
 		<property name="resourceRef" value="true"/>
 	</bean>
+
+	<bean id="dataSourceMySql" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:/comp/env/jdbc/zieumMydbDS" />
+		<property name="resourceRef" value="true"/>
+	</bean>
 	<!-- <bean id="dataSource2" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="java:/comp/env/jdbc/adtdbDS" />
 		<property name="resourceRef" value="true"/>
