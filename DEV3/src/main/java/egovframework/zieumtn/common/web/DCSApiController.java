@@ -107,6 +107,9 @@ public class DCSApiController {
 
     	try {
 
+
+
+
 			if ( jObject.getJSONObject("frame_header") == null || jObject.getJSONObject("frame_header").isEmpty() ) {
 
 				jsonObject.put("message", "frame_header가 없거나 비어있습니다.");
