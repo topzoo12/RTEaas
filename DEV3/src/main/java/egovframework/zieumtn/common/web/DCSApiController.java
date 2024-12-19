@@ -76,15 +76,15 @@ public class DCSApiController {
 	private DcsService dcsService;
 
 
-	@RequestMapping(value = "/jsonTest.do", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@RequestMapping(value = "/uploadDetectedData.do", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	//public void jsonFileDown(@RequestPart HashMap<String,Object> param, @RequestPart(value = "image",required=false) MultipartFile image) throws Exception {
 	public void jsonFileDown(HttpServletRequest req, HttpServletResponse response, @RequestPart HashMap<String,Object> meta_json, @RequestPart(value = "uploadfile",required=false) List<MultipartFile> images) throws Exception {
 
-		System.out.println(req.getRequestURI());
-		System.out.println(req.getRequestURL());
+		//System.out.println(req.getRequestURI());
+		//System.out.println(req.getRequestURL());
 		response.setContentType("text/html; charset=UTF-8");
 
-		System.out.println(images.isEmpty());
+		//System.out.println(images.isEmpty());
 
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jObject = new JSONObject(meta_json);
