@@ -317,7 +317,6 @@ $('#save_faq').on('click', function(){
 function valid(){
 
 	/* console.log('authinfo 확인: ${authInfo.usrId}, usrNm');*/
-	console.log('pathtest - ${pathtest}' )
 	var cnt = 0;
 	var msg = "";
 	var bool = true;

@@ -84,7 +84,6 @@ public class FileUploadServiceImpl extends EgovAbstractServiceImpl implements Fi
 	@Override
 	public Double insertFileUpload(FileVO FileVO) {
 
-		System.out.println("333333333333333333333333333333");
 		Double rs =  (Double) FileUploadDAO.insertFile(FileVO);
 		return rs;
 	}
