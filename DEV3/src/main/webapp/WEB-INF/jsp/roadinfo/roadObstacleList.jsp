@@ -1230,6 +1230,7 @@ function showMap() {
 
 	map.invalidateSize();
 
+	lorem.scrollTop = 0;
 	//mapInfo(map);
 }
 
