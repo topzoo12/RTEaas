@@ -664,6 +664,12 @@ function getVideoImageList(){
 			console.log(err);
 		},
 		success : function(resp) {
+
+			allData = resp.data;
+
+			reSearch();
+
+			/*
 			beforeCheckAllData = resp.data;
 
 			for (var i=0; i <beforeCheckAllData.length; i++){
@@ -701,8 +707,8 @@ function getVideoImageList(){
 					}
 				});
 			}
-
 			reSearch();
+ */
 
 		}
 	});
@@ -835,7 +841,7 @@ function reSearch() {
 					+ "</ul>"
 					+ "</div>"
 					+ "<div class='infoThumnail'>"
-					+ "<img src='${authInfo.restApiUrl}/obs/" + id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + id + "')\">"   // 배포시 ajax
+					+ "<img src='${authInfo.restApiUrl}/obs/" + id + "/thumbnail' alt='업로드 예정' onclick=\"originalimg('" + id + "')\">"   // 배포시 ajax
 					//+ "<img src='http://localhost:8080/obs/" + id + "/thumbnail' alt='대표이미지' onclick=\"originalimg('" + id + "')\">"
 					+ "</div>"
 					+ "</li>"
