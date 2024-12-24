@@ -477,7 +477,7 @@ var g_idCheck = false;
 			,'coId':'${authInfo.coId}'
 			,'statConfirm':'1'
 		};
-
+		valid(params);
 
 		if(valid(params)){
 			$.ajax({
@@ -542,6 +542,8 @@ var g_idCheck = false;
 
 		var pwdChk = params.sectNo;
 
+		var nowDate = new Date();
+		var today = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
 
 		// 신규인 경우에만 비밀번호 형식 체크
 		if(g_isInsert){
@@ -593,8 +595,25 @@ var g_idCheck = false;
 
 		if(!params.endDt){
 			cnt += 1;
-			msg += "<fmt:message key="AUTH_END_REQUIRED" bundle="${bundle}"/>";
+			msg += "<fmt:message key="AUTH_END_REQUIRED" bundle="${bundle}"/><br>";
 		}
+
+
+		if (today > params.useDt) {
+			cnt += 1;
+			msg += "권한시작일이 현재 날짜보다 이전일 수 없습니다.<br>";
+		}
+
+		if (today > params.endDt) {
+			cnt += 1;
+			msg += "권한만료일이 현재 날짜보다 이전일 수 없습니다.<br>";
+		}
+
+		if (params.useDt > params.endDt) {
+			cnt += 1;
+			msg += "권한만료일이 권한시작일보다 이전일 수 없습니다.<br>";
+		}
+
 
 		if(cnt>0){
 			$("#alert_msg").html(msg);
