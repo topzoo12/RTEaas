@@ -38,22 +38,31 @@
     <div class="login_wrap">
 		<section class="container">
 			<div class="login_box">
-				<h1 class="logo">
-                    <strong>RTEaaS</strong>
-                    <span>Road & Traffic Experience as a Service</span>
-                </h1>
-				<form id="frm" action="/loginProc.do" method="post">
-					<p class="id">
-                        <label for="usrId" class="usrId_label">ID</label>
-                        <input type="text" value="" name="usrId" id="usrId" class="icon_id" placeholder="">
-                    </p>
-					<p class="password">
-                        <label for="usrPw" class="usrPw_label">PASSWORD</label>
-                        <input type="password" value="" name="usrPw" id="usrPw" class="icon_password" placeholder="">
-                    </p>
-					 <input type="hidden" id="regionData" name ="sessionCdNa" value="" />
-					<button class="login_button" onclick="loginProc();">LOGIN</button>
-				</form>
+				<div class="imgarea">
+					<img src="/img/load_carB.png" class="car carB">
+					<img src="/img/load_carG.png" class="car carG">
+					<img src="/img/load_carWh.png" class="car carWh">
+					<img src="/img/load_carY.png" class="car carY">
+					<img src="/img/load_pin.png" class="pin pinB">
+					<img src="/img/load_pin.png" class="pin pinG">
+					<img src="/img/load_pin.png" class="pin pinWh">
+					<img src="/img/load_pin.png" class="pin pinY">
+				</div>
+				<div class="inputarea">
+					<h1 class="logo"></h1>
+					<form id="frm" action="/loginProc.do" method="post">
+						<p class="id">
+							<label for="usrId" class="usrId_label">ID</label>
+							<input type="text" value="" name="usrId" id="usrId" class="icon_id" placeholder="이메일을 입력하세요">
+						</p>
+						<p class="password">
+							<label for="usrPw" class="usrPw_label">PASSWORD</label>
+							<input type="password" value="" name="usrPw" id="usrPw" class="icon_password" placeholder="비밀번호를 입력하세요 (8~16자)">
+						</p>
+						<input type="hidden" id="regionData" name ="sessionCdNa" value="" />
+						<button class="login_button" onclick="loginProc();">LOGIN</button>
+					</form>
+				</div>
 
 				<!-- <p class="copy">Copyright 2023. zieumTechNet all rights reserved.</p> -->
 			</div>
@@ -94,6 +103,16 @@
 
 <script language="javascript">
 var g_idCheck = false;
+
+const currentTheme = localStorage.getItem('theme');
+
+if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (currentTheme === 'dark') {
+        toggleSwitch.checked = true;
+    }
+}
 
 function loginProc(){
 

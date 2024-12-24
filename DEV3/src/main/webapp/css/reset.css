@@ -464,7 +464,13 @@ textarea {
   text-align: left;
   border-radius: .3rem;
 }
-
+.table_write .block {
+  display: block;
+  margin-top: 4px;
+}
+.table_write button ~ #checkMsg {
+  margin-left: 8px;
+}
 /*기본 값*/
 input[type=text], input[type=password] {
   /*height: 30px;*/
@@ -549,10 +555,9 @@ input.input4 {
   padding: 0 10px;
   color: #666666;
 }
-
 input:disabled{
 	color: var(--color-sub);
-    background: transparent;
+  background: var(--light-border);
 }
 
 input::placeholder  {
@@ -674,7 +679,6 @@ input:-ms-input-placeholder {
 	position: relative;
 	display: inline-block;
 	height: 40px;
-	right: 250px;
 	line-height: 40px;
 	padding: 0 12px 0 32px;
 	color: var(--color-sub);
@@ -984,7 +988,7 @@ input[type=checkbox]+.none{ padding:0 0 0 0; }
 input[type=checkbox]+.none .icon{ display: none; }
 input[type=checkbox]+ .icon{ position: relative; display: inline-block; width: 1.8rem; height: 1.8rem; border: 2px solid #a4aab1; border-radius: 2px; background: transparent; z-index: 2;}
 input[type=checkbox]+ .icon em {font-size: 0.7rem}
-input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z-index: 2;
+input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z-index: 2; 
   background-color: var(--primary-stress);
   background-position: center 3px;
   background-repeat: no-repeat;
@@ -995,7 +999,6 @@ input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z
 input[type="checkbox"]{	display: none;}
 input[type="checkbox"].checkbox + label { position: absolute; top: 8px; left: 12px; content: ""; width: 2.4rem; height: 2.4rem; mask-repeat: no-repeat; mask-position: center left;   mask-size: contain; background-color: #a4aab1; mask-image: url(../img/checkbox-blank-line.svg); z-index: 1;}
 input[type="checkbox"].checkbox:checked + label { position: absolute; top: 8px; left: 12px; content: ""; width: 2.4rem; height: 2.4rem; mask-repeat: no-repeat; mask-position: center left; mask-size: contain; background-color: var(--primary-stress); mask-image: url(../img/checkbox-fill.svg); z-index: 200;}
-
 table tr.on input[type="checkbox"].checkbox:checked + label{
   background-color: var(--white);
 }
@@ -1146,6 +1149,8 @@ input[type=number]{ border: 1px solid #1A1A22;}
     --input-bg: #fff;
     --input-border: #D9DFE4;
 	  --shadow-light: 2px 4px 6px rgb(0 0 0 / 4%);
+    --loginBG: url(../img/login_bg_light.png);
+    --loginLogo: url(../img/Login_logo_light.png);
 
     --table-thead: #EBF7F3;
     --table-trodd: #F9F9F9;
@@ -1182,6 +1187,8 @@ input[type=number]{ border: 1px solid #1A1A22;}
     --checkicon: url(../img/icon_checkbox_dark.png);
     --input-bg: #252832;
     --input-border: #1A1A22;
+    --loginBG: url(../img/login_bg_dark.png);
+    --loginLogo: url(../img/Login_logo_dark.png);
 
     --table-thead: #1A1A22;
     --table-trodd: #252832;

@@ -124,6 +124,7 @@
                                     <th><fmt:message key="USER_ID" bundle="${bundle}"/><span class="remark" id="userIdSpan"></span></th>
                                     <td colspan="3">
                                     <input type="text" name="usrId" id="p1_usrId" class="input3 p1_usrId" >
+                                    <span class="block"></span>
                                     <button id="chkBtn" class="btn_s btn_gray btn_r btn_check check"><fmt:message key="DUPLICATION_CHECK" bundle="${bundle}"/></button>
                                     <span id="checkMsg"></span>
                                     </td>
@@ -423,8 +424,6 @@ var g_idCheck = false;
 
 		$("#confirm_msg").html("<fmt:message key="Q_DELETE" bundle="${bundle}"/>");
 		$('#pop_confirm').stop().fadeIn(300);
-        $('#pop_confirm').stop().fadeIn(300);
-
 
         $('.pop_confirm_select').off('click');
         $('.pop_confirm_select').on('click', function(){
@@ -433,7 +432,7 @@ var g_idCheck = false;
           			'usrId' : $('#table-1 > tbody > .on').find('td:eq(1)').text()
            		};
 
-        	$('#confirm_msg').hide();
+        	$('#pop_confirm').hide();
 
            	$.ajax({
     			type : 'POST',
@@ -447,16 +446,12 @@ var g_idCheck = false;
 
     				$("#alert_msg").html(result.msg);
 					$('#pop_alert').stop().fadeIn(300);
-		        	$('#pop_alert').stop().fadeIn(300);
 
 					if(result.code == 0000){
 						// 성공시 창닫기
 						$('#pop_write-1').hide();
 	    				$('.btn_search').click();
-
 					}
-
-
 
     			},
     			error : function(err){

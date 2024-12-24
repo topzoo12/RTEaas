@@ -380,7 +380,6 @@ input:checked + .slider:before {
 .left .subtitle span.material-icons{
     color: var(--primary-stress);
 }
-
 .btn_menu,
 .btn_favorites{
     top: 0;
@@ -605,34 +604,88 @@ input:checked + .slider:before {
     height: 40px;
     background: var(--logo);
 }
-/*로그인*/
+/* 로그인 241219 */
 .login_wrap {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background: url("../img/bg_login.png") no-repeat center;
+	background: var(--loginBG) no-repeat center;
 }
 .login_wrap > .container{
 	height: 100%;
-    background: rgba(0, 0, 0, 0.4);
 }
 .login_wrap .login_box {
+	display: flex	;
+	justify-content: space-between;
+	align-items: center;
+	gap: 64px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	box-shadow: 4px 4px 20px rgba(0,0,0,0.4);
-	background: rgba(0,0,0,0.8);
-	border-radius: 16px;
-	padding: 56px 120px;
+	background: var(--bg);
+	border-radius: 40px;
+	padding: 120px 80px;
 	text-align: center;
-	color: #fff;
+	.imgarea{
+		position: relative;
+		display: flex;
+		width: 400px;
+		height: 318px;
+		background-image: url(/img/load_bg.png);
+		overflow: hidden;
+		.car{
+			position: absolute;
+			animation-delay: 1s;
+			animation-iteration-count: infinite;
+			animation-timing-function: Fast Out, Linear In;
+			animation-direction: normal;
+			animation-duration: 6s;
+			opacity: .75;
+		}
+		.carB{ top: 110px; left: 400px; animation-name: slideinB;}
+		.carG{ top: 170px;	left: -50px; animation-name: slideinG;}
+		.carWh{	top: 188px;	left: 136px; animation-name: slideinWh;}
+		.carY{ top: 223px; left: 150px; animation-name: slideinY;}
+		.pin{ position: absolute; animation: bounce 2s infinite;}
+		.pinB{ top: 82px; left: 324px;}
+		.pinG{ top: 144px; left: 32px;}
+		.pinWh{	top: 86px; left: 132px;}
+		.pinY{ top: 190px; left: 232px;}
+	}
+	.inputarea{
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+}      
+@keyframes slideinB {
+	0% { left: 400px; opacity: .7; }
+	100% { left: 340px; opacity: 1; }
 }
-
+@keyframes slideinG {
+	0% { left: -50px; opacity: .7; }
+	100% { left: 0; opacity: 1; }
+}
+@keyframes slideinWh {
+	0% { top: 188px; opacity: .7; }
+	100% { top: 120px; opacity: 1; }
+}
+@keyframes slideinY {
+	0% { left: 150px; opacity: .7; }
+	100% { left: 222px; opacity: 1; }
+}
+@keyframes bounce {
+	0% { margin-top: 14px; }
+	50% { margin-top: 0; opacity: .9; }
+	100% { margin-top: 14px; }
+}
 .login_wrap .login_box h1 {
-	text-align: left;
-	color: inherit;
-	margin-bottom: 56px;
+	width: 301px;
+	height: 30px;
+	background: var(--loginLogo);
+	margin-left: 16px;
 }
 .login_wrap .login_box form{
 	min-width: 360px;
@@ -640,41 +693,28 @@ input:checked + .slider:before {
 .login_wrap .login_box form p{
 	margin-bottom: 8px;
 }
-.login_wrap .login_box h1 strong {
-	font-size: 4.2rem;
-	font-weight: 900;
-	color: inherit;
-}
-
-.login_wrap .login_box h1 span {
-	font-size: 1.3rem;
-	font-weight: 400;
-	opacity: 1;
-	letter-spacing: -0.1;
-	margin: 0 0 0 8px;
-	color: #71788D;
-}
-
 .login_wrap .login_box input,
 .login_wrap .login_box input:focus,
 .login_wrap .login_box input:hover,
 .login_wrap .login_box input:active {
 	width: 100%;
-	height: 40px;
+	height: 56px;
     line-height: 6rem;
     font-size: 1.6rem;
-	color: #D9DFE4;
+	color: var(--color);
     background: transparent !important;
-    border: 0px none;
-    border-bottom: 1px solid #1C1C26;
-    padding: 0;
-	margin: 8px 0;
+    border: 1px solid var(--border);
+	border-radius: 40px;
+}
+.login_wrap .login_box input:hover,
+.login_wrap .login_box input:active {
+	border: 1px solid var(--Optselect);
 }
 .login_wrap .login_box input:-webkit-autofill,
 .login_wrap .login_box input:-webkit-autofill:hover,
 .login_wrap .login_box input:-webkit-autofill:focus,
 .login_wrap .login_box input:-webkit-autofill:active {
-	-webkit-text-fill-color: #D9DFE4;
+	-webkit-text-fill-color: var(--color);
     -webkit-box-shadow: 0 0 0px 1000px transparent inset;
     box-shadow: 0 0 0px 1000px transparent inset;
     transition: background-color 5000s ease-in-out 0s;
@@ -683,40 +723,36 @@ input:checked + .slider:before {
 .login_wrap .login_box input:autofill:hover,
 .login_wrap .login_box input:autofill:focus,
 .login_wrap .login_box input:autofill:active {
-	-webkit-text-fill-color: #D9DFE4;
+	-webkit-text-fill-color: var(--color);
     -webkit-box-shadow: 0 0 0px 1000px transparent00 inset;
     box-shadow: 0 0 0px 1000px transparent inset;
     transition: background-color 5000s ease-in-out 0s;
 }
 .login_wrap .login_box input::placeholder{
-	color: #71788D;
+	color: var(--color-sub);
     font-weight: 400;
 }
 .login_wrap .login_box label{
-	color: #99A3AC;
-    font-size: 15px;
-    font-weight: 400;
-    display: block;
-    text-align: left;
+	display: none;
 }
 .login_wrap .login_box .login_button {
 	margin: 32px 0 0;
     width: 100%;
     text-align: center;
-    line-height: 52px;
+    line-height: 56px;
     color: var(--bg);
     font-size: 1.8rem;
     font-weight: 700;
-    border-radius: 5px;
     background: var(--primary-stress);
 	transition: 0.3s;
+	border-radius: 40px;
 }
 .login_wrap .login_box .login_button:hover,
 .login_wrap .login_box .login_button:active,
 .login_wrap .login_box .login_button:focus{
-	/* color: #fff;
-	background: #00888A; */
+	opacity: 0.85;
 }
+/* 로그인 241219 */
 
 .login_wrap .login_box .info {
 	margin: 56px auto 0;
@@ -1168,6 +1204,7 @@ input:checked + .slider:before {
 .main .contents .view {
 	flex-basis: auto;
 	flex: 1;
+	width: 100%;
 }
 
 .main .contents .code2 {
@@ -2302,7 +2339,7 @@ button.beefup__head[aria-disabled], .beefup__head > button[aria-disabled] {
 .btn_iconTXT{ display: flex; align-items: center; color: var(--color); line-height: 2.4rem; word-break: keep-all;}
 .btn_iconTXT span{ color: var(--color); margin-right: .6rem;}
 
-.btn_primary{ background-color: var(--submit); color: var(--white); }
+.btn_primary{ background-color: var(--submit); color: var(--white); border: 1px solid var(--submit); }
 .btn_secondary{ background-color: var(--color); color: var(--bg); }
 .btn_danger{ background-color: #EF1D10; color: var(--white);}
 .btn_negative{ background-color: #EF5656; color: #fff;}
@@ -3259,7 +3296,7 @@ span.badge.sm2.badge_primary::before{	/* 복구완료 */
 	padding: 0px 10px 0px 0;
 	background: var(--bg);
 	color: var(--color);
-	margin: 0 16px 0 0;
+	/* margin: 0 16px 0 0; */
 }
 
 .pop_wrap .date button {
@@ -4636,11 +4673,7 @@ span.badge_risk.badge_danger::after{
 
 /* 파일업로드 */
 .fileUploadwrap{
-	border: 1px solid var(--border);
-	border-radius: 3px;
-	padding: 4px 4px 4px 8px;
-	width: 500px;
-	display: flex;
+	position: relative;
 	justify-content: space-between;
 }
 .fileUploadwrap form{
@@ -4648,27 +4681,40 @@ span.badge_risk.badge_danger::after{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 4px;
 }
 .fileUploadwrap input{
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	padding: 7px 0 7px 76px;
+	width: 100%;
 	flex: 1;
 }
-.fileUploadwrap input[type=file]::file-selector-button {
-	height: 32px;
+.fileUploadwrap input[type=file]::file-selector-button,
+.fileUploadwrap label {
+	height: 26px;
     border: 1px solid var(--border);
 	background-color: var(--bg);
     border-radius: 3px;
     font-size: 13px;
     color: var(--color-sub);
-    line-height: 30px;
+    line-height: 26px;
     padding: 0 8px;
+	position: absolute;
+	left: 3px;
 }
-.fileUploadwrap input[type=file]::file-selector-button:hover {
+.fileUploadwrap input[type=file]::file-selector-button:hover,
+.fileUploadwrap label {
 	background-color: var(--bg-gray);
 	color: var(--color);
 }
+.btn_uploadFile{
+	height: 32px;
+	line-height: 32px;
+}
 .btn_uploadFile::before{
 	position: absolute;
-    top: 12px;
+    top: 8px;
     left: 14px;
     content: "";
     width: 1.6rem;

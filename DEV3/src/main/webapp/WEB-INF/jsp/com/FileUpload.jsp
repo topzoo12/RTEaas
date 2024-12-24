@@ -40,25 +40,14 @@
 
 			<div class="stitle">
                 <p class="tl" style="width:100px;"><span class="cnt"><fmt:message key="TOTAL" bundle="${bundle}"/> <strong id="totCnt">${totCnt}</strong> <fmt:message key="COUNT2" bundle="${bundle}"/></span></p>
-				<!-- <label for="file">
-					<div class="btn_m btn_primary btn_r">파일 업로드하기</div>
-				</label> -->
 
-					<!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
-					<!-- <input type="submit" value="UPLOAD" class="btn_m btn_primary btn_r" id="save_faq"><br/> -->
-
-				<%-- <form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; direction: rtl;"> --%>
-				<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data" style="width:300px; margin-left:1000px; direction: rtl;">
-					<input type="file" name="file" id="file" style="width:100%" readonly>
-				</form>
-
-				<p class="bbs_btn">
-					<!-- <label class="btn_m btn_primary btn_r" for="file" style="cursor: pointer">파일 선택하기</label> -->
-					<label class="btn btn_primary" for="file" style="cursor: pointer;">파일 선택하기</label>
-					<!-- <button class="btn_m btn_primary btn_r" id="file">파일 선택</button> -->
-					<!-- <button class="btn_m btn_primary btn_r" id="save_faq">파일 업로드</button> -->
-					<button class="btn btn_primary" id="save_faq">파일 업로드</button>
-				</p>
+				<div class="fileUploadwrap">
+					<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data">
+						<input type="file" name="file" id="file" readonly>
+						<label for="file">파일 선택</label>
+						<button class="btn_bgPrimary btn_uploadFile" id="uploadFile">파일 업로드</button>
+					</form>
+				</div>
 			</div>
 
 			<table class="table">
@@ -84,7 +73,7 @@
 				</thead>
 			</table>
 
-			<div class="tbody" style="overflow-y:scroll">
+			<div class="tbody" style="overflow-y:scroll; height: 660px;">
 				<table class="table" id="table-1">
 					<colgroup>
 						<col style="width: 48px">
@@ -258,7 +247,7 @@ $('#file').on('change', function() {
 });
 
 
-$('#save_faq').on('click', function(){
+$('#uploadFile').on('click', function(){
 
 	var form = $('#fileUploadForm')[0];
 	var formData = new FormData(form);
