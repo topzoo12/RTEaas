@@ -27,6 +27,12 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" defer></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
+<style type="text/css">
+.contents_box.roadinfo .contents.mainMap{
+    height: calc(100% - 64px);
+}
+</style>
+
 <div class="contents_box item mainpage roadinfo">
 	<!-- p class="title ${fav}" style="margin:20px 24px;">${pageName.srnNm}</p-->
 	<p class="title ${fav}">${pageName.srnNm}</p>

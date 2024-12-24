@@ -144,7 +144,7 @@
 			<button class="btn_re-search" id ="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 			<button class="btn_bgPrimary btn_obstacleList" id ="btn_obstacleList" onclick='hideMap()'><fmt:message key="OBS_LIST_INFO" bundle="${bundle}"/></button>
 		</div>
-		<div class="contents mainMap">
+		<div class="contents mainMap" style ="height: calc(100%-64px);">
 			<div class="mapWrap">
 				<!-- ******************************************************************************************************************* -->
 				<!-- Level List 부분 start -->
@@ -1258,6 +1258,7 @@ function optionReset() {
 	});
 
 	reSearch();
+	lorem.scrollTop = 0;
 }
 
 $(".obslist").change(function(){

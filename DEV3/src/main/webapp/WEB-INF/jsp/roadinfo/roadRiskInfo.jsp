@@ -21,6 +21,12 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
+<style type="text/css">
+.contents_box.roadinfo .contents.mainMap{
+    height: calc(100% - 64px);
+}
+</style>
+
 <div class="contents_box item mainpage roadinfo">
 	<p class="title ${fav}">${pageName.srnNm}</p>
     <div class="contents mainMap">
