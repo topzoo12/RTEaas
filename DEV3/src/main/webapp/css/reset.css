@@ -688,6 +688,7 @@ input:-ms-input-placeholder {
 	background: var(--bg);
 	border: 1px solid var(--border);
     border-radius: 3px;
+    right: 250px;
 }
 .btn_re-search:hover {
 	background: var(--primary-bg);
@@ -988,7 +989,7 @@ input[type=checkbox]+.none{ padding:0 0 0 0; }
 input[type=checkbox]+.none .icon{ display: none; }
 input[type=checkbox]+ .icon{ position: relative; display: inline-block; width: 1.8rem; height: 1.8rem; border: 2px solid #a4aab1; border-radius: 2px; background: transparent; z-index: 2;}
 input[type=checkbox]+ .icon em {font-size: 0.7rem}
-input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z-index: 2; 
+input[type=checkbox]:checked + .icon { border:1px solid var(--primary-stress); z-index: 2;
   background-color: var(--primary-stress);
   background-position: center 3px;
   background-repeat: no-repeat;
