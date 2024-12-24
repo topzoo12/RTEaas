@@ -53,11 +53,11 @@
 					<form id="frm" action="/loginProc.do" method="post">
 						<p class="id">
 							<label for="usrId" class="usrId_label">ID</label>
-							<input type="text" value="" name="usrId" id="usrId" class="icon_id" placeholder="이메일을 입력하세요">
+							<input type="text" value="" name="usrId" id="usrId" class="icon_id" >
 						</p>
 						<p class="password">
 							<label for="usrPw" class="usrPw_label">PASSWORD</label>
-							<input type="password" value="" name="usrPw" id="usrPw" class="icon_password" placeholder="비밀번호를 입력하세요 (8~16자)">
+							<input type="password" value="" name="usrPw" id="usrPw" class="icon_password" >
 						</p>
 						<input type="hidden" id="regionData" name ="sessionCdNa" value="" />
 						<button class="login_button" onclick="loginProc();">LOGIN</button>
@@ -138,29 +138,26 @@ function checkUserCdNaByIp(){
 	/*   console.log('지역코드 확인',data.geoplugin_countryCode); */
 		  var regionData = data.geoplugin_countryCode;
 
-		  $('#regionData').val(regionData);
+		  //$('#regionData').val(regionData);
 
-	  		/* if(regionData =='KR'){
-	  		   $('.usrId_label').text("아이디");
-	 	       $('.usrPw_label').text("비밀번호");
-	 	       $('.icon_id').attr("placeholder", "아이디를 입력하세요");
-	 	       $('.icon_password').attr("placeholder","8~16자 비밀번호를 입력해주세요.");
-	 	       $('.login_button').text("로그인");
+		  //테스트용
+		/*    $('#regionData').val('US');
+		  regionData = 'US';
+ */
+	  		 if(regionData =='KR'){
+	 	       $('.icon_id').attr("placeholder", "이메일을 입력하세요");
+	 	       $('.icon_password').attr("placeholder","비밀번호를 입력하세요 (8~16자)");
 
 	  		} else if (regionData =='JP'){
-	  			$('.usrId_label').text("ID");
-		 	    $('.usrPw_label').text("PASSWORD");
-		 	    $('.icon_id').attr("placeholder", "(jp)아이디를 입력하세요");
-		 	    $('.icon_password').attr("placeholder","(jp)8~16자 비밀번호를 입력해주세요.");
-		 	    $('.login_button').text("Login");
+		 	    $('.icon_id').attr("placeholder", "(jp)이메일을 입력하세요");
+		 	    $('.icon_password').attr("placeholder","(jp)비밀번호를 입력하세요 (8~16자)");
 
 	  		} else {
-	  			$('.usrId_label').text("ID");
-		 	    $('.usrPw_label').text("PASSWORD");
-		 	    $('.icon_id').attr("placeholder", "Please enter your ID");
-		 	    $('.icon_password').attr("placeholder","Please enter a password of 8 to 16 characters.");
-		 	    $('.login_button').text("Login");
-	  		} */
+		 	    $('.icon_id').attr("placeholder", "Enter your E-Mail");
+		 	    $('.icon_password').attr("placeholder","Enter a password of 8 to 16 characters.");
+
+	  		}
+
 
 		  /*  $.ajax({
 			    type: 'POST',
@@ -183,11 +180,7 @@ function checkUserCdNaByIp(){
 
 	 });
 
- 	/* if (!$('#name').val()) {
-        alert('Enter your name!');
-    } */
-
-	/* var lang = navigator.userLanguage;
+/* 	var lang = navigator.userLanguage;
 
 	if(navigator.appName == "Netscape"){
 	  lang = navigator.language;
@@ -198,11 +191,10 @@ function checkUserCdNaByIp(){
 
 }
 
+checkUserCdNaByIp();
 
 
 $(document).ready(function() {
-
-	checkUserCdNaByIp();
 
 
 })

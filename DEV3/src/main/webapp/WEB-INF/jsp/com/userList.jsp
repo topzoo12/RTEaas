@@ -7,10 +7,23 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <%@ taglib prefix="fmt" 	uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:set var="bundleName" value="bundles.lang_${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
 <fmt:setBundle basename="${bundleName}" var="bundle" />
+
+<style type="text/css">
+div.pass i{
+  position: absolute;
+  left: 90%;
+  top: 35%;
+  color: gray;
+  width: 100px;
+  height: 100px;
+  z-index: 30000;
+}
+</style>
 
 <div class="contentsWrap">
     <div class="contents_bg"></div>
@@ -132,7 +145,13 @@
                                 <tr>
                                     <th><fmt:message key="PWD" bundle="${bundle}"/><span class="remark" id="userPwdSpan"></span></th>
                                     <td colspan="3">
-                                    <input type="password" type="text" name="pwd" id="p1_pwd" class="input3 p1_pwd" >
+                                    <div class="pass">
+	                                    <input type="password" type="text" name="pwd" id="p1_pwd" class="input3 p1_pwd" oninput ="pwCheck()" placeholder="<fmt:message key="PWD" bundle="${bundle}"/>">
+	                                    <i class="fa fa-eye fa-lg"></i>
+                                    </div>
+                                    <input type="password" type="text" name="pwd2" id="p1_pwd2" class="input3 p1_pwd" oninput ="pwCheck()" placeholder="<fmt:message key="PWD_CHECK" bundle="${bundle}"/>">
+
+									<!-- <button id="showPwdBtn" class="btn_s btn_gray btn_r btn_check check">비밀번호 보기</button> -->
                                     <button class="btn_s btn_gray btn_r btn_check reset"><fmt:message key="RESET_PWD" bundle="${bundle}"/></button>
                                     </td>
                                 </tr>
@@ -193,6 +212,7 @@
                         <div class="pop_btn">
                             <span class="btn_m btn_darkline btn_r pop_close" id="pop_close-1"><fmt:message key="CANCEL" bundle="${bundle}"/></span>
                             <button class="btn_m btn_primary btn_r" id="pop_save-1"><fmt:message key="SAVE" bundle="${bundle}"/></button>
+
                             <!-- <button class="btn_m btn_primary btn_r" id="pop_approve">승인</button> -->
                         </div>
                     </li>
@@ -725,6 +745,9 @@ var g_idCheck = false;
 				$('.p1_pwd').val('');
 				$('.p1_pwd').prop('disabled',true);
 
+				$('.p1_pwd2').val('');
+				$('.p1_pwd2').prop('disabled',true);
+
 				$('.p1_usrNm').val(row.find('td:eq(2)').text());
 
 				$('.p1_deptNm').val(row.find('').text());
@@ -809,4 +832,33 @@ var g_idCheck = false;
 
 	};
 
+
+
+$(document).ready(function(){
+
+/* 	$('#showPwdBtn').on('click',function(){
+
+	}
+
+	if($("#license_check").is(":checked")){
+		  $('.license_input').attr("type", "password");
+		}else{
+		  $('.license_input').attr("type", "text");
+		}
+	}
+ */
+	/*
+    $('.main i').on('click',function(){
+        $('input').toggleClass('active');
+        if($('input').hasClass('active')){
+            $(this).attr('class',"fa fa-eye-slash fa-lg")
+            .prev('input').attr('type',"text");
+        }else{
+            $(this).attr('class',"fa fa-eye fa-lg")
+            .prev('input').attr('type','password');
+        }
+    }); */
+});
+
 </script>
+
