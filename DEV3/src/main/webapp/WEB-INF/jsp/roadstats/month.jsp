@@ -252,7 +252,7 @@
 	            a.click();
 	        },
 	        error: function() {
-	            alert('파일 다운로드에 실패했습니다.');
+	            alert('<fmt:message key="DOWN_FAILED" bundle="${bundle}"/>');
 	        }
 	    });
 	});

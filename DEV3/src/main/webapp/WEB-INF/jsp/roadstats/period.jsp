@@ -172,7 +172,7 @@ $('.btn_search').on('click', function () {
 	            window.URL.revokeObjectURL(a.href); // 메모리 해제
 	        },
 	        error: function() {
-	            alert('파일 다운로드에 실패했습니다.');
+	            alert('<fmt:message key="DOWN_FAILED" bundle="${bundle}"/>');
 	        }
 	    });
 	});

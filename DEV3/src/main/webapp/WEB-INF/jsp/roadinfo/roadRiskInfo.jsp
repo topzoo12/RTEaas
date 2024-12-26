@@ -400,7 +400,7 @@ $('.btn_search').on("click", function(){
 		}
 
 	} else {
-		$("#alert_msg").html("Level1과 Level2는 필수선택사항입니다.");
+		$("#alert_msg").html("<fmt:message key="REQ_LV1_LV2" bundle="${bundle}"/>");
 		$("#pop_alert").stop().fadeIn(300);
     	$("#pop_alert").stop().fadeIn(300);
 	}
