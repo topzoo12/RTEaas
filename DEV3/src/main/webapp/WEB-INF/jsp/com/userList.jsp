@@ -7,7 +7,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <%@ taglib prefix="fmt" 	uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:set var="bundleName" value="bundles.lang_${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
@@ -16,8 +16,8 @@
 <style type="text/css">
 div.pass i{
   position: absolute;
-  left: 90%;
-  top: 35%;
+  left: 85%;
+  top: 20%;
   color: gray;
   width: 100px;
   height: 100px;
@@ -110,7 +110,7 @@ div.pass i{
 	                        <td align="center" class="listtd"><c:out value="${result.regDt}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.useDt}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.endDt}"/></td>
-	                        <td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+	                        <td align="center" class="listtd"><c:out value="${result.statConfirm}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.authgrpId}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.adminYn}"/></td>
                         </tr>
@@ -148,8 +148,9 @@ div.pass i{
                                     <div class="pass">
 	                                    <input type="password" type="text" name="pwd" id="p1_pwd" class="input3 p1_pwd" oninput ="pwCheck()" placeholder="<fmt:message key="PWD" bundle="${bundle}"/>">
 	                                    <i class="fa fa-eye fa-lg"></i>
+	                                    <input type="password" type="text" name="pwd2" id="p1_pwd2" class="input3 p1_pwd" oninput ="pwCheck()" placeholder="<fmt:message key="PWD_CHECK" bundle="${bundle}"/>">
                                     </div>
-                                    <input type="password" type="text" name="pwd2" id="p1_pwd2" class="input3 p1_pwd" oninput ="pwCheck()" placeholder="<fmt:message key="PWD_CHECK" bundle="${bundle}"/>">
+
 
 									<!-- <button id="showPwdBtn" class="btn_s btn_gray btn_r btn_check check">비밀번호 보기</button> -->
                                     <button class="btn_s btn_gray btn_r btn_check reset"><fmt:message key="RESET_PWD" bundle="${bundle}"/></button>
@@ -202,6 +203,12 @@ div.pass i{
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th><fmt:message key="USE_YN" bundle="${bundle}"/><span class="remark"></span></th>
+                                    <td>
+                                        <label class="checkbox"><input type="checkbox" name="useYn" id="p1_statConfirm" value="1"><span class="icon"></span></label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="4"><span class="txt">※ <fmt:message key="USER_ID_RULE" bundle="${bundle}"/><br>
                                     								※ <fmt:message key="USER_PWD_RULE" bundle="${bundle}"/>
                                    </span></td>
@@ -227,6 +234,7 @@ div.pass i{
 
 var g_isInsert = true;
 var g_idCheck = false;
+
 	//alert("${authInfo}")
 	//console.log("${authInfo.coId}")
 	//날짜선택
@@ -495,9 +503,11 @@ var g_idCheck = false;
 			,'adminYn':$('#p1_adminYn').is(':checked')?$('#p1_adminYn').val():''
 			//,'coId':'A0001'
 			,'coId':'${authInfo.coId}'
-			,'statConfirm':'1'
+			,'statConfirm': $('#p1_statConfirm').is(':checked')?$('#p1_statConfirm').val():'0'
 		};
 		valid(params);
+
+		console.log('사용여부 체크 여부', $('#p1_statConfirm').is(':checked')?$('#p1_statConfirm').val():'0');
 
 		if(valid(params)){
 			$.ajax({
@@ -530,7 +540,7 @@ var g_idCheck = false;
 
 	});
 
-	$('#pop_approve').on('click', function(){
+/* 	$('#pop_approve').on('click', function(){
 		var params = {
 			'usrId':$('.p1_usrId').val()
 		};
@@ -551,7 +561,8 @@ var g_idCheck = false;
 			}
 		});
 
-	});
+	}); */
+
 	function valid(params){
 		var cnt = 0;
 		var msg = "";
@@ -634,6 +645,11 @@ var g_idCheck = false;
 			msg += "권한만료일이 권한시작일보다 이전일 수 없습니다.<br>";
 		}
 
+		 if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
+			 cnt += 1;
+			 msg += "비밀번호가 일치하지 않습니다.";
+		 }
+
 
 		if(cnt>0){
 			$("#alert_msg").html(msg);
@@ -698,9 +714,6 @@ var g_idCheck = false;
 				var result = json.result;
 				var appendRow = "";
 
-
-
-
 				result.forEach (function (el, index) {
 					appendRow += '<tr>'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
@@ -711,7 +724,8 @@ var g_idCheck = false;
 						+'<td align="center" class="listtd">'+el.regDt+'</td>'
 						+'<td align="center" class="listtd">'+el.useDt+'</td>'
 						+'<td align="center" class="listtd">'+el.endDt+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						//+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+el.statConfirm+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.authgrpId+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.adminYn+'</td>'
 						+'</tr>';
@@ -734,6 +748,7 @@ var g_idCheck = false;
 	function popupData(target_pop,row){
 		if(target_pop=='write-1'){
 
+			//수정 팝업
 			if(row.length) {
 				$('.p1_usrId').val(row.find('td:eq(1)').text());
 				$('.p1_usrId').prop('disabled',true);
@@ -769,24 +784,31 @@ var g_idCheck = false;
 					$('#search_calender2').data('daterangepicker').setEndDate($('.p1_endDt').val());
 				}
 
-				$('#p1_adminYn').prop('checked',row.find('td:eq(8)').text()=='사용'?true:false);
+				$('#p1_statConfirm').prop('checked', row.find('td:eq(8)').text()=='사용'? true:false);
 
+				//관리자 여부
+				//$('#p1_adminYn').prop('checked',row.find('td:eq(8)').text()=='사용'?true:false);
+
+			/* 	승인 버튼 삭제됨
 				if(row.find('td:eq(1)').text()=='승인'){
 					$('#pop_approve').css('display','none');//prop('disabled',false);
 				} else {
 					$('#pop_approve').css('display','block');//prop('disabled',false);
-				}
+				} */
 
 
 				// remark 제거
 				$('#userIdSpan').removeAttr('class');
 				$('#userPwdSpan').removeAttr('class');
 				$('#p1_pwd').css('display','none');
+				$('#p1_pwd2').css('display','none');
+				$('div.pass i').css('display','none');
 				$('.btn_check.check').css('display','none');
-
 
 				g_isInsert = false;
 				g_idCheck = true;
+
+			//신규 팝업
 			} else {
 
 				$('.btn_check.check').css('display', '')
@@ -801,6 +823,9 @@ var g_idCheck = false;
 				$('.p1_pwd').val('');
 				$('.p1_pwd').prop('disabled',false);
 
+				$('.p1_pwd2').val('');
+				$('.p1_pwd2').prop('disabled',false);
+
 				$('.p1_usrNm').val('');
 				$('.p1_deptNm').val('');
 				$('.p1_cotelNo').val('');
@@ -813,16 +838,22 @@ var g_idCheck = false;
 				$('.p1_useDt').val('${todayDt}');
 				$('.p1_endDt').val('');
 
-				$('#p1_adminYn').prop('checked',false);
+				//$('#p1_adminYn').prop('checked',false);
 
 				//$('#pop_approve').prop('disabled',true);
-				$('#pop_approve').css('display','none');//prop('disabled',false);
+				//$('#pop_approve').css('display','none');//prop('disabled',false);
 
-				//
 				$('#userIdSpan').attr('class', 'remark');
 				$('#userPwdSpan').attr('class', 'remark');
 				$('#p1_pwd').css('display','block');
+				$('#p1_pwd2').css('display','block');
 
+				$('div.pass i').css('display','block');
+
+				$('div.pass input').attr('type', 'password');
+			    $('div.pass i').attr('class', 'fa fa-eye fa-lg');
+
+			    $('#p1_statConfirm').prop('checked', true);
 
 				g_isInsert = true;
 				g_idCheck = false;
@@ -833,31 +864,46 @@ var g_idCheck = false;
 	};
 
 
+/* function pwCheck(){
+    if($('#pwd1').val() == $('#pwd2').val()){
+    	pwd_valid_check = false;
+    }else{
+    	pwd_valid_check = true;
+    }
+} */
+
 
 $(document).ready(function(){
 
-/* 	$('#showPwdBtn').on('click',function(){
+  /*  $('div.pass i').on('click',function(){
+       $('input').toggleClass('active');
+       if($('input').hasClass('active')){
+           $(this).attr('class',"fa fa-eye-slash fa-lg")
+           .prev('input').attr('type',"text");
+       }else{
+           $(this).attr('class',"fa fa-eye fa-lg")
+           .prev('input').attr('type','password');
+       }
+   }); */
 
-	}
+	$('div.pass i').on('click', function() {
+	    // 'div.pass' 내의 p1_pwd와 p1_pwd2 입력 필드를 선택
+	    var inputs = $('div.pass input');
 
-	if($("#license_check").is(":checked")){
-		  $('.license_input').attr("type", "password");
-		}else{
-		  $('.license_input').attr("type", "text");
-		}
-	}
- */
-	/*
-    $('.main i').on('click',function(){
-        $('input').toggleClass('active');
-        if($('input').hasClass('active')){
-            $(this).attr('class',"fa fa-eye-slash fa-lg")
-            .prev('input').attr('type',"text");
-        }else{
-            $(this).attr('class',"fa fa-eye fa-lg")
-            .prev('input').attr('type','password');
-        }
-    }); */
+	    inputs.toggleClass('active');
+
+	    if (inputs.hasClass('active')) {
+	        $(this).attr('class', "fa fa-eye-slash fa-lg")
+	               .prev('input').attr('type', "text");
+	        inputs.last().attr('type', 'text');
+	    } else {
+
+	        $(this).attr('class', "fa fa-eye fa-lg")
+	               .prev('input').attr('type', 'password');
+	        inputs.last().attr('type', 'password');
+	    }
+	});
+
 });
 
 </script>

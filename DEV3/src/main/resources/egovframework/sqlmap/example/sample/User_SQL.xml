@@ -99,7 +99,7 @@
 				,a.upd_id as updId
 				,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
 				,b.authgrp_id as authgrpId
-				,case a.stat_confirm when '1' then '승인' else '미승인' end as statConfirm
+				,case a.stat_confirm when '1' then '사용' else '미사용' end as statConfirm
 				,a.admin_yn as adminYn
 				,b.use_dt as useDt
 				,b.end_dt as endDt
@@ -263,6 +263,7 @@
 				,upd_id		=#sessionUserId#
 				,upd_dtm	=now()
 				,admin_yn	=#adminYn#
+				,stat_confirm =#statConfirm#
 			where co_id = #sessionCoId#
 			and usr_id =#usrId#
 		]]>
