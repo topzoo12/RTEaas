@@ -222,6 +222,8 @@
 				(co_id
 				,mnu_id
 				,mnu_nm
+				,mnu_nm_jp
+				,mnu_nm_eng
 				,mnu_lvl
 				,hrnkmnu_id
 				,srt_seq
@@ -239,6 +241,8 @@
 				#coId#
 				,concat(#coId#,substring(mnu_id,6,15))
 				,mnu_nm
+				,mnu_nm_jp
+				,mnu_nm_eng
 				,mnu_lvl
 				,concat(#coId#,substring(hrnkmnu_id,6,15))
 				,srt_seq

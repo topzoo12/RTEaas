@@ -155,9 +155,9 @@
     </select>
 
 	<insert id="serviceDAO.insertService" parameterClass="serviceVO">
-		<selectKey keyProperty="coId" resultClass="String">
+		<!-- <selectKey keyProperty="coId" resultClass="String">
 			select concat('A',lpad(cast(cast(right(max(co_id),4) as integer)+1 as varchar),4,'0')) from tsys_company
-		</selectKey>
+		</selectKey> -->
 		<![CDATA[
 			insert into tsys_company
 				(co_id
@@ -189,7 +189,8 @@
 				,map_min_size
 				,map_max_size
 				,area_code_lv2
-				,area_code_lv1)
+				,area_code_lv1
+				,cd_na)
 			VALUES
 				(
 				#coId#
@@ -221,7 +222,8 @@
 				,#mapMinSize#
 				,#mapMaxSize#
 				,#areaCodeLv2#
-				,#areaCodeLv1#)
+				,#areaCodeLv1#
+				,#cdNa#)
 		]]>
 	</insert>
 

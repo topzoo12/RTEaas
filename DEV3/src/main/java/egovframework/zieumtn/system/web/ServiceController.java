@@ -228,7 +228,8 @@ public class ServiceController {
 			String insertCoId = (String) serviceService.insertService(paramVO);
 			//int iResult = serviceService.insertService(paramVO);
 
-			paramVO.setCoId(insertCoId);
+			//paramVO.setCoId(insertCoId);
+			paramVO.setCoId(paramVO.getCoId());
 			codeService.copyCode(paramVO);
 			authgrpService.copyAuthgrp(paramVO);
 			menuService.copyMenu(paramVO);
@@ -241,7 +242,7 @@ public class ServiceController {
 			userVO.setUsrId(paramVO.getEmailAddr());
 			userVO.setAuthgrpId(paramVO.getCoId() + "SAG201604000001"); // 시스템 관리자 그룹
 			userVO.setUsrNm(paramVO.getRdrtrNm());
-			userVO.setSectNo("a1234567!");	// 초기 비밀번호
+			userVO.setSectNo("zieum0514!");	// 초기 비밀번호
 			userVO.setUseYn("1");
 			userVO.setAdminYn("1");
 			userVO.setStatConfirm("1");

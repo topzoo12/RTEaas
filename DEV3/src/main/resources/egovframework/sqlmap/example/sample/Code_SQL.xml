@@ -367,6 +367,8 @@
 				,com_cd
 				,cd_id
 				,cd_nm
+				,cd_nm_eng
+				,cd_nm_jp
 				,cd_desc
 				,srt_seq
 				,hrnkcom_cd
@@ -385,6 +387,8 @@
 				,com_cd
 				,cd_id
 				,cd_nm
+				,cd_nm_eng
+				,cd_nm_jp
 				,cd_desc
 				,srt_seq
 				,hrnkcom_cd

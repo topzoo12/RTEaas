@@ -113,9 +113,9 @@
 					<li>
 						<table class="table_write">
 							<tbody>
-							<tr>
-									<th><fmt:message key="SERVICE_GRP_ID" bundle="${bundle}"/></th>
-									<td><input type="text" value="" name="coId" id="p1_coId" class="input3" placeholder="" disabled="true"></td>
+								<tr>
+									<th><fmt:message key="SERVICE_GRP_ID" bundle="${bundle}"/><span class="remark"></span></th>
+									<td><input type="text" value="" name="coId" id="p1_coId" class="input3" placeholder="" disabled="true" oninput="this.value = this.value.replace(/[^a-zA-Z0-9.]/g, '').replace(/(\..*)\./g, '$1');"></td>
 									<th><fmt:message key="SERVICE_GRP_NAME" bundle="${bundle}"/><span class="remark"></span></th>
 									<td><input type="text" value="" name="coNm" id="p1_coNm" class="input3" placeholder=""></td>
 								</tr>
@@ -183,9 +183,9 @@
 									</td>
 								</tr>
                                 <tr>
-									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/></th>
+									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (최소값)<span class="remark"></span></th>
 									<td><input type="text" value="" name="wtY" id="map_MinSize" class="input3" placeholder="<fmt:message key="MIN_SIZE" bundle="${bundle}"/>"></td>
-									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/></th>
+									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (최대값)<span class="remark"></span></th>
 									<td><input type="text" value="" name="wtX" id="map_MaxSize" class="input3" placeholder="19" disabled></td>
 								</tr>
 
@@ -207,8 +207,6 @@
 									<th><fmt:message key="USE_YN" bundle="${bundle}"/></th>
 									<td><label class="checkbox"><input type="checkbox" name="useYn" id="p1_useYn" value="1"><span class="icon"></span></label></td>
 								</tr>
-
-
 							</tbody>
 						</table>
 
@@ -239,8 +237,6 @@
 <script>
     // 우편번호 찾기 화면을 넣을 element
     var element_layer = document.getElementById('pop_zip');
-
-    console.log('${resultList}')
 
     let searchLv;
 
@@ -496,10 +492,11 @@ $('#btn_search').on('click', function () {
 			, 'wtY' : $("#level2").data('lng')
 		};
 
-		console.log(params)
+		//console.log(params)
 		//console.log(params);
+		//valid(params)
 
- 		if(valid(params)){
+  		if(valid(params)){
 			$.ajax({
 				type : 'POST',
 				data : params,
@@ -553,6 +550,11 @@ $('#btn_search').on('click', function () {
 		if(!CheckEmail(params.emailAddr)){
 			cnt += 1;
 			msg += "<fmt:message key="INVALID_EMAIL" bundle="${bundle}"/><br>";
+		}
+
+		if(!params.mapMinSize){
+			cnt += 1;
+			msg += "맵사이즈 최소값을 입력해주세요.<br>";
 		}
 
 		//, 'centerCode' : $('#level2').data('code')
@@ -835,7 +837,7 @@ $('#btn_search').on('click', function () {
 
 
 				$('#p1_coId').val('');
-				//$('#p1_coId').prop("disabled",false);
+				$('#p1_coId').prop("disabled",false);
 
 				$('#p1_coNm').val('');
 
@@ -851,7 +853,7 @@ $('#btn_search').on('click', function () {
 				$('#p1_hpgAddr').val('');
 				$('#p1_hpNo').val('');
 
-				$('#p1_useYn').prop('checked',false);
+				$('#p1_useYn').prop('checked', true);
 
 				$('#p1_wtX').val('');
 				$('#p1_wtY').val('');
