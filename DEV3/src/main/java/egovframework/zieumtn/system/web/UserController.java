@@ -573,7 +573,7 @@ public class UserController {
 						+ "        <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%\"><tbody><tr><td height=\"16\">&nbsp;</td></tr></tbody></table> 						\r\n"
 						+ "        <table style=\"border-collapse:collapse;border-spacing:0;padding:0;text-align:left;vertical-align:top;width:100%;background:#f0f1f3;border-collapse:collapse;border-radius:10px\"><tbody><tr style=\"padding:0;text-align:left;vertical-align:top\"><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;color:#183153;font-family:'AppleSDGothicNeo-Regular','Malgun Gothic','맑은고딕','돋움',dotum,sans-serif;font-size:20px;font-weight:600;hyphens:auto;line-height:16px;margin:0;mso-line-height-rule:exactly;padding:0;text-align:center;vertical-align:top;word-wrap:break-word;\">\r\n"
 						+ "        <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%\"><tbody><tr><td height=\"24\">&nbsp;</td></tr></tbody></table> \r\n"
-						+ "        <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%;\"><tbody><tr><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;color:#183153;font-family:'AppleSDGothicNeo-Regular','Malgun Gothic','맑은고딕','돋움',dotum,sans-serif;font-size:20px;font-weight:600;hyphens:auto;line-height:16px;margin:0;mso-line-height-rule:exactly;padding:0;text-align:center;vertical-align:top;word-wrap:break-word;\">비밀번호 <strong style=\"color: #0475f4;margin-left: 16px\">"
+						+ "        <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%;\"><tbody><tr><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;color:#183153;font-family:'AppleSDGothicNeo-Regular','Malgun Gothic','맑은고딕','돋움',dotum,sans-serif;font-size:20px;font-weight:600;hyphens:auto;line-height:16px;margin:0;mso-line-height-rule:exactly;padding:0;text-align:center;vertical-align:top;word-wrap:break-word;\">변경된  비밀번호는 = <strong style=\"color: #0475f4;margin-left: 16px\">"
 						+ paramVO.getSectNo()
 						+ "</strong></td></tr></tbody></table>";
 
@@ -587,7 +587,7 @@ public class UserController {
 
 				emailVO.setMessage(mailMessage);
 
-				emailService.sendMail(emailVO);
+				//emailService.sendMail(emailVO);
 
 				response.setContentType("text/html; charset=UTF-8");
 

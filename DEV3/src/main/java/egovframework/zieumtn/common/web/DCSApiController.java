@@ -91,12 +91,7 @@ public class DCSApiController {
 		PrintWriter out = response.getWriter();
 
 
-    	if (images == null || images.isEmpty()) {
-
-    		jsonObject.put("message", "첨부된 파일이 없습니다.");
-			out.write(jsonObject.toString());
-    		return;
-    	} else if ( jObject == null || jObject.isEmpty() ) {
+    	if ( jObject == null || jObject.isEmpty() ) {
     		//jsonObject.put("success", true);
 
     		jsonObject.put("message", "json data 가 없거나 비어있습니다.");
@@ -106,9 +101,6 @@ public class DCSApiController {
     	}
 
     	try {
-
-
-
 
 			if ( jObject.getJSONObject("frame_header") == null || jObject.getJSONObject("frame_header").isEmpty() ) {
 
@@ -146,54 +138,44 @@ public class DCSApiController {
 
     	JSONObject jObjectUpload = jObject.getJSONObject("frame_header").getJSONObject("image_info_hdr").getJSONObject("upload");
 
-
     	// JSON 문자열로 변환
 
     	//System.out.println("count가 있는지 체크 --  " + jObjectUpload.has("count")); // has 로 존재유무 구별 가능
 
-    	if ( !jObjectUpload.has("count") || jObjectUpload.getInt("count") < 1 ) {
+    	//if ( !jObjectUpload.has("count") || jObjectUpload.getInt("count") < 1 ) {
+    	if ( !jObjectUpload.has("count") ) {
     		// upload 에 포함된 내용 체크
     		jsonObject.put("message", "count 가 없거나 비어있음");
 			out.write(jsonObject.toString());
     		return;
-    	} else if (jObjectUpload.getJSONArray("sequence").isEmpty() || jObjectUpload.getJSONArray("sequence") == null) {
-    		jsonObject.put("message", "sequence 가 없거나 비어있음");
-			out.write(jsonObject.toString());
-    		return;
-    	}
 
-    	Integer uploadCount = jObjectUpload.getInt("count");
-    	JSONArray checklist = jObjectUpload.getJSONArray("sequence");
+    	} else if ( jObjectUpload.getInt("count") > 0 ) {
 
-    	//List<?> fileList[];
-    	MultipartFile[] fileList = new MultipartFile[images.size()];
-
-
-		for (int i = 0; i < images.size(); i++) {
-			if (images.get(i).getContentType() == "image/png") {
-				fileList[i] = images.get(i);
-			}
-    	}
-
-
-    	if (jObjectUpload.getInt("count") > 0 || fileList.length > 0 ) {
-
-    		if (jObjectUpload.getInt("count") != fileList.length) {
-    			//System.out.println("json데이터의 정보와 파일의 숫자가 맞지 않음");
-    			jsonObject.put("message", "json데이터의 정보와 파일의 숫자가 맞지 않습니다");
+    		if (!jObjectUpload.has("sequence")) {
+    			jsonObject.put("message", "sequence 가 없음");
     			out.write(jsonObject.toString());
         		return;
     		}
 
+    		if ( jObjectUpload.getJSONArray("sequence").isEmpty() || jObjectUpload.getJSONArray("sequence") == null ) {
+        		jsonObject.put("message", "sequence 가  비어있음");
+    			out.write(jsonObject.toString());
+        		return;
+        	}
+
+    		if (images == null || images.isEmpty()) {
+
+        		jsonObject.put("message", "첨부된 파일이 없습니다.");
+    			out.write(jsonObject.toString());
+        		return;
+        	}
+
     	}
-    	//String[] uploadFiles;
-    	//List<?> uploadFiles;
 
-    	//Integer insertId = dcsService.insertDcsData();
 
+
+    	// ------------------------------------------------------------------------------------------------------------------------
 		Date today = new Date(System.currentTimeMillis());
-
-		//String todayfm = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
 
 		//dateStr, year, month, day, hours, minutes, seconds, milliseconds;
 		String dateStr = new SimpleDateFormat("yyyy/MM/dd").format(today);
@@ -207,68 +189,89 @@ public class DCSApiController {
 		String seconds = new SimpleDateFormat("ss").format(today);
 		String milliseconds = new SimpleDateFormat("SSS").format(today);
 
-		//String fname = year + month + day + "_" + hours + minutes + seconds + "_" + milliseconds + "_" + String.format("%3s", 0).replace(" ", "0") + "_" + jObject.getJSONObject("common").getJSONObject("system_info").getString("device_id") + "_e" + ext;
 		String fname = year + month + day + "_" + hours + minutes + seconds + "_" + milliseconds + "_";
 		String jsonIdx = String.format("%3s", 0).replace(" ", "0");
 		String devieceName = jObject.getJSONObject("common").getJSONObject("system_info").getString("device_id");
+
+		Integer frameCount = 0;
+		Integer imageCount = 0;
 
 
 		String jsonFileName = fname + jsonIdx + "_" + devieceName +  "_e.json";
 
 		JSONArray frameInfoArray = jObject.getJSONArray("frame_info");
 
-    	System.out.println(jObject.getJSONObject("common").getJSONObject("system_info"));
-
     	String uploadFolder = "/usr/local/datahub/uploaded/" + dateStr;
 
     	File dir = new File(uploadFolder);
-//    	System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//    	System.out.println(new File("/app/attach/").exists());
-//    	System.out.println(new File("/app/attach1/").exists());
 
 		if(dir.exists() == false) {
             dir.mkdirs();
         }
 
-    	ArrayList<String> imageFileNames = new ArrayList<>();
+		ArrayList<String> imageFileNames = new ArrayList<>();
 
-    	for (int i = 0; i < images.size(); i++) {
-    		//System.out.println(images.get(i).getOriginalFilename());
-    		//System.out.println(fname + String.format("%3s", i).replace(" ", "0") + "_" + devieceName + "_e.jpg");
-    		//imageFileNm[i] = fname + String.format("%3s", i).replace(" ", "0") + "_" + devieceName + "_e.jpg";
-    		String imageFileName = fname + String.format("%3s", i).replace(" ", "0") + "_" + devieceName + "_e.jpg";
 
-    		imageFileNames.add('"'+imageFileName+'"');
+    	if (jObjectUpload.has("sequence")) {
 
-    		try {
-    			InputStream inputStream = images.get(i).getInputStream();
-    			// 대상 파일로 복사
-    			Files.copy(inputStream, Paths.get(uploadFolder + "/" + imageFileName), StandardCopyOption.REPLACE_EXISTING);
-    		} catch(NullPointerException e) {
-    			System.err.println("Null 에러 발생::"+e.toString());
-    			jsonObject.put("message", "Null 에러 발생::"+e.toString());
-    			out.write(jsonObject.toString());
-        		return;
+    		Integer uploadCount = jObjectUpload.getInt("count");
+        	JSONArray checklist = jObjectUpload.getJSONArray("sequence");
 
-    		} catch (Exception e) {
-    			System.err.println("에러 발생::"+e.toString());
-    			jsonObject.put("message", "Null 에러 발생::"+e.toString());
-    			out.write(jsonObject.toString());
-        		return;
+        	if (jObjectUpload.getInt("count") > 0 || images.size() > 0 ) {
 
+        		if (jObjectUpload.getInt("count") != images.size()) {
+        			//System.out.println("json데이터의 정보와 파일의 숫자가 맞지 않음");
+        			jsonObject.put("message", "json데이터의 정보와 파일의 숫자가 맞지 않습니다");
+        			out.write(jsonObject.toString());
+            		return;
+        		}
+        	}
+
+        	for (int i = 0; i < images.size(); i++) {
+        		for (int a = 0; a < checklist.length(); a++) {
+
+            		if (images.get(i).getOriginalFilename().equals(checklist.get(a))) {
+
+        				String imageFileName = fname + String.format("%3s", a).replace(" ", "0") + "_" + devieceName + "_e.jpg";
+
+        				imageFileNames.add('"'+imageFileName+'"');
+
+        				try {
+        	    			InputStream inputStream = images.get(i).getInputStream();
+        	    			// 대상 파일로 복사
+        	    			Files.copy(inputStream, Paths.get(uploadFolder + "/" + imageFileName), StandardCopyOption.REPLACE_EXISTING);
+        	    		} catch(NullPointerException e) {
+        	    			System.err.println("Null 에러 발생::"+e.toString());
+        	    			jsonObject.put("message", "Null 에러 발생::"+e.toString());
+        	    			out.write(jsonObject.toString());
+        	        		return;
+
+        	    		} catch (Exception e) {
+        	    			System.err.println("에러 발생::"+e.toString());
+        	    			jsonObject.put("message", "Null 에러 발생::"+e.toString());
+        	    			out.write(jsonObject.toString());
+        	        		return;
+
+        	    		}
+        			}
+            	}
+        	}
+
+        	if (frameInfoArray.length() > 0) {
+    			frameCount = frameInfoArray.length();
     		}
+
+    		if (images.size() > 0) {
+    			imageCount = images.size();
+    		}
+
     	}
 
-		Integer frameCount = 0;
-		Integer imageCount = 0;
+    	// ------------------------------------------------------------------------------------------------------------------------
 
-		if (frameInfoArray.length() > 0) {
-			frameCount = frameInfoArray.length();
-		}
-
-		if (images.size() > 0) {
-			imageCount = images.size();
-		}
+    	/*if (imageFileNames.size() < 1) {
+    		imageFileNames.add('"'+imageFileName+'"');
+    	}*/
 
 		DcsServiceapiVO DcsVO = new DcsServiceapiVO();
 		DcsVO.setPath(dateStr.replace("-", "/"));

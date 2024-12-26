@@ -43,6 +43,7 @@
 		<result property="adminYn" column="adminYn"/>
 		<result property="useDt" column="useDt"/>
 		<result property="endDt" column="endDt"/>
+		<result property="useYn" column="useYn"/>
 	</resultMap>
 
 	<resultMap id="loginmenu" class="egovframework.zieumtn.common.service.LoginMenuVO">
@@ -152,12 +153,15 @@
 				,a.admin_yn as adminYn
 				,b.use_dt as useDt
 				,b.end_dt as endDt
+				,c.use_yn as useYn
 			FROM public.tsys_users a
 			left outer join tsys_author_group_user b
-			on a.co_id = b.co_id
-			and a.usr_id = b.usr_id
+				on a.co_id = b.co_id
+				and a.usr_id = b.usr_id
+			left outer join tsys_company c
+				on a.co_id = c.co_id
 			where a.usr_id = #usrId#
-			and a.sect_no = ENCODE(DIGEST(#usrPw#, 'sha256'), 'hex');
+				and a.sect_no = ENCODE(DIGEST(#usrPw#, 'sha256'), 'hex');
         ]]>
     </select>
     <select id="loginDAO.selectByCoId" resultMap="login">

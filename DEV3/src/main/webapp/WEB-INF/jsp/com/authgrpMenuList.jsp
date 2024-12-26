@@ -102,25 +102,26 @@
                     </colgroup>
                     <tbody>
                     <c:forEach var="result2" items="${resultList2}" varStatus="status">
-                        <tr class="<c:if test="${result2.mnuLvl eq '1'}">depth1</c:if><c:if test="${result2.mnuLvl eq '2'}">depth2</c:if> <c:if test="${result2.rowno eq '1'}">on</c:if>">
-                        <td align="center" class="subj">
-                       		 <%--  ${result2.mnuNm} --%>
-                   			 <c:choose>
-								<c:when test="${nowCdNa eq 'KR'}">${result2.mnuNm}</c:when>
-								<c:when test="${nowCdNa eq 'US'}">${result2.mnuNmEng}</c:when>
-								<c:when test="${nowCdNa eq 'JP'}">${result2.mnuNmJp}</c:when>
-							</c:choose>
-                        </td> <!-- JJ 리스트 -->
+                        <%-- <tr class="<c:if test="${result2.mnuLvl eq '1'}">depth1</c:if><c:if test="${result2.mnuLvl eq '2'}">depth2</c:if> <c:if test="${result2.rowno eq '1'}">on</c:if>"> --%>
+                        <tr class="<c:if test="${result2.mnuLvl eq '1'}">depth1</c:if><c:if test="${result2.mnuLvl eq '2'}">depth2</c:if>">
+	                        <td align="center" class="subj">
+	                       		 <%--  ${result2.mnuNm} --%>
+	                   			 <c:choose>
+									<c:when test="${nowCdNa eq 'KR'}">${result2.mnuNm}</c:when>
+									<c:when test="${nowCdNa eq 'US'}">${result2.mnuNmEng}</c:when>
+									<c:when test="${nowCdNa eq 'JP'}">${result2.mnuNmJp}</c:when>
+								</c:choose>
+	                        </td> <!-- JJ 리스트 -->
 
-                        <td align="center" class="listtd">
-                            <label class="checkbox">
-                                <input type="checkbox" id="${result2.mnuId}_rauthYn" value="1" onclick="updateCheck('${result2.coId}','${result2.authgrpId}','${result2.mnuId}')" <c:if test="${result2.rauthYn eq '1'}">checked</c:if>>
-                                <span class="icon"></span>
-                            </label>
-                        </td>
-                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.authgrpId}"/></td>
-                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.mnuId}"/></td>
-                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.coId}"/></td>
+	                        <td align="center" class="listtd">
+	                            <label class="checkbox">
+	                                <input type="checkbox" id="${result2.mnuId}_rauthYn" value="1" onclick="updateCheck('${result2.coId}','${result2.authgrpId}','${result2.mnuId}')" <c:if test="${result2.rauthYn eq '1'}">checked</c:if>>
+	                                <span class="icon"></span>
+	                            </label>
+	                        </td>
+	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.authgrpId}"/></td>
+	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.mnuId}"/></td>
+	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.coId}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>

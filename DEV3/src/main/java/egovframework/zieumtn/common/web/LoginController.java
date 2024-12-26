@@ -162,6 +162,12 @@ public class LoginController {
 					List<?> list = ownerService.getOpenList(null);
 					mv.addObject("serviceList",list);
 					return mv;
+				} else if (!chk.getUseYn().contentEquals("1")) {
+					ModelAndView mv = new ModelAndView("/login");
+					mv.addObject("error", message.get("MSG00014"));  //사용 권한 없음
+					List<?> list = ownerService.getOpenList(null);
+					mv.addObject("serviceList",list);
+					return mv;
 				}
 
 			}

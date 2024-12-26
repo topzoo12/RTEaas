@@ -67,8 +67,16 @@ public class LoginVO extends CommonDefaultVO {
 
 	private String areaCodeLv1;
 	private String areaCodeLv2;
+	private String useYn;
 
 
+
+	public String getUseYn() {
+		return useYn;
+	}
+	public void setUseYn(String useYn) {
+		this.useYn = useYn;
+	}
 
 	public String getAreaCodeLv1() {
 		return areaCodeLv1;
