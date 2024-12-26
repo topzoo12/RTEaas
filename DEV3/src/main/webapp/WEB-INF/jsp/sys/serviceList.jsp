@@ -746,6 +746,7 @@ $('#btn_search').on('click', function () {
 
 				$('#p1_rdrtrNm').val(row.find('td:eq(3)').text());
 				$('#p1_emailAddr').val(row.find('td:eq(4)').text());
+				$('#p1_emailAddr').prop("disabled", true);
 
 
 				$('#p1_roadzpNo').val(row.find('td:eq(9)').text());
@@ -825,6 +826,7 @@ $('#btn_search').on('click', function () {
 
 				$('#p1_rdrtrNm').val('');
 				$('#p1_emailAddr').val('');
+				$('#p1_emailAddr').prop("disabled", false);
 
 
 				$('#p1_roadzpNo').val('');
