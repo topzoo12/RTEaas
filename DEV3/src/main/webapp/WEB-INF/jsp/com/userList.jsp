@@ -19,9 +19,6 @@ div.pass i{
   left: 85%;
   top: 20%;
   color: gray;
-  width: 100px;
-  height: 100px;
-  z-index: 30000;
 }
 </style>
 
@@ -628,27 +625,27 @@ var g_idCheck = false;
 
 		if (today > params.useDt) {
 			cnt += 1;
-			msg += "권한시작일이 현재 날짜보다 이전일 수 없습니다.<br>";
+			msg += "<fmt:message key="AUTH_DATE_S_N" bundle="${bundle}"/><br>";
 		}
 
 		if (today > params.endDt) {
 			cnt += 1;
-			msg += "권한만료일이 현재 날짜보다 이전일 수 없습니다.<br>";
+			msg += "<fmt:message key="AUTH_DATE_E_N" bundle="${bundle}"/><br>";
 		}
 
 		if (params.useDt > params.endDt) {
 			cnt += 1;
-			msg += "권한만료일이 권한시작일보다 이전일 수 없습니다.<br>";
+			msg += "<fmt:message key="AUTH_DATE_E_S" bundle="${bundle}"/><br>";
 		}
 
 		if (today == params.endDt) {
 			cnt += 1;
-			msg += "권한만료일은 현재 날짜 이후 날짜로 선택해주세요.<br>";
+			msg += "<fmt:message key="SELECT_AUTH_DATE_E_N" bundle="${bundle}"/><br>";
 		}
 
 		 if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
 			 cnt += 1;
-			 msg += "비밀번호가 일치하지 않습니다.";
+			 msg += "<fmt:message key="PWD_NOT_SAME" bundle="${bundle}"/>";
 		 }
 
 

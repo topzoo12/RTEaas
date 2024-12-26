@@ -393,7 +393,7 @@ $('.btn_search').on("click", function(){
 		}
 
 	} else {
-		$("#alert_msg").html("Level1과 Level2는 필수선택사항입니다.");
+		$("#alert_msg").html("<fmt:message key="REQ_LV1_LV2" bundle="${bundle}"/>");
 		$("#pop_alert").stop().fadeIn(300);
     	$("#pop_alert").stop().fadeIn(300);
 	}
@@ -761,7 +761,7 @@ $('#sortchk .sorting').on('click', function() {
 			let reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
 			let resultData = id.replace(reg, "");
 
-			markerListSort.push("<li><a class='infoListItem'>" //jj 다국어 리스트
+			markerListSort.push("<li><a class='infoListItem'>"
 							+ "<div class='info'><div class='tit'>"
 							+ "<span class='badge sm " + className + "'>" + name + "</span>"
 								//+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', ' " + device_name + "', '" + device_id + "', '" + addr_po_locality + "', '" + dateFormat + "', '" + data[index].point['latitude'] + "', '" + data[index].point['longitude'] + "', 'Y')\"'>" + device_name + " ( " + device_id + " )</h3></div>"

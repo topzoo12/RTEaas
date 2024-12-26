@@ -232,7 +232,6 @@
 </div>
 
 </div>
-<script>console.log('페이지 네임 ${pageName}');</script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
     // 우편번호 찾기 화면을 넣을 element
@@ -534,7 +533,7 @@ $('#btn_search').on('click', function () {
 
 		if(!params.coId){
 			cnt += 1;
-			msg += "서비스그룹 ID 를 입력해주세요<br>";
+			msg += "<fmt:message key="INPUT_SERVICE_ID" bundle="${bundle}"/><br>";
 		}
 
 		if(!params.coNm){
@@ -559,7 +558,7 @@ $('#btn_search').on('click', function () {
 
 		if(!params.mapMinSize){
 			cnt += 1;
-			msg += "맵사이즈 최소값을 입력해주세요.<br>";
+			msg += "<fmt:message key="INPUT_MIN_SIZE" bundle="${bundle}"/><br>";
 		}
 
 		//, 'centerCode' : $('#level2').data('code')
@@ -739,28 +738,6 @@ $('#btn_search').on('click', function () {
 
 		if(target_pop=='write-1'){
 			if(row.length) {
-
-
-				console.log('1 - ' + row.find('td:eq(1)').text())
-				console.log('2 - ' + row.find('td:eq(2)').text())
-				console.log('3 - ' + row.find('td:eq(3)').text())
-				console.log('4 - ' + row.find('td:eq(4)').text())
-				console.log('5 - ' + row.find('td:eq(5)').text())
-				console.log('6 - ' + row.find('td:eq(6)').text())
-				console.log('7 - ' + row.find('td:eq(7)').text())
-				console.log('8 - ' + row.find('td:eq(8)').text())
-				console.log('9 - ' + row.find('td:eq(9)').text())
-				console.log('10 - ' + row.find('td:eq(10)').text())
-				console.log('11 - ' + row.find('td:eq(11)').text())
-				console.log('12 - ' + row.find('td:eq(12)').text())
-				console.log('13 - ' + row.find('td:eq(13)').text())
-				console.log('14 - ' + row.find('td:eq(14)').text())
-				console.log('15 - ' + row.find('td:eq(15)').text())
-				console.log('16 - ' + row.find('td:eq(16)').text())
-				console.log('17 - ' + row.find('td:eq(17)').text())
-				console.log('18 - ' + row.find('td:eq(18)').text())
-				console.log('19 - ' + row.find('td:eq(19)').text())
-				console.log('20 - ' + row.find('td:eq(20)').text())
 
 				$('#p1_coId').val(row.find('td:eq(1)').text());
 				//$('#p1_coId').prop("disabled",true);

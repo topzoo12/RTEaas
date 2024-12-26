@@ -75,10 +75,10 @@
     <div class="pop_box2">
     <div class="pop_content">
       <ul class="contents">
-        <p class="box center" id="login_msg">로그인 실패</p>
+        <p class="box center" id="login_msg"><fmt:message key="LOGIN_FAILED" bundle="${bundle}"/></p>
         <li>
           <div class="pop_btn">
-            <button class="btn_select pop_close">확인</button>   <!-- 확인 -->
+            <button class="btn_select pop_close"><fmt:message key="CONFIRM" bundle="${bundle}"/></button>   <!-- 확인 -->
           </div>
         </li>
       </ul>
@@ -92,7 +92,7 @@
         <p class="box center" id="alert_msg"></p>
         <li>
           <div class="pop_btn">
-            <button class="btn_select pop_alert_close">확인</button>
+            <button class="btn_select pop_alert_close"><fmt:message key="CONFIRM" bundle="${bundle}"/></button>
           </div>
         </li>
       </ul>

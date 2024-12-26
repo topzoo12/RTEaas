@@ -316,19 +316,20 @@ function valid(){
 	//console.log($('#file')[0].files);
 	if(!$('#file').val()){
 		cnt += 1;
-		msg += "선택된 파일이 없습니다."
+		msg += "<fmt:message key="NO_SELECTED_FILE" bundle="${bundle}"/>"
 	} else 	if ($('#file')[0].files[0].size > 10485760) {
 		//10485760		/ 10메가
 		//524288000		/ 500메가
 		cnt += 1;
-		msg += "저장할 수 있는 최대 파일 크기는 10MB 입니다.\n"
+		msg += "<fmt:message key="SAVE_MAX_FILE_SIZE" bundle="${bundle}"/>\n"
 	}
-/*
-	if (fileName.length < 1) {
-		cnt += 1;
-		msg += "선택된 파일이 없습니다."
-	}
-*/
+
+
+	//if (fileName.length < 1) {
+	//	cnt += 1;
+		/*msg += "선택된 파일이 없습니다."; */
+	//}
+
 
 	if (cnt > 0) {
 		$("#alert_msg").html(msg);
