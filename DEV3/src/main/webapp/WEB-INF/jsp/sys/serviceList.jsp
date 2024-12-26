@@ -115,7 +115,7 @@
 							<tbody>
 								<tr>
 									<th><fmt:message key="SERVICE_GRP_ID" bundle="${bundle}"/><span class="remark"></span></th>
-									<td><input type="text" value="" name="coId" id="p1_coId" class="input3" placeholder="" disabled="true" oninput="this.value = this.value.replace(/[^a-zA-Z0-9.]/g, '').replace(/(\..*)\./g, '$1');"></td>
+									<td><input type="text" value="" name="coId" id="p1_coId" class="input3" placeholder="" disabled="true" oninput="this.value = this.value.replace(/[^a-zA-Z0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength=5></td>
 									<th><fmt:message key="SERVICE_GRP_NAME" bundle="${bundle}"/><span class="remark"></span></th>
 									<td><input type="text" value="" name="coNm" id="p1_coNm" class="input3" placeholder=""></td>
 								</tr>
@@ -494,9 +494,9 @@ $('#btn_search').on('click', function () {
 
 		//console.log(params)
 		//console.log(params);
-		//valid(params)
+		valid(params)
 
-  		if(valid(params)){
+  		/* if(valid(params)){
 			$.ajax({
 				type : 'POST',
 				data : params,
@@ -523,7 +523,7 @@ $('#btn_search').on('click', function () {
 			});
 		} else {
 			return false;
-		}
+		} */
 
 	});
 
@@ -531,6 +531,11 @@ $('#btn_search').on('click', function () {
 		var cnt = 0;
 		var msg = "";
 		var bool = true;
+
+		if(!params.coId){
+			cnt += 1;
+			msg += "서비스그룹 ID 를 입력해주세요<br>";
+		}
 
 		if(!params.coNm){
 			cnt += 1;
