@@ -336,7 +336,6 @@ var g_idCheck = false;
 			'usrId':$('.p1_usrId').val()
 		};
 
-		console.log(params)
 		if(validIdCheck(params)){
 			$.ajax({
 				type : 'POST',
@@ -505,11 +504,8 @@ var g_idCheck = false;
 			,'coId':'${authInfo.coId}'
 			,'statConfirm': $('#p1_statConfirm').is(':checked')?$('#p1_statConfirm').val():'0'
 		};
-		valid(params);
 
-		console.log('사용여부 체크 여부', $('#p1_statConfirm').is(':checked')?$('#p1_statConfirm').val():'0');
-
-		if(valid(params)){
+ 		if(valid(params)){
 			$.ajax({
 				type : 'POST',
 				data : params,
@@ -643,6 +639,11 @@ var g_idCheck = false;
 		if (params.useDt > params.endDt) {
 			cnt += 1;
 			msg += "권한만료일이 권한시작일보다 이전일 수 없습니다.<br>";
+		}
+
+		if (today == params.endDt) {
+			cnt += 1;
+			msg += "권한만료일은 현재 날짜 이후 날짜로 선택해주세요.<br>";
 		}
 
 		 if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
