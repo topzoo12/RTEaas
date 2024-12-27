@@ -19,6 +19,7 @@ import java.util.List;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import egovframework.zieumtn.system.vo.ServiceVO;
+import egovframework.zieumtn.system.vo.UserVO;
 
 import org.springframework.stereotype.Repository;
 
@@ -92,6 +93,10 @@ public class ServiceDAO extends EgovAbstractDAO {
 			iResult = -1;
 		}
 		return result;
+	}
+
+	public int checkDuplicateGrpId(ServiceVO paramVO) throws Exception {
+		return (int) select("serviceDAO.checkDuplicateGrpId", paramVO);
 	}
 
 	public int confirmService(ServiceVO paramVO) {

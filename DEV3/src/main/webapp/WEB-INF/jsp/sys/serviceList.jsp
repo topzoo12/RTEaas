@@ -492,10 +492,8 @@ $('#btn_search').on('click', function () {
 		};
 
 		//console.log(params)
-		//console.log(params);
-		valid(params)
 
-  		/* if(valid(params)){
+  	 if(valid(params)){
 			$.ajax({
 				type : 'POST',
 				data : params,
@@ -522,7 +520,7 @@ $('#btn_search').on('click', function () {
 			});
 		} else {
 			return false;
-		} */
+		}
 
 	});
 

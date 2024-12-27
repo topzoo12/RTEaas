@@ -278,6 +278,14 @@
 		]]>
 	</insert>
 
+	<select id="serviceDAO.checkDuplicateGrpId" parameterClass="serviceVO" resultClass="int">
+		<![CDATA[
+			select count(*) totcnt
+			from tsys_company
+			where co_id = #coId#
+		]]>
+	</select>
+
 	<update id="serviceDAO.updateService" parameterClass="serviceVO">
 		<![CDATA[
 			update tsys_company

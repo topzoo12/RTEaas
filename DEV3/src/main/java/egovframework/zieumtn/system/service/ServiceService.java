@@ -50,6 +50,8 @@ public interface ServiceService {
 	Object insertService(ServiceVO paramVO) throws Exception;
 	Object reqService(ServiceVO paramVO) throws Exception;
 
+	int checkDuplicateGrpId(ServiceVO paramVO) throws Exception;
+
 	int confirmService(ServiceVO paramVO) throws Exception;
 
 	int updateService(ServiceVO paramVO) throws Exception;

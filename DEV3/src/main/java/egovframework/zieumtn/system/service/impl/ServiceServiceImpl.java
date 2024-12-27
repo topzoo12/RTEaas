@@ -105,6 +105,12 @@ public class ServiceServiceImpl extends EgovAbstractServiceImpl implements Servi
 	}
 
 	@Override
+	public int checkDuplicateGrpId(ServiceVO paramVO) throws Exception {
+		int rs = serviceDAO.checkDuplicateGrpId(paramVO);
+		return rs;
+	}
+
+	@Override
 	public int confirmService(ServiceVO paramVO) throws Exception {
 		int rs = serviceDAO.confirmService(paramVO);
 		return rs;

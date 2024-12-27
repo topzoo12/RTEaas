@@ -225,16 +225,6 @@ public class ServiceController {
 			paramVO.setSessionCoId(authInfo.getSessionCoId());
 			paramVO.setSessionUserId(authInfo.getSessionUserId());
 
-			String insertCoId = (String) serviceService.insertService(paramVO);
-			//int iResult = serviceService.insertService(paramVO);
-
-			//paramVO.setCoId(insertCoId);
-			paramVO.setCoId(paramVO.getCoId());
-			codeService.copyCode(paramVO);
-			authgrpService.copyAuthgrp(paramVO);
-			menuService.copyMenu(paramVO);
-			authgrpMenuService.copyAuthgrpMenu(paramVO);
-
 			UserVO userVO = new UserVO();
 			userVO.setSessionCoId(paramVO.getCoId());
 			userVO.setCoId(paramVO.getCoId());
@@ -247,22 +237,57 @@ public class ServiceController {
 			userVO.setAdminYn("1");
 			userVO.setStatConfirm("1");
 
-			int iResult = userService.insertUser(userVO);	// 생성
+			int grpIdResult = serviceService.checkDuplicateGrpId(paramVO);
+			int userIdResult = userService.getUserIdCheck(userVO);
 
-			if(iResult > 0 ) {
-				//JSONObject message = messageService.getMessageObject(authInfo.getSessionCoId());
-				JSONObject message = (authInfo.getChangedCdNa() == null || authInfo.getChangedCdNa().isEmpty())? messageService.getMessageObjectByUserRegion(authInfo.getCdNa()): messageService.getMessageObjectByUserRegion(authInfo.getChangedCdNa());
+			// 서비스 그룹 아이디 & 관리자 이메일 중복 안된 경우
+			 if (grpIdResult == 0 &&  userIdResult == 0) {
+				String insertCoId = (String) serviceService.insertService(paramVO);
+				//int iResult = serviceService.insertService(paramVO);
+
+				//paramVO.setCoId(insertCoId);
+				paramVO.setCoId(paramVO.getCoId());
+				codeService.copyCode(paramVO);
+				authgrpService.copyAuthgrp(paramVO);
+				menuService.copyMenu(paramVO);
+				authgrpMenuService.copyAuthgrpMenu(paramVO);
+
+				int iResult = userService.insertUser(userVO);
+
+				if(iResult > 0 ) {
+					//JSONObject message = messageService.getMessageObject(authInfo.getSessionCoId());
+					JSONObject message = (authInfo.getChangedCdNa() == null || authInfo.getChangedCdNa().isEmpty())? messageService.getMessageObjectByUserRegion(authInfo.getCdNa()): messageService.getMessageObjectByUserRegion(authInfo.getChangedCdNa());
+
+					response.setContentType("text/html; charset=UTF-8");
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("result", new ReturnDTO(0000, message.get("MSG00003").toString()));
+					PrintWriter out = response.getWriter();
+					out.write(jsonObject.toString());
+				}else {
+					throw new Exception();
+				}
+
+			} else if (grpIdResult > 0) { //서비스 그룹 아이디 중복
 
 				response.setContentType("text/html; charset=UTF-8");
+				JSONObject message = (authInfo.getChangedCdNa() == null || authInfo.getChangedCdNa().isEmpty())? messageService.getMessageObjectByUserRegion(authInfo.getCdNa()): messageService.getMessageObjectByUserRegion(authInfo.getChangedCdNa());
+
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("result", new ReturnDTO(0000, message.get("MSG00003").toString()));
+				jsonObject.put("result", new ReturnDTO(9001, message.get("MSG00015").toString()));
 				PrintWriter out = response.getWriter();
 				out.write(jsonObject.toString());
-			}else {
-				throw new Exception();
+
+			} else if (userIdResult > 0) { //관리자 이메일 중복
+
+				response.setContentType("text/html; charset=UTF-8");
+				JSONObject message = (authInfo.getChangedCdNa() == null || authInfo.getChangedCdNa().isEmpty())? messageService.getMessageObjectByUserRegion(authInfo.getCdNa()): messageService.getMessageObjectByUserRegion(authInfo.getChangedCdNa());
+
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("result", new ReturnDTO(9001, message.get("MSG00016").toString()));
+				PrintWriter out = response.getWriter();
+				out.write(jsonObject.toString());
+
 			}
-
-
 
 		}catch(NullPointerException e) {
 			System.err.println("Null 에러 발생::"+e.toString());
