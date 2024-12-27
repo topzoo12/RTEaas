@@ -836,6 +836,49 @@ var g_idCheck = false;
 				$('.p1_useDt').val('${todayDt}');
 				$('.p1_endDt').val('');
 
+				$('#search_calender2').daterangepicker({
+					   singleDatePicker: true,
+						autoApply: true,
+						autoUpdateInput: false,
+						singleClasses: "date",
+						locale: {
+							"format": "YYYY-MM-DD",
+							"separator": " - ",
+							"applyLabel": "<fmt:message key="CONFIRM" bundle="${bundle}"/>",
+							"cancelLabel": "<fmt:message key="CANCEL" bundle="${bundle}"/>",
+							"fromLabel": "From",
+							"toLabel": "~",
+							"customRangeLabel": "Custom",
+							"weekLabel": "W",
+							"daysOfWeek": [
+								"<fmt:message key="SUNDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="MONDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="TUESDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="WEDNESDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="THURSDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="FRIDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="SATURDAY" bundle="${bundle}"/>"
+							],
+							"monthNames": [
+								"<fmt:message key="JANUARY" bundle="${bundle}"/>",
+					        	"<fmt:message key="FEBRUARY" bundle="${bundle}"/>",
+					        	"<fmt:message key="MARCH" bundle="${bundle}"/>",
+					        	"<fmt:message key="APRIL" bundle="${bundle}"/>",
+					        	"<fmt:message key="MAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="JUNE" bundle="${bundle}"/>",
+					        	"<fmt:message key="JULY" bundle="${bundle}"/>",
+					        	"<fmt:message key="AUGUST" bundle="${bundle}"/>",
+					        	"<fmt:message key="SEPTEMBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="OCTOBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="NOVEMBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="DECEMBER" bundle="${bundle}"/>"
+							],
+							"firstDay": 0
+						}
+					},function(start, end, label) {
+							$("#p1_endDt").val(start.format('YYYY-MM-DD'));
+					});
+
 				//$('#p1_adminYn').prop('checked',false);
 
 				//$('#pop_approve').prop('disabled',true);
