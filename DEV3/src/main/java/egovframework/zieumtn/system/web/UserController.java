@@ -480,6 +480,8 @@ public class UserController {
 				PrintWriter out = response.getWriter();
 				out.write(jsonObject.toString());
 
+
+				/* 비밀번호 초기화 안내 이메일
 				EmailVO emailVO = new EmailVO();
 				emailVO.setReceiveMail(paramVO.getUsrId());
 				emailVO.setSenderMail(authInfo.getSessionUserId());
@@ -488,7 +490,7 @@ public class UserController {
 				String mailMessage =
 						"<strong style=\"display: block;color: #0475f4;\">비밀번호초기화 정보를</strong>알려 드립니다.</p>"
 						+ "<p style=\"margin: 30px 0 0;	font-size: 14px; color: #666666;padding: 0;	border: 0;vertical-align: baseline;box-sizing: border-box;\">"
-						+ "비밀번호가 초기화 되었습니다.</p>"
+						+ "비밀번호가 초기화 되었습니다. 로그인 후 비밀번호를 변경해주세요.</p>"
 						+ "<p style=\"margin: 40px 0 0;	text-align: center;	font-size: 18px; color: #0475f4;	font-weight: 600; border-top: 2px solid #000; border-bottom: 1px solid #e7e7e7; padding: 20px 0;font-family: inherit; vertical-align: baseline;box-sizing: border-box;\">"
 						+ "<span style=\"color: #000;display: inline-block;margin: 0 20px 0 0;padding: 0;	border: 0;	font-size: 100%;vertical-align: baseline;box-sizing: border-box;\">비밀번호</span> "+paramVO.getSectNo()+"</p>";
 
@@ -496,6 +498,7 @@ public class UserController {
 
 				//emailVO.setMessage(paramVO.getSectNo());
 				emailService.sendMail(emailVO);
+				*/
 			} else {
 				throw new Exception();
 			}
