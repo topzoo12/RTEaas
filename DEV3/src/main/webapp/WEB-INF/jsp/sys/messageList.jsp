@@ -391,7 +391,7 @@ var g_isInsert = true;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
-					appendRow += '<tr>'
+					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.msgId+'</td>'
 						+'<td align="center" class="listtd">'+el.msgdivNm+'</td>'

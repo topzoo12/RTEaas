@@ -31,6 +31,7 @@
 .contents_box.roadinfo .contents.mainMap{
     height: calc(100% - 64px);
 }
+
 </style>
 
 <div class="contents_box item mainpage roadinfo">

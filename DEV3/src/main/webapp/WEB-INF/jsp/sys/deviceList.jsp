@@ -62,7 +62,7 @@
                         <th><fmt:message key="FIRM_VER" bundle="${bundle}"/></th>
                         <th><fmt:message key="MAC_ADDR" bundle="${bundle}"/></th>
                         <th><fmt:message key="BIGO" bundle="${bundle}"/></th>
-                        <th><fmt:message key="REG_DTTM" bundle="${bundle}"/></th>
+                        <th><fmt:message key="REG_DT" bundle="${bundle}"/></th>
                         <th><fmt:message key="USE_YN" bundle="${bundle}"/></th>
 					</tr>
 				</thead>
@@ -107,7 +107,7 @@
 	    <div class="pop_box">
 			<div class="pop_content">
 				<h3 class="pop_tit">
-				  디바이스 등록
+				  <fmt:message key="DEVICE_REG" bundle="${bundle}"/>
 				</h3>
 
 				<ul class="user_write">
@@ -191,7 +191,7 @@ var g_isInsert = true;
  				var resultCode = json.resultCode;
 				var appendRow = "";
 				result.forEach (function (el, index) {
-					appendRow += '<tr>'
+					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.deviceId+'</td>'
 						+'<td align="center" class="listtd">'+el.deviceNm+'</td>'

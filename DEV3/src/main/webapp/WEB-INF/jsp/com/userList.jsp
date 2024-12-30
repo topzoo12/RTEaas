@@ -231,6 +231,7 @@ div.pass i{
 
 var g_isInsert = true;
 var g_idCheck = false;
+var g_idDupliCheck = false;
 
 	//alert("${authInfo}")
 	//console.log("${authInfo.coId}")
@@ -346,18 +347,22 @@ var g_idCheck = false;
 						$('#checkMsg').text('<fmt:message key="POSSIBLE" bundle="${bundle}"/>');
 						$('#checkMsg').css('color','green');
 						g_idCheck = true;
+						g_idDupliCheck = true;
 						$('#p1_usrId').prop('disabled',true);
 					} else if(result==1){
 						$('#checkMsg').text('<fmt:message key="DUP_IMPOSSIBLE" bundle="${bundle}"/>');
 						$('#checkMsg').css('color','red');
 						g_idCheck = false;
+						g_idDupliCheck = true;
 						$('#p1_usrId').prop('disabled',false);
-					} else if(result==-1){
+					}
+
+					/* else if(result==-1){
 						$('#checkMsg').text('<fmt:message key="DOMAIN_IMPOSSIBLE" bundle="${bundle}"/>');
 						$('#checkMsg').css('color','red');
 						g_idCheck = false;
 						$('#p1_usrId').prop('disabled',false);
-					}
+					} */
 				},
 				error : function(err) {
 					console.log(err);
@@ -557,50 +562,67 @@ var g_idCheck = false;
 	}); */
 
 	function valid(params){
+
+
+
 		var cnt = 0;
 		var msg = "";
 		var bool = true;
 
 		//var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,16}$/;
-		var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-z]{2,50}).{8,}$/;
+		var reg = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-z]{1,50}).{8,}$/;
 
 		var pwdChk = params.sectNo;
 
 		var nowDate = new Date();
 		var today = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
 
-		// 신규인 경우에만 비밀번호 형식 체크
-		if(g_isInsert){
-			if( !reg.test(pwdChk) ) {
-			    msg += "<fmt:message key="REQ_PW_RULE" bundle="${bundle}"/><br>";
-
-			    $("#alert_msg").html(msg);
-				$('#pop_alert').stop().fadeIn(300);
-		        $('#pop_alert').stop().fadeIn(300);
-		        bool = false;
-		        return false;
-			}
-		}
-
 		if(!params.usrId){
 			cnt += 1;
 			msg += "<fmt:message key="USER_ID_REQUIRED" bundle="${bundle}"/><br>";
 		}
 
-		if(!g_idCheck){
+		if(!g_idDupliCheck){
 			cnt += 1;
 			msg += "<fmt:message key="DUP_CHECK_REQUIRED" bundle="${bundle}"/><br>";
 		}
+
+
+		if(!g_idCheck && g_idDupliCheck){
+			cnt += 1;
+			msg += "<fmt:message key="DUP_USER_ID" bundle="${bundle}"/><br>";
+		}
+
+		if(!params.sectNo&&g_isInsert){
+			cnt += 1;
+			msg += "<fmt:message key="PASSWORD_REQUIRED" bundle="${bundle}"/><br>";
+		}
+
+		// 신규인 경우에만 비밀번호 형식 체크
+		if(g_isInsert){
+			if( !reg.test(pwdChk) ) {
+			    msg += "<fmt:message key="REQ_PW_RULE" bundle="${bundle}"/><br>";
+
+			  /*   $("#alert_msg").html(msg);
+				$('#pop_alert').stop().fadeIn(300);
+		        $('#pop_alert').stop().fadeIn(300);
+		        bool = false;
+		        return false; */
+			}
+		}
+
+		if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
+			 cnt += 1;
+			 msg += "<fmt:message key="PWD_NOT_SAME" bundle="${bundle}"/>";
+		 }
+
 
 		/* if(params.sectNo){
 			cnt += 1;
 			msg += "비밀번호는 필수입력 입니다.<br>";
 		} */
 
-		if(!params.sectNo&&g_isInsert){
-			cnt += 1;
-			msg += "<fmt:message key="PASSWORD_REQUIRED" bundle="${bundle}"/><br>";
-		}
+
 
 		if(!params.usrNm){
 			cnt += 1;
@@ -622,8 +644,13 @@ var g_idCheck = false;
 			msg += "<fmt:message key="AUTH_END_REQUIRED" bundle="${bundle}"/><br>";
 		}
 
+		if (params.endDt && params.useDt > params.endDt) {
+			cnt += 1;
+			msg += "<fmt:message key="AUTH_DATE_E_S" bundle="${bundle}"/><br>";
+		}
 
-		if (today > params.useDt) {
+
+	/* 	if (today > params.useDt) {
 			cnt += 1;
 			msg += "<fmt:message key="AUTH_DATE_S_N" bundle="${bundle}"/><br>";
 		}
@@ -633,21 +660,12 @@ var g_idCheck = false;
 			msg += "<fmt:message key="AUTH_DATE_E_N" bundle="${bundle}"/><br>";
 		}
 
-		if (params.useDt > params.endDt) {
-			cnt += 1;
-			msg += "<fmt:message key="AUTH_DATE_E_S" bundle="${bundle}"/><br>";
-		}
-
 		if (today == params.endDt) {
 			cnt += 1;
 			msg += "<fmt:message key="SELECT_AUTH_DATE_E_N" bundle="${bundle}"/><br>";
 		}
 
-		 if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
-			 cnt += 1;
-			 msg += "<fmt:message key="PWD_NOT_SAME" bundle="${bundle}"/>";
-		 }
-
+	*/
 
 		if(cnt>0){
 			$("#alert_msg").html(msg);
@@ -713,7 +731,7 @@ var g_idCheck = false;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
-					appendRow += '<tr>'
+					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.usrId+'</td>'
 						+'<td align="center" class="listtd">'+el.usrNm+'</td>'
@@ -805,6 +823,7 @@ var g_idCheck = false;
 
 				g_isInsert = false;
 				g_idCheck = true;
+				g_idDupliCheck = true;
 
 			//신규 팝업
 			} else {
@@ -835,6 +854,73 @@ var g_idCheck = false;
 
 				$('.p1_useDt').val('${todayDt}');
 				$('.p1_endDt').val('');
+
+
+
+				//$('#p1_adminYn').prop('checked',false);
+
+				//$('#pop_approve').prop('disabled',true);
+				//$('#pop_approve').css('display','none');//prop('disabled',false);
+
+				$('#userIdSpan').attr('class', 'remark');
+				$('#userPwdSpan').attr('class', 'remark');
+				$('#p1_pwd').css('display','block');
+				$('#p1_pwd2').css('display','block');
+
+				$('div.pass i').css('display','block');
+
+				$('div.pass input').attr('type', 'password');
+			    $('div.pass i').attr('class', 'fa fa-eye fa-lg');
+
+			    $('#p1_statConfirm').prop('checked', true);
+
+				g_isInsert = true;
+				g_idCheck = false;
+				g_idDupliCheck = false;
+
+				//캘린더 초기화
+				$('#search_calender1').daterangepicker({
+					   singleDatePicker: true,
+						autoApply: true,
+						autoUpdateInput: false,
+						singleClasses: "date",
+						locale: {
+							"format": "YYYY-MM-DD",
+							"separator": " - ",
+							"applyLabel": "<fmt:message key="CONFIRM" bundle="${bundle}"/>",
+							"cancelLabel": "<fmt:message key="CANCEL" bundle="${bundle}"/>",
+							"fromLabel": "From",
+							"toLabel": "~",
+							"customRangeLabel": "Custom",
+							"weekLabel": "W",
+							"daysOfWeek": [
+								"<fmt:message key="SUNDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="MONDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="TUESDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="WEDNESDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="THURSDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="FRIDAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="SATURDAY" bundle="${bundle}"/>"
+							],
+							"monthNames": [
+								"<fmt:message key="JANUARY" bundle="${bundle}"/>",
+					        	"<fmt:message key="FEBRUARY" bundle="${bundle}"/>",
+					        	"<fmt:message key="MARCH" bundle="${bundle}"/>",
+					        	"<fmt:message key="APRIL" bundle="${bundle}"/>",
+					        	"<fmt:message key="MAY" bundle="${bundle}"/>",
+					        	"<fmt:message key="JUNE" bundle="${bundle}"/>",
+					        	"<fmt:message key="JULY" bundle="${bundle}"/>",
+					        	"<fmt:message key="AUGUST" bundle="${bundle}"/>",
+					        	"<fmt:message key="SEPTEMBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="OCTOBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="NOVEMBER" bundle="${bundle}"/>",
+					        	"<fmt:message key="DECEMBER" bundle="${bundle}"/>"
+							],
+							"firstDay": 0
+						}
+					},function(start, end, label) {
+							$("#p1_useDt").val(start.format('YYYY-MM-DD'));
+					});
 
 				$('#search_calender2').daterangepicker({
 					   singleDatePicker: true,
@@ -878,26 +964,6 @@ var g_idCheck = false;
 					},function(start, end, label) {
 							$("#p1_endDt").val(start.format('YYYY-MM-DD'));
 					});
-
-				//$('#p1_adminYn').prop('checked',false);
-
-				//$('#pop_approve').prop('disabled',true);
-				//$('#pop_approve').css('display','none');//prop('disabled',false);
-
-				$('#userIdSpan').attr('class', 'remark');
-				$('#userPwdSpan').attr('class', 'remark');
-				$('#p1_pwd').css('display','block');
-				$('#p1_pwd2').css('display','block');
-
-				$('div.pass i').css('display','block');
-
-				$('div.pass input').attr('type', 'password');
-			    $('div.pass i').attr('class', 'fa fa-eye fa-lg');
-
-			    $('#p1_statConfirm').prop('checked', true);
-
-				g_isInsert = true;
-				g_idCheck = false;
 			}
 
 		}

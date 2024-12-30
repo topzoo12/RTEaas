@@ -772,7 +772,7 @@ $('#sortchk .sorting').on('click', function() {
 							+ "<div class='info'><div class='tit'>"
 							+ "<span class='badge sm " + className + "'>" + name + "</span>"
 								//+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', ' " + device_name + "', '" + device_id + "', '" + addr_po_locality + "', '" + dateFormat + "', '" + data[index].point['latitude'] + "', '" + data[index].point['longitude'] + "', 'Y')\"'>" + device_name + " ( " + device_id + " )</h3></div>"
-								+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
+								+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N', 'Y')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
 							+ "<ul class='infoContents'>"
 							+ "<li> <fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + "</li>"
 							+ "<li> <fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</li>"
@@ -1003,7 +1003,7 @@ function reSearch() {
 
 				infoList.push("<li><a class='infoListItem'>"
 						//+ "<div class='info'><div class='tit'>"
-						+ "<div class='info' onClick=\"detail('" + id + "', 'N')\" style=\"cursor:pointer\"'><div class='tit'>"
+						+ "<div class='info' onClick=\"detail('" + id + "', 'N', 'Y')\" style=\"cursor:pointer\"'><div class='tit'>"
 						+ "<span class='badge sm " + className + "'>" + name + "</span>"
 						//+ "<h3 class='infoTitle' onClick=\"detail('" + id + "', 'N')\"'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
 						+ "<h3 class='infoTitle'>" + deviceNm + " ( " + deviceId + " )</h3></div>"
@@ -1037,7 +1037,7 @@ function reSearch() {
 
 			popupContent += "Marker " + (index + 1) + " : "
 							+ "<b id='" + marker.options.id + "'" //+ mouseoverTxt + mouseoutTxt
-							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y')\">"
+							+ "class='txtColor' onClick=\"detail('" + item.id + "', 'Y', 'N')\">"
 							+ marker.getLatLng().toString()
 							+ "</b><br>";
 
@@ -1072,7 +1072,7 @@ function reSearch() {
 
 }
 
-function detail(id, clusterChk){
+function detail(id, clusterChk, listClicked){
 
 	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
 
@@ -1097,7 +1097,9 @@ function detail(id, clusterChk){
 		}
 	});
 
-	map.setView({lat:lat, lng}, map.getZoom());
+	if (listClicked =='Y') {
+ 		map.setView({lat:lat, lng}, map.getZoom());
+ 	}
 
 	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
 				+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
@@ -1322,7 +1324,7 @@ function onMarkerClick(e) {
 
 	// 현재 클릭된 마커를 추적
     //activeMarker = this;
-    detail(e.target.options.id, 'N');
+    detail(e.target.options.id, 'N', 'N');
 
 	/* detail(e.target.options.id
 			, e.target.options.deviceName

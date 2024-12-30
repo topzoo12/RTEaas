@@ -310,6 +310,8 @@ $('.ps_select').on('click', function () {
 	});
 
 	$('.pop_reg').on('click', function(){
+		g_isInsert = true;
+
 		let target_pop = $(this).data('pop');
         $('#pop_'+target_pop).stop().fadeIn(300);
         if($('.pop_wrap').length){
@@ -583,8 +585,6 @@ $('.ps_select').on('click', function () {
 	}
 
 	function popupData(target_pop,row){
-
-		console.log('멤뉴', row.find('td:eq(15)').text())
 
 		if(target_pop=='write-1'){
 			if(row.length) {

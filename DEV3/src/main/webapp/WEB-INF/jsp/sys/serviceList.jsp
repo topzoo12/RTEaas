@@ -79,7 +79,13 @@
 							<td align="center" class="listtd"><c:out value="${result.rdrtrNm}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.emailAddr}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.roadnmAddr}"/> <c:out value="${result.roadnmdtlAddr}"/></td>
-							<td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+							<td align="center" class="listtd">
+							<%-- <c:out value="${result.useYn}"/> --%>
+								<c:choose>
+									<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+							</td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.hpNo}"/></td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.telNo}"/></td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.roadzpNo}"/></td>
@@ -153,7 +159,7 @@
 									<td><input type="text" value="" name="wtY" id="p1_wtY" class="input3" placeholder=""></td>
 								</tr> --%>
 								<tr>
-									<th>지도중심선택<span class="remark"></span></th>
+									<th><fmt:message key="MAP_CENTER_SELECT" bundle="${bundle}"/><span class="remark"></span></th>
  									<!--<td><input type="text" value="" name="wtX" id="p1_wtX" class="input3" placeholder=""></td> -->
  									<!--<td><input type="text" value="" name="wtY" id="p1_wtY" class="input3" placeholder=""></td> -->
  									<td colspan="3">
@@ -608,7 +614,11 @@ $('#btn_search').on('click', function () {
 				var result = json.result;
 				var resultCode = json.resultCode;
 				var appendRow = "";
+
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.coId+'</td>'
@@ -616,7 +626,8 @@ $('#btn_search').on('click', function () {
 						+'<td align="center" class="listtd">'+el.rdrtrNm+'</td>'
 						+'<td align="center" class="listtd">'+el.emailAddr+'</td>'
 						+'<td align="center" class="listtd">'+el.roadnmAddr+ ' ' + el.roadnmdtlAddr + '</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
+						/* +'<td align="center" class="listtd">'+el.useYn+'</td>' */
 						+'<td align="center" class="listtd" style="display:none;">'+el.hpNo+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.telNo+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.roadzpNo+'</td>'
@@ -647,6 +658,15 @@ $('#btn_search').on('click', function () {
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 	function getMasterPopSearch(){
 		$('#table-ps tbody tr').remove();
@@ -756,7 +776,7 @@ $('#btn_search').on('click', function () {
 				$('#p1_hpNo').val(row.find('td:eq(7)').text());
 				$('#p1_hpgAddr').val(row.find('td:eq(5)').text()); //
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(6)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(6)').text()=='Y'?true:false);
 
 				$('#p1_wtX').val(row.find('td:eq(13)').text());
 				$('#p1_wtY').val(row.find('td:eq(14)').text());
@@ -770,8 +790,6 @@ $('#btn_search').on('click', function () {
 
 				setLevelList(1, '');
 
-				//console.log("areaCodeLv2 = " + row.find('td:eq(18)').text());
-				//console.log("areaCodeLv1 = " + row.find('td:eq(19)').text());
 				$('#level1').text("");
 				$('#level2').text("");
 
@@ -813,9 +831,6 @@ $('#btn_search').on('click', function () {
  */
 				g_isInsert = false;
 			} else {
-
-
-
 
 				$('#p1_coId').val('');
 				$('#p1_coId').prop("disabled",false);

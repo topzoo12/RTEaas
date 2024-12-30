@@ -53,7 +53,7 @@
 					<form id="frm" action="/loginProc.do" method="post">
 						<p class="id">
 							<label for="usrId" class="usrId_label">ID</label>
-							<input type="text" value="" name="usrId" id="usrId" class="icon_id" >
+							<input type="text" value="" name="usrId" id="usrId" class="icon_id">
 						</p>
 						<p class="password">
 							<label for="usrPw" class="usrPw_label">PASSWORD</label>
@@ -109,9 +109,10 @@ const currentTheme = localStorage.getItem('theme');
 if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark') {
+   /*  if (currentTheme === 'dark') {
+
         toggleSwitch.checked = true;
-    }
+    } */
 }
 
 function loginProc(){
@@ -146,17 +147,17 @@ function checkUserCdNaByIp(){
 
 	  		 if(regionData =='KR'){
 	 	       $('.icon_id').attr("placeholder", "이메일을 입력하세요");
-	 	       $('.icon_password').attr("placeholder","비밀번호를 입력하세요 (8~16자)");
+	 	       $('.icon_password').attr("placeholder","비밀번호를 입력하세요 (8자 이상)");
 	 	       $('.btn_select').text('확인');
 
 	  		} else if (regionData =='JP'){
 		 	    $('.icon_id').attr("placeholder", "(jp)이메일을 입력하세요");
-		 	    $('.icon_password').attr("placeholder","(jp)비밀번호를 입력하세요 (8~16자)");
+		 	    $('.icon_password').attr("placeholder","(jp)비밀번호를 입력하세요 (8자 이상)");
 		 	    $('.btn_select').text('(jp)확인');
 
 	  		} else {
 		 	    $('.icon_id').attr("placeholder", "Enter your E-Mail");
-		 	    $('.icon_password').attr("placeholder","Enter a password of 8 to 16 characters.");
+		 	    $('.icon_password').attr("placeholder","Enter your password (8 characters or more)");
 		 	    $('.btn_select').text('Confirm');
 
 	  		}

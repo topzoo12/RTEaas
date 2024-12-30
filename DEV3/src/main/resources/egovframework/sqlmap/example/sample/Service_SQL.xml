@@ -85,7 +85,7 @@
 				,bzcat_nm as bzcatNm
 				,aprv_yn as aprvYn
 				,tel_no as telNo
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,co_div as coDiv
 				,rmks_cts as rmksCts
 				,regpsn_id as regId

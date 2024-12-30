@@ -66,7 +66,7 @@
 				 , DEVICE_RMKS as deviceRmks
 				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
 				 , REGPSN_ID as regpsnId
-				 , TO_CHAR(REG_DTM,  'YYYY/MM/DD') as regDtm
+				 , TO_CHAR(REG_DTM, 'YYYY-MM-DD') AS regDtm
 				 , UPD_ID as updId
 				 , UPD_DTM as updDtm
 				 , ROW_NUMBER() OVER (order by TO_CHAR(REG_DTM,  'YYYY/MM/DD') desc, DEVICE_ID) as rowno

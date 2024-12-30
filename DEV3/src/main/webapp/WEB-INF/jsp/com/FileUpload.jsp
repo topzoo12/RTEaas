@@ -44,8 +44,8 @@
 				<div class="fileUploadwrap">
 					<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data">
 						<input type="file" name="file" id="file" readonly>
-						<label for="file">파일 선택</label>
-						<button class="btn_bgPrimary btn_uploadFile" id="uploadFile">파일 업로드</button>
+						<label for="file"><fmt:message key="FILE_SELECT" bundle="${bundle}"/></label>
+						<button class="btn_bgPrimary btn_uploadFile" id="uploadFile"><fmt:message key="FILE_UPLOAD" bundle="${bundle}"/></button>
 					</form>
 				</div>
 			</div>
@@ -63,11 +63,11 @@
 				<thead>
 					<tr>
                         <th>No.</th>
-                        <th>파일명</th>
+                        <th><fmt:message key="FILE_NM" bundle="${bundle}"/></th>
                         <!-- <th>파일타입</th> -->
-                        <th>파일사이즈</th>
-                        <th>저장자</th>
-                        <th>저장날짜</th>
+                        <th><fmt:message key="FILE_SIZE" bundle="${bundle}"/></th>
+                        <th><fmt:message key="REG_USER" bundle="${bundle}"/></th>
+                        <th><fmt:message key="REG_DT" bundle="${bundle}"/></th>
                         <!-- <th>파일경로</th> -->
 					</tr>
 				</thead>
@@ -243,9 +243,11 @@ var fileNameChk = $('#file').val();
 
 $('#file').on('change', function() {
     var fileName = $(this).val().split('\\').pop(); // 파일 경로에서 이름만 추출
-    $('#fileName').text(fileName || "선택된 파일 없음");
+    $('#fileName').text(fileName || "No Selected File");
+
 });
 
+//$('#fileName').text(fileName || "선택된 파일 없음");
 
 $('#uploadFile').on('click', function(){
 
@@ -317,6 +319,7 @@ function valid(){
 	if(!$('#file').val()){
 		cnt += 1;
 		msg += "<fmt:message key="NO_SELECTED_FILE" bundle="${bundle}"/>"
+		console.log('파입 업로드 파일 없음');
 	} else 	if ($('#file')[0].files[0].size > 10485760) {
 		//10485760		/ 10메가
 		//524288000		/ 500메가
