@@ -107,9 +107,16 @@ div.pass i{
 	                        <td align="center" class="listtd"><c:out value="${result.regDt}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.useDt}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.endDt}"/></td>
-	                        <td align="center" class="listtd"><c:out value="${result.statConfirm}"/></td>
+	                        <td align="center" class="listtd">
+	                        <%-- <c:out value="${result.statConfirm}"/> --%>
+	                        	<c:choose>
+									<c:when test="${result.statConfirm eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.statConfirm eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+	                        </td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.authgrpId}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.adminYn}"/></td>
+	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.statConfirm}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -731,6 +738,9 @@ var g_idDupliCheck = false;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.statConfirm);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.usrId+'</td>'
@@ -741,9 +751,10 @@ var g_idDupliCheck = false;
 						+'<td align="center" class="listtd">'+el.useDt+'</td>'
 						+'<td align="center" class="listtd">'+el.endDt+'</td>'
 						//+'<td align="center" class="listtd">'+el.useYn+'</td>'
-						+'<td align="center" class="listtd">'+el.statConfirm+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.authgrpId+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.adminYn+'</td>'
+						+'<td align="center" class="listtd" style="display:none;">'+el.statConfirm+'</td>'
 						+'</tr>';
 				});
 
@@ -760,6 +771,15 @@ var g_idDupliCheck = false;
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 	function popupData(target_pop,row){
 		if(target_pop=='write-1'){
@@ -800,7 +820,7 @@ var g_idDupliCheck = false;
 					$('#search_calender2').data('daterangepicker').setEndDate($('.p1_endDt').val());
 				}
 
-				$('#p1_statConfirm').prop('checked', row.find('td:eq(8)').text()=='사용'? true:false);
+				$('#p1_statConfirm').prop('checked', row.find('td:eq(11)').text()=='Y'? true:false);
 
 				//관리자 여부
 				//$('#p1_adminYn').prop('checked',row.find('td:eq(8)').text()=='사용'?true:false);

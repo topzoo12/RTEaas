@@ -71,9 +71,15 @@
 							<td align="left" class="listtd"><c:out value="${result.srnNm}"/></td>
 							<td align="left" class="listtd"><c:out value="${result.srnUrl}"/></td>
 							<td align="left" class="listtd"><c:out value="${result.rmksCts}"/></td>
-							<td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+							<td align="center" class="listtd">
+								<c:choose>
+									<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+							</td>
 							<td style="display:none;" align="center" class="listtd"><c:out value="${result.regId}"/></td>
 							<td style="display:none;" align="center" class="listtd"><c:out value="${result.regDt}"/></td>
+							<td style="display:none;" align="center" class="listtd"><c:out value="${result.useYn}"/></td>
 						</tr>
 					</c:forEach>
 		        	</tbody>
@@ -314,15 +320,18 @@ var g_isInsert = true;
 				var resultCode = json.resultCode;
 				var appendRow = "";
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.srnId+'</td>'
 						+'<td align="left" class="listtd">'+el.srnNm+'</td>'
 						+'<td align="left" class="listtd">'+el.srnUrl+'</td>'
 						+'<td align="left" class="listtd">'+el.rmksCts+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" style="display:none;" class="listtd">'+el.regId+'</td>'
 						+'<td align="center" style="display:none;" class="listtd">'+el.regDt+'</td>'
+						+'<td align="center" style="display:none;" class="listtd">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -341,6 +350,15 @@ var g_isInsert = true;
 		});
 	};
 
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
+
 	function popupData(target_pop,row){
 		if(target_pop=='write-1'){
 			if(row.length) {
@@ -350,7 +368,9 @@ var g_isInsert = true;
 				$('#p1_srnNm').val(row.find('td:eq(2)').text());
 				$('#p1_srnUrl').val(row.find('td:eq(3)').text());
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(5)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(8)').text()=='Y'?true:false);
+
+				console.log('로우',row.find('td:eq(5)').text());
 
 				$('#p1_rmksCts').val(row.find('td:eq(4)').text());
 
@@ -365,7 +385,7 @@ var g_isInsert = true;
 				$('#p1_srnNm').val('');
 				$('#p1_srnUrl').val('');
 
-				$('#p1_useYn').prop('checked',false);
+				$('#p1_useYn').prop('checked',true);
 
 				$('#p1_rmksCts').val('');
 

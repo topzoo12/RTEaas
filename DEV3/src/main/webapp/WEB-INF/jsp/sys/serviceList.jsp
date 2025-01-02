@@ -99,6 +99,7 @@
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.mapMaxSize}"/></td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.areaCodeLv2}"/></td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.areaCodeLv1}"/></td>
+							<td align="center" class="listtd" style="display:none;" ><c:out value="${result.useYn}"/></td>
 						</tr>
 					</c:forEach>
 		        	</tbody>
@@ -641,6 +642,7 @@ $('#btn_search').on('click', function () {
 						+'<td align="center" class="listtd" style="display:none;">'+el.mapMaxSize+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.areaCodeLv2+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.areaCodeLv1+'</td>'
+						+'<td align="center" class="listtd" style="display:none;">'+el.useYn+'</td>'
 
 				});
 
@@ -776,7 +778,7 @@ $('#btn_search').on('click', function () {
 				$('#p1_hpNo').val(row.find('td:eq(7)').text());
 				$('#p1_hpgAddr').val(row.find('td:eq(5)').text()); //
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(6)').text()=='Y'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(20)').text()=='Y'?true:false);
 
 				$('#p1_wtX').val(row.find('td:eq(13)').text());
 				$('#p1_wtY').val(row.find('td:eq(14)').text());

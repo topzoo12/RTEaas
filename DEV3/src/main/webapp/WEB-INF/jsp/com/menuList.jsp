@@ -98,13 +98,19 @@
                         <td align="center" class="listtd"><c:out value="${result.srtSeq}"/></td>
                         <td align="center" class="listtd"><c:out value="${result.srnUrl}"/></td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result.markYn}"/></td>
-                        <td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+                        <td align="center" class="listtd">
+                        	<c:choose>
+									<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+							</c:choose>
+                        </td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result.regId}"/></td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result.regDt}"/></td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result.mnuLvl}"/></td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result.coId}"/></td>
                     	<td align="center" class="subj" style="display:none;"><c:out value="${result.mnuNmUs}"/></td>
                         <td align="center" class="subj" style="display:none;"><c:out value="${result.mnuNmJp}"/></td>
+                        <td style="display:none;" align="center" class="listtd"><c:out value="${result.useYn}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -328,7 +334,6 @@ $('.ps_select').on('click', function () {
         	return
         }
 
-        console.log('row 확인',row );
         $('#pop_'+target_pop).stop().fadeIn(300);
         if($('.pop_wrap').length){
             $('#pop_'+target_pop).stop().fadeIn(300);
@@ -493,6 +498,9 @@ $('.ps_select').on('click', function () {
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class='+(el.mnuLvl==1?'depth1':(el.mnuLvl==2?'depth2':''))+'>'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="subj">'+el.mnuNm+'</td>'
@@ -503,15 +511,17 @@ $('.ps_select').on('click', function () {
 						+'<td align="center" class="listtd">'+el.srtSeq+'</td>'
 						+'<td align="center" class="listtd">'+el.srnUrl+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.markYn+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.regId+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.regDt+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.mnuLvl+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.coId+'</td>'
 						+'<td align="center" class="subj" style="display:none;">'+el.mnuNmUs+'</td>'
 						+'<td align="center" class="subj" style="display:none;">'+el.mnuNmJp+'</td>'
+						+'<td align="center" class="subj" style="display:none;">'+el.useYn+'</td>'
 						+'</tr>';
 				});
+
 
 				$('#table-1 > tbody').append(appendRow);
 				$('#totCnt').text(result.length);
@@ -526,6 +536,16 @@ $('.ps_select').on('click', function () {
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
+
 	function getMasterPopSearch(){
 		$('#table-ps tbody tr').remove();
 		var params = {
@@ -610,7 +630,7 @@ $('.ps_select').on('click', function () {
 				$('#p1_srtSeq').val(row.find('td:eq(6)').text());
 
 				$('#p1_markYn').prop('checked',row.find('td:eq(8)').text()=='사용'?true:false);
-				$('#p1_useYn').prop('checked',row.find('td:eq(9)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(16)').text()=='Y'?true:false);
 
 				$('#p1_regId').val(row.find('td:eq(10)').text());
 				$('#p1_regDt').val(row.find('td:eq(11)').text());
@@ -638,7 +658,7 @@ $('.ps_select').on('click', function () {
 				$('#p1_srtSeq').val(0);
 
 				$('#p1_markYn').prop('checked',false);
-				$('#p1_useYn').prop('checked',false);
+				$('#p1_useYn').prop('checked',true);
 
 				$('#p1_regId').val('');
 				$('#p1_regDt').val('');

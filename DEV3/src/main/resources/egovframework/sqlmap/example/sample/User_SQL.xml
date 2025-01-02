@@ -91,7 +91,7 @@
 				,a.email_addr as emailAddr
 				,a.dept_cd as deptCd
 				,a.dept_nm as deptNm
-				,case a.use_yn when '1' then '사용' else '미사용' end as useYn
+				,case a.use_yn when '1' then 'Y' else 'N' end as useYn
 				,a.rmks_cts as rmksCts
 				,c.authgrp_nm as authgrpNm
 				,a.regpsn_id as regId
@@ -99,7 +99,7 @@
 				,a.upd_id as updId
 				,to_char(a.upd_dtm, 'YYYY-MM-DD') as updDt
 				,b.authgrp_id as authgrpId
-				,case a.stat_confirm when '1' then '사용' else '미사용' end as statConfirm
+				,case a.stat_confirm when '1' then 'Y' else 'N' end as statConfirm
 				,a.admin_yn as adminYn
 				,b.use_dt as useDt
 				,b.end_dt as endDt

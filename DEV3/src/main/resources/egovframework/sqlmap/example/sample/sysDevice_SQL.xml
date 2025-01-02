@@ -64,7 +64,7 @@
 				 , FW_INFO as fwInfo
 				 , DEVICE_SPEC as deviceSpec
 				 , DEVICE_RMKS as deviceRmks
-				 , CASE USE_YN WHEN 'Y' THEN '사용' ELSE '미사용' END as useYn
+				 , CASE USE_YN WHEN 'Y' THEN 'Y' ELSE 'N' END as useYn
 				 , REGPSN_ID as regpsnId
 				 , TO_CHAR(REG_DTM, 'YYYY-MM-DD') AS regDtm
 				 , UPD_ID as updId

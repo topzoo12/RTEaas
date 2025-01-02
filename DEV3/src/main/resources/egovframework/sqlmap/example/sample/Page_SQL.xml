@@ -39,7 +39,7 @@
 				,opntp_cd as opntpCd
 				,authgrp_cd as authgrpCd
 				,rmks_cts as rmksCts
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,mp_yn as mpYn
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt

@@ -128,7 +128,7 @@
 				,(select srn_url from tsys_screen where srn_id = menu.srn_id) as srnUrl
 				,arg_val as argVal
 				,mark_yn as markYn
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,mnu_desc as mnuDesc
 				,mp_yn as mpYn
 				,regpsn_id as regId

@@ -63,10 +63,16 @@
                     <tr class="<c:if test="${result1.rowno eq '1'}">on</c:if>">
 	                    <td align="center" class="listtd"><c:out value="${result1.rowno}"/></td>
 	                    <td align="center" class="listtd"><c:out value="${result1.authgrpNm}"/></td>
-	                    <td align="center" class="listtd"><c:out value="${result1.useYn}"/></td>
+	                    <td align="center" class="listtd">
+	                    	<c:choose>
+								<c:when test="${result1.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+								<c:when test="${result1.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+							</c:choose>
+	                    </td>
 	                    <td align="center" class="listtd" style="display:none;"><c:out value="${result1.rmksCts}"/></td>
 	                    <td align="center" class="listtd" style="display:none;"><c:out value="${result1.authgrpId}"/></td>
 	                    <td align="center" class="listtd" style="display:none;"><c:out value="${result1.coId}"/></td>
+	                    <td align="center" class="listtd" style="display:none;" ><c:out value="${result1.useYn}"/></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -193,13 +199,16 @@
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.authgrpNm+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.rmksCts+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.authgrpId+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.coId+'</td>'
+						+'<td align="center" class="listtd" style="display:none;">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -219,6 +228,15 @@
 		});
 
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 	function getDetail(obj){
 		var params = {

@@ -48,7 +48,7 @@
 				,msg_cts as msgCts
 				,msg_cts_eng as msgengCts
 				,msg_cts_jp as msgjpCts
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
 				,upd_id as updId

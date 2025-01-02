@@ -54,7 +54,7 @@
 				,device_nm         as fcltsNm
 				,'' as fcltsItlpcNmDs
 				,''         as stat
-				,case when USE_YN = 'Y' then '사용' else '미사용' end        as useSttus
+				,case when USE_YN = 'Y' then 'Y' else 'N' end        as useSttus
 				,'' as fcltsItlpcNm
 				from tb_device td
 			where co_id = #sessionCoId#

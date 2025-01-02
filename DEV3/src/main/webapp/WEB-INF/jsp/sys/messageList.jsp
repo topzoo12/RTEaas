@@ -94,9 +94,31 @@
                         <tr class="<c:if test="${result.rowno eq '1'}">on</c:if>">
                         <td align="center" class="listtd"><c:out value="${result.rowno}"/></td>
                         <td align="center" class="listtd"><c:out value="${result.msgId}"/></td>
-                        <td align="center" class="listtd"><c:out value="${result.msgdivNm}"/></td>
+
+                        <td align="center" class="listtd">
+
+                        <c:out value="${result.msgdivNm}"/>
+	                  <%--   시스템 알림
+
+	                  		<c:forEach var="select1" items="${selectList1}" varStatus="status">
+	                        <li class="optionItem" data-code="${select1.comCd}">
+	                        ${select1.cdNm}
+	                        <c:choose>
+								<c:when test="${nowCdNa eq 'KR'}">${select1.cdNm}</c:when>
+								<c:when test="${nowCdNa eq 'US'}">${select1.cdNmEng}</c:when>
+								<c:when test="${nowCdNa eq 'JP'}">${select1.cdNmJp}</c:when>
+							</c:choose>
+	                        </li>
+                   		 </c:forEach> --%>
+                        </td>
+
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.taskdivNm}"/></td>
-                        <td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+                        <td align="center" class="listtd">
+                        	<c:choose>
+								<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+								<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+							</c:choose>
+                        </td>
                         <td align="center" class="listtd"><c:out value="${result.msgCts}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.msgengCts}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.msgjpCts}"/></td>
@@ -104,6 +126,7 @@
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.regDt}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.msgdivCd}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.taskdivCd}"/></td>
+                        <td align="center" class="listtd" style="display:none"><c:out value="${result.useYn}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -391,12 +414,15 @@ var g_isInsert = true;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.msgId+'</td>'
 						+'<td align="center" class="listtd">'+el.msgdivNm+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.taskdivNm+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd">'+el.msgCts+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.msgengCts+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.msgjpCts+'</td>'
@@ -404,6 +430,7 @@ var g_isInsert = true;
 						+'<td align="center" class="listtd" style="display:none;">'+el.regDt+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.msgdivCd+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.taskdivCd+'</td>'
+						+'<td align="center" class="listtd" style="display:none">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -420,6 +447,15 @@ var g_isInsert = true;
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 	var selectKeyValue = [];
 
@@ -458,7 +494,7 @@ var g_isInsert = true;
 				$('#p1_msgengCts').val(row.find('td:eq(6)').text());
 			 	$('#p1_msgjpCts').val(row.find('td:eq(7)').text());
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(4)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(12)').text()=='Y'?true:false);
 
 				$('#p1_regId').val(row.find('td:eq(8)').text());
 				$('#p1_regDt').val(row.find('td:eq(9)').text());
@@ -478,7 +514,7 @@ var g_isInsert = true;
 				$('#p1_msgengCts').val('');
 				$('#p1_msgjpCts').val('');
 
-				$('#p1_useYn').prop('checked',false);
+				$('#p1_useYn').prop('checked',true);
 
 				$('#p1_regId').val('');
 				$('#p1_regDt').val('');

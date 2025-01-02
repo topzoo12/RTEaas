@@ -85,12 +85,18 @@
                         <%-- <td align="center" class="listtd"><c:out value="${result1.taskDivNm}"/></td> --%>
                         <td align="center" class="listtd"><c:out value="${result1.cdgrpId}"/></td>
                         <td align="center" class="listtd"><c:out value="${result1.cdgrpNm}"/></td>
-                        <td align="center" class="listtd"><c:out value="${result1.useYn}"/></td>
+                        <td align="center" class="listtd">
+                       		 <c:choose>
+								<c:when test="${result1.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+								<c:when test="${result1.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+							</c:choose>
+                        </td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result1.cdgrpDesc}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result1.regId}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result1.regDt}"/></td>
                         <td align="center" class="listtd" style="display:none"><c:out value="${result1.taskDiv}"/></td>
                         <td align="center" class="listtd" style="display:none;"><c:out value="${result1.coId}"/></td>
+                        <td style="display:none;" align="center" class="listtd"><c:out value="${result1.useYn}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -162,7 +168,12 @@
 	                        <td align="center" class="listtd"><c:out value="${result2.comCd}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result2.cdNm}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result2.srtSeq}"/></td>
-	                        <td align="center" class="listtd"><c:out value="${result2.useYn}"/></td>
+	                        <td align="center" class="listtd">
+	                       	 	<c:choose>
+									<c:when test="${result2.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result2.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+	                        </td>
 	                        <td align="center" class="listtd" style="display:none"><c:out value="${result2.cdDesc}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result2.hrnkcomCd}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result2.etc1}"/></td>
@@ -171,6 +182,7 @@
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.regId}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.regDt}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result2.coId}"/></td>
+	                        <td style="display:none;" align="center" class="listtd"><c:out value="${result2.useYn}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -655,17 +667,21 @@
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						/* +'<td align="center" class="listtd">'+el.taskDivNm+'</td>' */
 						+'<td align="center" class="listtd">'+el.cdgrpId+'</td>'
 						+'<td align="center" class="listtd">'+el.cdgrpNm+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.cdgrpDesc+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.regId+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.regDt+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.taskDiv+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.coId+'</td>'
+						+'<td align="center" class="listtd" style="display:none">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -687,6 +703,15 @@
 		});
 	};
 
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
+
 	function getDetail(obj){
 		var params = {
 			'coId':$(obj).find('td:eq(8)').text()
@@ -706,6 +731,9 @@
 
 				result.forEach (function (el, index) {
 					//appendRow += '<tr>'
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.cdgrpId+'</td>'
@@ -713,7 +741,7 @@
 						+'<td align="center" class="listtd">'+el.comCd+'</td>'
 						+'<td align="center" class="listtd">'+el.cdNm+'</td>'
 						+'<td align="center" class="listtd">'+el.srtSeq+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.cdDesc+'</td>'
 						+'<td align="center" class="listtd">'+el.hrnkcomCd+'</td>'
 						+'<td align="center" class="listtd">'+el.etc1+'</td>'
@@ -724,6 +752,7 @@
 						+'<td align="center" class="listtd" style="display:none">'+el.coId+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.cdNmEng+'</td>'   //eq td row 매핑데이터
 						+'<td align="center" class="listtd" style="display:none">'+el.cdNmJp+'</td>'
+						+'<td align="center" class="listtd" style="display:none">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -754,7 +783,7 @@
 				$('#p1_cdgrpNm').val(row.find('td:eq(2)').text());
 				$('#p1_cdgrpDesc').val(row.find('td:eq(4)').text());
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(3)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(9)').text()=='Y'?true:false);
 
 				//if(row.find('td:eq(4)').children().children().eq(0).val()=='1'){
 				//	$('#p1_useYn').prop('checked',true);
@@ -773,7 +802,7 @@
 
 				$('#p1_cdgrpNm').val('');
 				$('#p1_cdgrpDesc').val('');
-				$('#p1_useYn').prop('checked',false);
+				$('#p1_useYn').prop('checked',true);
 				$('#p1_regId').val('');
 				$('#p1_regDt').val('');
 				$('#p1_coId').val($('#coId').data('code'));
@@ -799,7 +828,7 @@
 				$('#p2_etc2').val(row.find('td:eq(10)').text());
 				$('#p2_etc3').val(row.find('td:eq(11)').text());
 
-				$('#p2_useYn').prop('checked',row.find('td:eq(6)').text()=='사용'?true:false);
+				$('#p2_useYn').prop('checked',row.find('td:eq(17)').text()=='Y'?true:false);
 
 				$('#p2_regId').val(row.find('td:eq(12)').text());
 				$('#p2_regDt').val(row.find('td:eq(13)').text());
@@ -808,26 +837,6 @@
 				$('#p2_cdNmEng').val(row.find('td:eq(15)').text());
 				$('#p2_cdNmJp').val(row.find('td:eq(16)').text());
 
-				/* $('#p2_cdgrpId').val(row.find('td:eq(1)').text());
-
-				$('#p2_cdId').val(row.find('td:eq(2)').text());
-				$('#p2_cdId').prop("disabled",true);
-
-				$('#p2_comCd').val(row.find('td:eq(3)').text());
-				$('#p2_cdNm').val(row.find('td:eq(4)').text());
-				$('#p2_srtSeq').val(row.find('td:eq(5)').text());
-				$('#p2_cdDesc').val(row.find('td:eq(7)').text());
-				$('#p2_hrnkcomCd').val(row.find('td:eq(8)').text());
-				$('#p2_etc1').val(row.find('td:eq(9)').text());
-				$('#p2_etc2').val(row.find('td:eq(10)').text());
-				$('#p2_etc3').val(row.find('td:eq(11)').text());
-
-				$('#p2_useYn').prop('checked',row.find('td:eq(6)').text()=='사용'?true:false);
-
-				$('#p2_regId').val(row.find('td:eq(12)').text());
-				$('#p2_regDt').val(row.find('td:eq(13)').text());
-				$('#p2_coId').val(row.find('td:eq(14)').text());
- */
 				g_isInsert = false;
 			} else {
 				$('#p2_cdgrpId').val($('#table-1 > tbody .on').find('td:eq(1)').text());
@@ -848,7 +857,7 @@
 				$('#p2_etc2').val('');
 				$('#p2_etc3').val('');
 
-				$('#p2_useYn').prop('checked',false);
+				$('#p2_useYn').prop('checked',true);
 
 				$('#p2_regId').val('');
 				$('#p2_regDt').val('');

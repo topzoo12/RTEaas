@@ -90,8 +90,14 @@
 							<td align="center" class="listtd"><c:out value="${result.macAddr}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.deviceRmks}"/></td>
 							<td align="center" class="listtd"><c:out value="${result.regDtm}"/></td>
-							<td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+							<td align="center" class="listtd">
+								<c:choose>
+									<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+							</td>
 							<td align="center" class="listtd" style="display:none;"><c:out value="${result.coId}"/></td>
+							<td align="center" class="listtd" style="display:none;"><c:out value="${result.useYn}"/></td>
 						</tr>
 					</c:forEach>
 		        	</tbody>
@@ -191,6 +197,8 @@ var g_isInsert = true;
  				var resultCode = json.resultCode;
 				var appendRow = "";
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.deviceId+'</td>'
@@ -199,8 +207,9 @@ var g_isInsert = true;
 						+'<td align="center" class="listtd">'+el.macAddr+'</td>'
 						+'<td align="center" class="listtd">'+el.deviceRmks+'</td>'
 						+'<td align="center" class="listtd">'+el.regDtm+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.coId+'</td>'
+						+'<td align="center" class="listtd" style="display:none;">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 				$('#table-1 > tbody').append(appendRow);
@@ -219,6 +228,15 @@ var g_isInsert = true;
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 
 	//	ROW 선택 처리
@@ -549,7 +567,7 @@ var g_isInsert = true;
 				$('#p1_deviceRmks').val(row.find('td:eq(5)').text());
 				$('#p1_macAddr').val(row.find('td:eq(4)').text());
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(7)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(9)').text()=='Y'?true:false);
 				// $('#p1_useYn').val('checked',row.find('td:eq(7)').text()=='사용'?'Y':'N');
 				g_isInsert = false;
 			} else {

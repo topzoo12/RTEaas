@@ -73,11 +73,17 @@
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.coNm}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.authgrpNm}"/></td>
 	                        <td align="center" class="listtd"><c:out value="${result.rmksCts}"/></td>
-	                        <td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
+	                        <td align="center" class="listtd">
+	                        	<c:choose>
+									<c:when test="${result.useYn eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+									<c:when test="${result.useYn eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+								</c:choose>
+	                        </td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.regId}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.regDt}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.authgrpId}"/></td>
 	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.coId}"/></td>
+	                        <td align="center" class="listtd" style="display:none;"><c:out value="${result.useYn}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -310,16 +316,20 @@ var g_isInsert = true;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useYn);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.coNm+'</td>'
 						+'<td align="center" class="listtd">'+el.authgrpNm+'</td>'
 						+'<td align="center" class="listtd">'+el.rmksCts+'</td>'
-						+'<td align="center" class="listtd">'+el.useYn+'</td>'
+						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.regId+'</td>'
 						+'<td align="center" class="listtd" style="display:none;">'+el.regDt+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.authgrpId+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.coId+'</td>'
+						+'<td align="center" class="listtd" style="display:none">'+el.useYn+'</td>'
 						+'</tr>';
 				});
 
@@ -336,6 +346,15 @@ var g_isInsert = true;
 		});
 	};
 
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
+
 	function popupData(target_pop,row){
 		if(target_pop=='write-1'){
 			if(row.length) {
@@ -344,7 +363,7 @@ var g_isInsert = true;
 
 				$('#p1_rmksCts').val(row.find('td:eq(3)').text());
 
-				$('#p1_useYn').prop('checked',row.find('td:eq(4)').text()=='사용'?true:false);
+				$('#p1_useYn').prop('checked',row.find('td:eq(9)').text()=='Y'?true:false);
 
 				$('#p1_regId').val(row.find('td:eq(5)').text());
 				$('#p1_regDt').val(row.find('td:eq(6)').text());

@@ -56,7 +56,7 @@
 				,task_div as taskDiv
 				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd = task_div) as taskDivNm
 				,cdgrp_desc as cdgrpDesc
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,rmks_cts as rmksCts
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
@@ -91,7 +91,7 @@
 				,task_div as taskDiv
 				,(select cd_nm from tsys_code where co_id = a.co_id and com_cd = task_div) as taskDivNm
 				,cdgrp_desc as cdgrpDesc
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,rmks_cts as rmksCts
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
@@ -179,7 +179,7 @@
 				,etc_2 as etc2
 				,etc_3 as etc3
 				,rmks_cts as rmksCts
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
 				,upd_id as updId
@@ -211,7 +211,7 @@
 				,etc_2 as etc2
 				,etc_3 as etc3
 				,rmks_cts as rmksCts
-				,case use_yn when '1' then '사용' else '미사용' end as useYn
+				,case use_yn when '1' then 'Y' else 'N' end as useYn
 				,regpsn_id as regId
 				,to_char(reg_dtm, 'YYYY-MM-DD') as regDt
 				,upd_id as updId

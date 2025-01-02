@@ -64,8 +64,14 @@ console.log("${authInfo.cdNa}");
                         <td><c:out value="${result1.fcltsUuid}"/></td>
                         <td><c:out value="${result1.fcltsNm}"/></td>
                         <td style="display:none;"><c:out value="${result1.stat}"/></td>
-                        <td><c:out value="${result1.useSttus}"/></td>
+                        <td><%-- <c:out value="${result1.useSttus}"/> --%>
+                        	<c:choose>
+								<c:when test="${result1.useSttus eq 'Y'}"><fmt:message key="USE" bundle="${bundle}"/></c:when>
+								<c:when test="${result1.useSttus eq 'N'}"><fmt:message key="UNUSE" bundle="${bundle}"/></c:when>
+							</c:choose>
+                        </td>
                         <td style="display:none;"><c:out value="${result1.fcltsItlpcNm}"/></td>
+                        <td style="display:none;"><c:out value="${result1.useSttus}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -422,13 +428,17 @@ var g_isInsert = true;
 				var appendRow = "";
 
 				result.forEach (function (el, index) {
+
+					var useYn = getUseYn(el.useSttus);
+
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td>'+el.rowno+'</td>'
 						+'<td>'+el.fcltsUuid+'</td>'
 						+'<td>'+el.fcltsNm+'</td>'
 						+'<td style="display:none;">'+el.stat+'</td>'
-						+'<td>'+el.useSttus+'</td>'
+						+'<td>'+useYn+'</td>'
 						+'<td style="display:none;">'+el.fcltsItlpcNm+'</td>'
+						+'<td style="display:none;">'+el.useSttus+'</td>'
 						+'</tr>';
 				});
 
@@ -447,6 +457,15 @@ var g_isInsert = true;
 			}
 		});
 	};
+
+	function getUseYn(useYn){
+
+		if (useYn =='Y'){
+			return '<fmt:message key="USE" bundle="${bundle}"/>';
+		} else {
+			return '<fmt:message key="UNUSE" bundle="${bundle}"/>';
+		}
+	}
 
 	function getDetail(obj){
 		$('#table-2 tbody tr').remove();
