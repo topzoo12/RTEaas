@@ -47,7 +47,7 @@
             </span>
         </c:if>
 
-        <span class="name pop_pwd" data-pop="userPwd"><span class="companyName">${authInfo.sessionCoNm} </span>${authInfo.sessionUserNm} 님</span>
+        <span class="name pop_pwd" data-pop="userPwd"><span class="companyName">${authInfo.sessionCoNm} </span>${authInfo.sessionUserNm} <fmt:message key="SIR" bundle="${bundle}"/></span>
 
         <span class="opt">
             <div class="language-container">
