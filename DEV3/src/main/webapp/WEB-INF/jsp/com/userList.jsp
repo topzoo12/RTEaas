@@ -620,7 +620,7 @@ var g_idDupliCheck = false;
 
 		if($('#p1_pwd').val() != $('#p1_pwd2').val()) {
 			 cnt += 1;
-			 msg += "<fmt:message key="PWD_NOT_SAME" bundle="${bundle}"/>";
+			 msg += "<fmt:message key="PWD_NOT_SAME" bundle="${bundle}"/><br>";
 		 }
 
 
