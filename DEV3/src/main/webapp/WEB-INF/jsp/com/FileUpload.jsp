@@ -45,7 +45,8 @@
 					<form id="fileUploadForm" name="frmName" method="post" enctype="multipart/form-data">
 						<input type="file" name="file" id="file" readonly>
 						<label for="file"><fmt:message key="FILE_SELECT" bundle="${bundle}"/></label>
-						<button class="btn_bgPrimary btn_uploadFile" id="uploadFile"><fmt:message key="FILE_UPLOAD" bundle="${bundle}"/></button>
+						<%-- <button class="btn_bgPrimary btn_uploadFile" id="uploadFile"><fmt:message key="FILE_UPLOAD" bundle="${bundle}"/></button> --%>
+						<fileBtn class="btn_bgPrimary btn_uploadFile" id="uploadFile"><fmt:message key="FILE_UPLOAD" bundle="${bundle}"/></fileBtn>
 					</form>
 				</div>
 			</div>
@@ -142,11 +143,6 @@ $('#table-1 > tbody > tr').on('dblclick', function(){
 	 //console.log(target_pop)
 
 	var row = $('#table-1 > tbody > .on');
-	//console.log(row.find('td:eq(1)').text());
-	//console.log(row.find('td:eq(2)').text());
-	//console.log(row.find('td:eq(3)').text());
-	//console.log(row.find('td:eq(4)').text());
-	//console.log(row.find('td:eq(5)').text());
 	//console.log(row.find('td:eq(6)').text());
 	//console.log(Math.floor(row.find('td:eq(6)').text()));
 
@@ -194,49 +190,6 @@ $('#table-1 > tbody > tr').on('dblclick', function(){
 	document.body.appendChild(form);
     form.submit();
 
-/*
-	$.ajax({
-			type : 'POST',
-			//data : formData,
-			data : params,
-			//dataType : 'text',
-			url : '/fileDownload2.do',
-			xhrFields: {
-		        responseType: 'blob'
-		    },
-			//contentType : false,
-			//processData : false,
-			success : function (blob) {
-				var link = document.createElement('a');
-			    link.href = window.URL.createObjectURL(blob);
-			    link.download = filename;
-			    link.click();
-			    console.log("파일 다운로드 성공");
-				//var json = JSON.parse(resp);
-				//var result = json.result;
-
-				//$("#alert_msg").html(result.msg);
-				//$('#pop_alert').stop().fadeIn(300);
-
-				//getFileList();
-
- 			},
- 			/* error : function(err){
- 				console.log(err);
- 			},
- 			//beforeSend:function(){
-// 				$('#circularG').css('display','block')
- 			//},
- 			complete : function(data) {
- 				//  실패했어도 완료가 되었을 때 처리
- 				//$('#circularG').css('display','none');
- 				//alert("cccccccccccc")
- 			}
-
-	}); */
-
-	//console.log($(this).data())
-	//console.log($('#srnNm').val())
 });
 
 var fileNameChk = $('#file').val();
@@ -247,8 +200,6 @@ $('#file').on('change', function() {
 
 });
 
-//$('#fileName').text(fileName || "선택된 파일 없음");
-
 $('#uploadFile').on('click', function(){
 
 	var form = $('#fileUploadForm')[0];
@@ -257,7 +208,6 @@ $('#uploadFile').on('click', function(){
 	//console.log("fileValue : ", fileValue, " fileName : ", fileName );
 	//var fileSize = $('#file')[0].files[0].size;
 
- 	//if(valid(fileName)){
  	if(valid()){
 
  		$.ajax({
@@ -278,66 +228,47 @@ $('#uploadFile').on('click', function(){
 
 				getFileList();
 
-	 			},
-	 			error : function(err){
-	 				console.log(err);
-	 			},
-	 			beforeSend:function(){
-	 				$('#circularG').css('display','block')
-	 			},
-	 			complete : function(data) {
-	 				//  실패했어도 완료가 되었을 때 처리
-	 				$('#circularG').css('display','none');
-	 			}
-
- 			});
-
-
-
- 		} /* else {
+	 		},
+ 			error : function(err){
+ 				console.log(err);
+	 		},
+ 			beforeSend:function(){
+ 				$('#circularG').css('display','block')
+ 			},
+ 			complete : function(data) {
+ 				//  실패했어도 완료가 되었을 때 처리
+ 				$('#circularG').css('display','none');
+ 			}
+		});
+	} /* else {
  			//alert("선택된 파일이 없습니다.");
  			$("#alert_msg").html("선택된 파일이 없습니다.");
  			$("#pop_alert").stop().fadeIn(300);
  	    	$("#pop_alert").stop().fadeIn(300);
  		} */
 
-
-
-	});
+});
 
 function valid(){
 
-	/* console.log('authinfo 확인: ${authInfo.usrId}, usrNm');*/
 	var cnt = 0;
 	var msg = "";
 	var bool = true;
-/*
-	var fileValue = $('#file').val().split("\\");
-	var fileName = fileValue[fileValue.length-1]; // 파일명
-	*/
-	//console.log($('#file')[0].files);
+
 	if(!$('#file').val()){
 		cnt += 1;
 		msg += "<fmt:message key="NO_SELECTED_FILE" bundle="${bundle}"/>"
-		console.log('파입 업로드 파일 없음');
-	} else 	if ($('#file')[0].files[0].size > 10485760) {
+	} else if ($('#file')[0].files[0].size > 10485760) {
 		//10485760		/ 10메가
 		//524288000		/ 500메가
 		cnt += 1;
 		msg += "<fmt:message key="SAVE_MAX_FILE_SIZE" bundle="${bundle}"/>\n"
 	}
 
-
-	//if (fileName.length < 1) {
-	//	cnt += 1;
-		/*msg += "선택된 파일이 없습니다."; */
-	//}
-
-
 	if (cnt > 0) {
 		$("#alert_msg").html(msg);
+		console.log("Fade in triggered");
 		$('#pop_alert').stop().fadeIn(300);
-        $('#pop_alert').stop().fadeIn(300);
         bool = false;
 	}
 
