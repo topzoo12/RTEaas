@@ -16,7 +16,7 @@
 <style type="text/css">
 div.pass i{
   position: absolute;
-  left: 70%;
+  left: 220px;
   top: 18%;
   color: gray;
 }
