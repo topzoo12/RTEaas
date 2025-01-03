@@ -16,8 +16,8 @@
 <style type="text/css">
 div.pass i{
   position: absolute;
-  left: 85%;
-  top: 20%;
+  left: 70%;
+  top: 18%;
   color: gray;
 }
 </style>
@@ -214,7 +214,7 @@ div.pass i{
                                 </tr>
                                 <tr>
                                     <td colspan="4"><span class="txt">※ <fmt:message key="USER_ID_RULE" bundle="${bundle}"/><br>
-                                    								※ <fmt:message key="USER_PWD_RULE" bundle="${bundle}"/>
+                                    								※ <fmt:message key="REQ_PW_RULE" bundle="${bundle}"/>
                                    </span></td>
                                 </tr>
                             </tbody>
@@ -697,7 +697,7 @@ var g_idDupliCheck = false;
 
 		if(!CheckEmail(params.usrId)){
 			cnt += 1;
-			msg += "<fmt:message key="USER_ID_TYPE_NOT_MATCH" bundle="${bundle}"/><br>";
+			msg += "<fmt:message key="INVALID_EMAIL" bundle="${bundle}"/><br>";
 		}
 
 		if(cnt>0){

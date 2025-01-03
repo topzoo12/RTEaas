@@ -64,7 +64,7 @@
 				<thead>
 					<tr>
                         <th>No.</th>
-                        <th><fmt:message key="FILE_NM" bundle="${bundle}"/></th>
+                        <th><fmt:message key="FILE_NAME" bundle="${bundle}"/></th>
                         <!-- <th>파일타입</th> -->
                         <th><fmt:message key="FILE_SIZE" bundle="${bundle}"/></th>
                         <th><fmt:message key="REG_USER" bundle="${bundle}"/></th>

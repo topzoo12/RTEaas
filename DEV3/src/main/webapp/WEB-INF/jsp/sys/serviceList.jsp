@@ -558,7 +558,7 @@ $('#btn_search').on('click', function () {
 
 		if(!CheckEmail(params.emailAddr)){
 			cnt += 1;
-			msg += "<fmt:message key="INVALID_EMAIL" bundle="${bundle}"/><br>";
+			msg += "<fmt:message key="INVALID_ADMIN_EMAIL" bundle="${bundle}"/><br>";
 		}
 
 		if(!params.mapMinSize){

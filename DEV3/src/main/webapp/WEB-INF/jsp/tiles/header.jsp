@@ -161,7 +161,7 @@
 							</tr>
 						</tbody>
 					</table>
-					※ <fmt:message key="USER_PWD_RULE" bundle="${bundle}"/>
+					※ <fmt:message key="REQ_PW_RULE" bundle="${bundle}"/>
 
 					<div class="pop_btn">
 						<span class="btn_m btn_darkline btn_r pop_pop_close" id="pch_close-1"><fmt:message key="CANCEL" bundle="${bundle}"/></span>    <!-- 취소 -->

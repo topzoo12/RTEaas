@@ -351,10 +351,10 @@
                             <span id="riskLv">LEVEL4. 심각</span>
                         </div>
                         <div class="itemvalue">
-                            <span><em id="CntPothole">3개</em><fmt:message key="포트홀" bundle="${bundle}"/></span>
-                             <span><em id="CntVertical">1개</em><fmt:message key="수직균열" bundle="${bundle}"/></span>
-                            <span><em id="CntHorizontal">0개</em><fmt:message key="수평균열" bundle="${bundle}"/></span>
-                            <span><em id="CntAlligators">0개</em><fmt:message key="피로균열" bundle="${bundle}"/></span>
+                            <span><em id="CntPothole">3개</em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+                             <span><em id="CntVertical">1개</em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+                            <span><em id="CntHorizontal">0개</em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+                            <span><em id="CntAlligators">0개</em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
                         </div>
                         <dl class="">
                             <dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>

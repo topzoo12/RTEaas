@@ -96,20 +96,16 @@
                         <td align="center" class="listtd"><c:out value="${result.msgId}"/></td>
 
                         <td align="center" class="listtd">
-
-                        <c:out value="${result.msgdivNm}"/>
-	                  <%--   시스템 알림
-
-	                  		<c:forEach var="select1" items="${selectList1}" varStatus="status">
-	                        <li class="optionItem" data-code="${select1.comCd}">
-	                        ${select1.cdNm}
-	                        <c:choose>
-								<c:when test="${nowCdNa eq 'KR'}">${select1.cdNm}</c:when>
-								<c:when test="${nowCdNa eq 'US'}">${select1.cdNmEng}</c:when>
-								<c:when test="${nowCdNa eq 'JP'}">${select1.cdNmJp}</c:when>
-							</c:choose>
-	                        </li>
-                   		 </c:forEach> --%>
+                		  <%-- <c:out value="${result.msgdivCd}"/> --%>
+	                       	<c:forEach var="select1" items="${selectList1}" varStatus="status">
+	                        	<c:if test="${result.msgdivCd eq select1.comCd}">
+			                        <c:choose>
+										<c:when test="${nowCdNa eq 'KR'}">${select1.cdNm}</c:when>
+										<c:when test="${nowCdNa eq 'US'}">${select1.cdNmEng}</c:when>
+										<c:when test="${nowCdNa eq 'JP'}">${select1.cdNmJp}</c:when>
+									</c:choose>
+			                     </c:if>
+		                    </c:forEach>
                         </td>
 
                         <td align="center" class="listtd" style="display:none"><c:out value="${result.taskdivNm}"/></td>
@@ -156,7 +152,7 @@
                                     <th><fmt:message key="MESSAGE_DIV" bundle="${bundle}"/><span class="remark"></span></th>
                                     <td colspan="3">
                                     <span class="selectBox bottom border" id="p1_msgdivCd_span">
-                                        <button class="label" id="p1_msgdivCd" data-code="">업무구분</button>
+                                        <button class="label" id="p1_msgdivCd" data-code=""><fmt:message key="MESSAGE_DIV" bundle="${bundle}"/></button>
                                         <ul class="optionList">
                                             <c:forEach var="select1" items="${selectList1}" varStatus="status">
                                                 <li class="optionItem" data-code="${select1.comCd}">
@@ -420,7 +416,7 @@ var g_isInsert = true;
 					appendRow += '<tr class="'+(el.rowno==1?'on':'')+'">'
 						+'<td align="center" class="listtd">'+el.rowno+'</td>'
 						+'<td align="center" class="listtd">'+el.msgId+'</td>'
-						+'<td align="center" class="listtd">'+el.msgdivNm+'</td>'
+						+'<td align="center" class="listtd">'+getMsgDivByCdNa(el.msgdivCd)+'</td>'
 						+'<td align="center" class="listtd" style="display:none">'+el.taskdivNm+'</td>'
 						+'<td align="center" class="listtd">'+useYn+'</td>'
 						+'<td align="center" class="listtd">'+el.msgCts+'</td>'
@@ -460,13 +456,15 @@ var g_isInsert = true;
 	var selectKeyValue = [];
 
  	<c:forEach var="select1" items="${selectList1}" varStatus="status">
- 		selectKeyValue.push({'codeName':'${select1.cdNm}', 'codeNameEng':'${select1.cdNmEng}', 'codeNameJP':'${select1.cdNmJp}' })
+ 		selectKeyValue.push({ 'comCd':'${select1.comCd}' ,'codeName':'${select1.cdNm}', 'codeNameEng':'${select1.cdNmEng}', 'codeNameJP':'${select1.cdNmJp}' })
 	</c:forEach>
+
 
  	function getMsgDivByCdNa(msgDiv){
 
- 	var result = selectKeyValue.find(item => item.codeName === msgDiv);
+ 	var result = selectKeyValue.find(item => item.comCd === msgDiv);
 
+ 		//console.log('셀렉 확인 ${selectList1}');
 	 	switch ('${nowCdNa}') {
 	        case 'KR':
 	            return result.codeName;
@@ -478,13 +476,16 @@ var g_isInsert = true;
  	}
 
 	function popupData(target_pop,row){
+
+		console.log('셀렉 리스트 : ${selectList1}');
 		if(target_pop=='write-1'){
 			if(row.length) {
 				$('#p1_msgId').val(row.find('td:eq(1)').text());
 				$('#p1_msgId').prop("disabled",true);
 
-				var msgDiv = row.find('td:eq(2)').text();
+				var msgDiv = row.find('td:eq(10)').text();
 
+				console.log('텍스트 확인', msgDiv);
 				$('#p1_msgdivCd').text(getMsgDivByCdNa(msgDiv));
 				$('#p1_msgdivCd').addClass('on');
 				$('#p1_taskdivCd').text(row.find('td:eq(3)').text());

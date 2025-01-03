@@ -173,10 +173,10 @@
                             <span id="riskLv"></span>
                         </div>
                         <div class="itemvalue">
-                            <span><em id="CntPothole"></em><fmt:message key="포트홀" bundle="${bundle}"/></span>
-                            <span><em id="CntVertical"></em><fmt:message key="수직균열" bundle="${bundle}"/></span>
-                            <span><em id="CntHorizontal"></em><fmt:message key="수평균열" bundle="${bundle}"/></span>
-                            <span><em id="CntAlligators"></em><fmt:message key="피로균열" bundle="${bundle}"/></span>
+                            <span><em id="CntPothole"></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+                            <span><em id="CntVertical"></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+                            <span><em id="CntHorizontal"></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+                            <span><em id="CntAlligators"></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
                         </div>
                         <dl class="">
                             <dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
