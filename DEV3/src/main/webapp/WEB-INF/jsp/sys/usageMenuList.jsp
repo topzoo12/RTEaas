@@ -75,7 +75,7 @@
         </li>
         <li class="view">
             <div class="stitle">
-                <p class="tl"><fmt:message key="DETAIL_ACCESS" bundle="${bundle}"/> <span class="cnt">총 <strong id="totCnt2">${totCnt2}</strong> 건</span></p>
+                <p class="tl"><fmt:message key="DETAIL_ACCESS" bundle="${bundle}"/> <span class="cnt"><fmt:message key="TOTAL" bundle="${bundle}"/> <strong id="totCnt2">${totCnt2}</strong> <fmt:message key="COUNT2" bundle="${bundle}"/></span></p>
             </div>
 
             <table class="table" >
