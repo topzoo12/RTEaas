@@ -13,7 +13,6 @@
 <c:set var="nowCdNa"
 	value="${not empty authInfo.changedCdNa ? authInfo.changedCdNa : authInfo.cdNa}" />
 
-
 <!--달력-->
 <script type="text/javascript"
 	src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -1215,7 +1214,7 @@ $(document).ready(function () {
    var date1  = new Date();
 
     $('#toDt').val(dateFormat(date1, 'select'))
-    $('#fromDt').val(getThreeMonthAgo())
+    $('#fromDt').val(getSixMonthAgo())
 
  	getList();
 
@@ -1270,12 +1269,12 @@ function dateFormat(date, format){
    return dateString;
 }
 
-function getThreeMonthAgo(){
+function getSixMonthAgo(){
 
 	var today = new Date();
 
 	today.setDate(today.getDate() + 1);
-	today.setMonth(today.getMonth() - 3);
+	today.setMonth(today.getMonth() - 6);
 
 	var fromDate = dateFormat(today, 'select');
 	return fromDate;
