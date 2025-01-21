@@ -764,6 +764,12 @@
 					'Refresh-Token' : localStorage
 							.getItem("Refresh-Token")
 				},
+			    beforeSend:function(){
+					$('#circularG').css('display','block');
+			    },
+			    complete:function(){
+					$('#circularG').css('display','none');
+			    },
 				success : function(resp) {
 					wayDatas = resp.data
 
