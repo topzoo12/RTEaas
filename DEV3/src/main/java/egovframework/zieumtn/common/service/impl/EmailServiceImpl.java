@@ -82,26 +82,30 @@ public class EmailServiceImpl extends EgovAbstractServiceImpl implements EmailSe
 	public void sendMail(EmailVO vo) {
     	System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
         Properties prop = new Properties();
-        //final String user = "icdp@nflux.co.kr"; //발신자의 이메일 아이디를 입력
-        //final String password = "nfluxicdp!";         //발신자 이메일의 패스워드를 입력
-        final String user = "platform@zieumtn.com"; //발신자의 이메일 아이디를 입력
-        final String password = "LwX5t5cdtGO1";         //발신자 이메일의 패스워드를 입력
+
+//        final String user = "platform@zieumtn.com"; //발신자의 이메일 아이디를 입력
+//        final String password = "LwX5t5cdtGO1";         //발신자 이메일의 패스워드를 입력
+        final String user = "daisol2022@gmail.com"; //발신자의 이메일 아이디를 입력
+        final String password = "xtezjiyrzwtaxcrh";         //발신자 이메일의 패스워드를 입력
 
 //        HGnA8x7K0voC
 
     	try{
-    		/*prop.put("mail.smtp.host", "smtps.hiworks.com");
-    		prop.put("mail.smtp.port", 465);
-    		prop.put("mail.smtp.auth", "true");
-    		prop.put("mail.smtp.ssl.enable", "true");
-    		prop.put("mail.smtp.ssl.trust", "smtps.hiworks.com");*/
-
+    		/* ssl 연결 - 465 포트
     		prop.put("mail.smtp.host", "smtp.worksmobile.com");
     		prop.put("mail.smtp.port", 465);
     		prop.put("mail.smtp.auth", "true");
     		prop.put("mail.smtp.ssl.enable", "true");
     		prop.put("mail.smtp.ssl.trust", "smtp.worksmobile.com");
-    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2");*/
+
+    		//tls 연결 - 587 포트
+    		prop.put("mail.smtp.host", "smtp.gmail.com");
+    		prop.put("mail.smtp.port", 587);
+    		prop.put("mail.smtp.auth", "true");
+    		prop.put("mail.smtp.starttls.enable", "true"); // STARTTLS를 활성화
+    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2"); // TLS 1.2를 명시적으로 설정
+
 
 
     		Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
@@ -145,7 +149,7 @@ public class EmailServiceImpl extends EgovAbstractServiceImpl implements EmailSe
             		+ "        <!-- 카피라이터 -->\r\n"
             		+ "        <table align=\"center\" style=\"Margin:0 auto;border-collapse:collapse;border-spacing:0;float:none;margin:0 auto;padding:0;text-align:center;vertical-align:top;width:100%\"><tbody><tr style=\"padding:0;text-align:left;vertical-align:top\"><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;\">\r\n"
             		+ "        <table align=\"center\" style=\"Margin:0 auto;background:0 0;background-color:#f0f1f3;border-collapse:collapse;border-spacing:0;margin:0 auto;padding:0;text-align:inherit;vertical-align:top;width:580px\"><tbody><tr style=\"padding:0;text-align:left;vertical-align:top\"><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;\"><p style=\"Margin:0;color:#8991a5;font-family:'AppleSDGothicNeo-Regular','Malgun Gothic','맑은고딕','돋움',dotum,sans-serif;font-size:.9rem;font-weight:400;line-height:1.5;margin:0;margin-bottom:10px;padding:0;text-align:center\">본 메일은 발신전용입니다.<br>\r\n"
-            		+ "        Copyright(C) 2022 지음테크넷. All Rights Reserved.</p></td></tr></tbody></table></td></tr></tbody></table>\r\n"
+            		+ "        Copyright(C) 2025 지음테크넷. All Rights Reserved.</p></td></tr></tbody></table></td></tr></tbody></table>\r\n"
             		+ "    </center>\r\n"
             		+ "    <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%\"><tbody><tr><td height=\"48\">&nbsp;</td></tr></tbody></table> \r\n"
             		+ "</td></tr></tbody></table>";
@@ -211,17 +215,25 @@ public class EmailServiceImpl extends EgovAbstractServiceImpl implements EmailSe
     	System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
         Properties prop = new Properties();
 
-        final String user = "platform@zieumtn.com"; //발신자의 이메일 아이디를 입력
-        final String password = "LwX5t5cdtGO1";         //발신자 이메일의 패스워드를 입력
+        final String user = "daisol2022@gmail.com"; //발신자의 이메일 아이디를 입력
+        final String password = "xtezjiyrzwtaxcrh";         //발신자 이메일의 패스워드를 입력
 
     	try{
 
+    		/* ssl 연결 - 465 포트
     		prop.put("mail.smtp.host", "smtp.worksmobile.com");
     		prop.put("mail.smtp.port", 465);
     		prop.put("mail.smtp.auth", "true");
     		prop.put("mail.smtp.ssl.enable", "true");
     		prop.put("mail.smtp.ssl.trust", "smtp.worksmobile.com");
-    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
+    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2");*/
+
+    		//tls 연결 - 587 포트
+    		prop.put("mail.smtp.host", "smtp.gmail.com");
+    		prop.put("mail.smtp.port", 587);
+    		prop.put("mail.smtp.auth", "true");
+    		prop.put("mail.smtp.starttls.enable", "true"); // STARTTLS를 활성화
+    		prop.put("mail.smtp.ssl.protocols", "TLSv1.2"); // TLS 1.2를 명시적으로 설정
 
 
     		Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
@@ -244,7 +256,7 @@ public class EmailServiceImpl extends EgovAbstractServiceImpl implements EmailSe
             		+ "        <!-- 카피라이터 -->\r\n"
             		+ "        <table align=\"center\" style=\"Margin:0 auto;border-collapse:collapse;border-spacing:0;float:none;margin:0 auto;padding:0;text-align:center;vertical-align:top;width:100%\"><tbody><tr style=\"padding:0;text-align:left;vertical-align:top\"><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;\">\r\n"
             		+ "        <table align=\"center\" style=\"Margin:0 auto;background:0 0;background-color:#f0f1f3;border-collapse:collapse;border-spacing:0;margin:0 auto;padding:0;text-align:inherit;vertical-align:top;width:580px\"><tbody><tr style=\"padding:0;text-align:left;vertical-align:top\"><td style=\"-moz-box-sizing:border-box;-moz-hyphens:auto;-webkit-box-sizing:border-box;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;box-sizing:border-box;\"><p style=\"Margin:0;color:#8991a5;font-family:'AppleSDGothicNeo-Regular','Malgun Gothic','맑은고딕','돋움',dotum,sans-serif;font-size:.9rem;font-weight:400;line-height:1.5;margin:0;margin-bottom:10px;padding:0;text-align:center\">본 메일은 발신전용입니다.<br>\r\n"
-            		+ "        Copyright(C) 2022 지음테크넷. All Rights Reserved.</p></td></tr></tbody></table></td></tr></tbody></table>\r\n"
+            		+ "        Copyright(C) 2025 지음테크넷. All Rights Reserved.</p></td></tr></tbody></table></td></tr></tbody></table>\r\n"
             		+ "    </center>\r\n"
             		+ "    <table style=\"border-collapse:collapse;border-spacing:0;padding:0;width:100%\"><tbody><tr><td height=\"48\">&nbsp;</td></tr></tbody></table> \r\n"
             		+ "</td></tr></tbody></table>";
