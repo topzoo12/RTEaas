@@ -22,25 +22,13 @@
 		<ul class="search_box" style="min-width: 1390px;">
 			<li><span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level1" data-code="">Level1</button>
-					<ul class="optionList" id="level1_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">Kedah, Malaysia</li>
-						<li class="optionItem" data-code="dd">Level1</li>
-					</ul>
+					<ul class="optionList" id="level1_ul"></ul>
 			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level2" data-code="">Level2</button>
-					<ul class="optionList" id="level2_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">07100 Langkawi</li>
-						<li class="optionItem">Level2</li>
-					</ul>
+					<ul class="optionList" id="level2_ul"></ul>
 			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level3" data-code="">Level3</button>
-					<ul class="optionList" id="level3_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">Langkawi International Airport Padang Mat Sirat Pulau Langkawi</li>
-						<li class="optionItem">Level3</li>
-					</ul>
+					<ul class="optionList" id="level3_ul"></ul>
 			</span>
 
 			<span class="stl"><fmt:message key="PERIOD" bundle="${bundle}" />
@@ -79,7 +67,7 @@
 						</ul> -->
 						<p class="tl">
 							<span class="cnt"> <fmt:message key="TOTAL"
-									bundle="${bundle}" /> <strong id="totCnt">0</strong> <fmt:message
+									bundle="${bundle}" /> <strong id="totCnt">-</strong> <fmt:message
 									key="COUNT2" bundle="${bundle}" />
 							</span>
 						</p>
@@ -127,7 +115,7 @@
 	<div class="pop_wrap" id="pop_riskPop" style="display: none;">
 		<div class="pop_box">
 			<div class="pop_content">
-				<h3 class="pop_tit">도로위험 상세정보 : Device-AAA</h3>
+				<h3 class="pop_tit"><!-- 도로위험 상세정보 : Device-AAA --></h3>
 				<div class="pop_riskInfo">
 					<div class="viewOpt">
 						<button class="btn_slide active" id="btn_slide" title="슬라이드형" onClick="getSlideList()"></button>
@@ -136,48 +124,15 @@
 					<!-- Album -->
 					<div class="riskAlbum">
 						<div class="swiper-count">
-							총 <em>00</em>건
+							<fmt:message key="TOTAL" bundle="${bundle}"/> <em>-</em><fmt:message key="COUNT2" bundle="${bundle}"/>
 						</div>
 						<div class="gallery-list">
 							<div class="gallery-thum-box" id="riskAlbumId">
-								<div class="gallery-thum">
+								<!-- <div class="gallery-thum">
 									<img src="/img/sample_highway.jpg" class="active">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway02.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway03.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway02.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway03.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway02.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway03.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway02.jpg">
-								</div>
-								<div class="gallery-thum">
-									<img src="/img/sample_highway03.jpg">
-								</div>
+								</div -->
 							</div>
-							<span class="txtBox">경도 132.1 / 위도 37.001</span>
+							<span class="txtBox"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</span>
 						</div>
 					</div>
 
@@ -188,7 +143,7 @@
 								<div class="swiper-slide">
 									<div class="riskSlide_item">
 										<img src="" alt="도로위험 이미지" class="riskPopImg">
-										<span class="txtBox">경도 132.1 / 위도 37.001</span>
+										<span class="txtBox"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</span>
 									</div>
 								</div>
 							</div>
@@ -201,7 +156,7 @@
 
 						</div>
 						<div class="swiper-count">
-							<span id="slide-index">1</span> <span id="slide-length">/5</span>
+							<span id="slide-index">-</span> <span id="slide-length">/-</span>
 						</div>
 						<div class="thumb-control-wrap">
 							<div class="thumb-swiper-button-prev"></div>
@@ -212,7 +167,7 @@
 							<div class="swiper-wrapper" id="thumbSwiperId">
 								<div class="swiper-slide">
 									<p class="info-img object-fit">
-										<img src="https://user-images.githubusercontent.com/33821863/148932761-33a8f83e-f88b-468f-9b8c-d999ef3a7b71.jpg" alt="Sample">
+										<!-- <img src="https://user-images.githubusercontent.com/33821863/148932761-33a8f83e-f88b-468f-9b8c-d999ef3a7b71.jpg" alt="Sample"> -->
 									</p>
 								</div>
 							</div>
@@ -220,7 +175,7 @@
 					</div>
 					<div class="infoDetail">
 						<div class="level" id="popup_level_icon">
-							<span id="popup_level">LEVEL4. 심각</span>
+							<span id="popup_level">LEVEL. -</span>
 						</div>
 						<div class="itemvalue">
 							<span><em id="portholeCnt">-</em> <fmt:message key="POTHOLE" bundle="${bundle}" /></span>
@@ -257,7 +212,7 @@
 								<fmt:message key="ROAD_STATUS" bundle="${bundle}" />
 							</dt>
 							<!-- db 데이터 및 다국어 필요 -->
-							<dd id="popup_road_status">미분류</dd>
+							<dd id="popup_road_status"></dd>
 						</dl>
 					</div>
 				</div>
@@ -280,8 +235,7 @@
 	<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
 		<div class="pop_riskPopImg">
 			<div class="photo_area">
-				<img src="/img/sample_highway03.jpg" alt="도로위험목록 이미지"
-					id="popup_imgDetail">
+				<!-- <img src="/img/sample_highway03.jpg" alt="도로위험목록 이미지" id="popup_imgDetail"> -->
 			</div>
 		</div>
 		<button class="riskPopImg_close" id=""></button>

@@ -322,23 +322,23 @@
 								<dt>
 									<fmt:message key="DEVICE_NAME" bundle="${bundle}" />
 								</dt>
-								<dd id="detail_device_name">SOT1000</dd>
+								<dd id="detail_device_name"></dd>
 								<dt>
 									<fmt:message key="DEVICE_ID" bundle="${bundle}" />
 								</dt>
-								<dd id="detail_device_id">KR0001</dd>
+								<dd id="detail_device_id"></dd>
 								<dt>
 									<fmt:message key="COORDINATES" bundle="${bundle}" />
 								</dt>
-								<dd id="detail_latlng">위도 37.412396 / 경도 127.133415</dd>
+								<dd id="detail_latlng">위도  -/ 경도 -</dd>
 								<dt>
 									<fmt:message key="ROAD_NAME" bundle="${bundle}" />
 								</dt>
-								<dd id="detail_route_name">매화로47번길</dd>
+								<dd id="detail_route_name"></dd>
 								<dt>
 									<fmt:message key="PHOTO_DATETIME" bundle="${bundle}" />
 								</dt>
-								<dd id="detail_stime">2024.11.22 11:08</dd>
+								<dd id="detail_stime"></dd>
 							</dl>
 						</div>
 					</div>
@@ -357,15 +357,12 @@
 				<div class="infoListWrap" style="overflow-y: auto; display: block;">
 					<div class="infoListTop">
 						<h2 class="hidden">검색목록</h2>
-						<span class="fileName"><fmt:message key="FILE_NAME"
-								bundle="${bundle}" /> : <em>수정구로_20241113.dat</em></span>
-						<p class="itemCount">
-							총 <em>0건</em>
-						</p>
+						<span class="fileName"><fmt:message key="FILE_NAME" bundle="${bundle}" /> : <em></em></span>
+						<p class="itemCount"><em></em></p>
 					</div>
 
 					<ul class="infoList">
-						<li><a class="infoListItem">
+					<!-- 	<li><a class="infoListItem">
 								<div class="info">
 									<ul class="infoContents">
 										<li>도로명 : 매화로47번길</li>
@@ -379,37 +376,7 @@
 										alt="대표이미지"
 										onclick="originalimg('20240906024925-MH2DY2300001')">
 								</div>
-						</a></li>
-						<li><a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li>도로명 : 매화로47번길</li>
-										<li>촬영일시 : 2024.11.22 11:08</li>
-										<li>탐지객체수 : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img
-										src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail"
-										alt="대표이미지"
-										onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-						</a></li>
-						<li><a class="infoListItem">
-								<div class="info">
-									<ul class="infoContents">
-										<li>도로명 : 매화로47번길</li>
-										<li>촬영일시 : 2024.11.22 11:08</li>
-										<li>탐지객체수 : 5개</li>
-									</ul>
-								</div>
-								<div class="infoThumnail">
-									<img
-										src="http://datahub-dev.zieumtn.com/gis/pothole/20240906024925-MH2DY2300001/thumbnail"
-										alt="대표이미지"
-										onclick="originalimg('20240906024925-MH2DY2300001')">
-								</div>
-						</a></li>
+						</a></li> -->
 					</ul>
 				</div>
 				<!-- e:검색목록 -->

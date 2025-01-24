@@ -22,25 +22,13 @@
 		<ul class="search_box" style="min-width: 1390px;">
 			<li><span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level1" data-code="">Level1</button>
-					<ul class="optionList" id="level1_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">Kedah, Malaysia</li>
-						<li class="optionItem" data-code="dd">Level1</li>
-					</ul>
+					<ul class="optionList" id="level1_ul"></ul>
 			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level2" data-code="">Level2</button>
-					<ul class="optionList" id="level2_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">07100 Langkawi</li>
-						<li class="optionItem">Level2</li>
-					</ul>
+					<ul class="optionList" id="level2_ul"></ul>
 			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level3" data-code="">Level3</button>
-					<ul class="optionList" id="level3_ul">
-						<li class="optionItem">전체</li>
-						<li class="optionItem">Langkawi International Airport Padang Mat Sirat Pulau Langkawi</li>
-						<li class="optionItem">Level3</li>
-					</ul>
+					<ul class="optionList" id="level3_ul"></ul>
 
 			</span>
 
@@ -124,7 +112,7 @@
 	<div class="pop_wrap" id="pop_riskPop" style="display: none;">
 		<div class="pop_box">
 			<div class="pop_content">
-				<h3 class="pop_tit">도로위험 상세정보 : Device-AAA</h3>
+				<h3 class="pop_tit"></h3>
 				<div class="pop_riskInfo">
 					<!-- Swiper -->
 					<div class="riskSlide">
@@ -134,7 +122,7 @@
 								<div class="swiper-slide">
 									<div class="riskSlide_item">
 										<img src="" alt="도로위험 이미지" class="riskPopImg">
-										<span class="txtBox">경도 132.1 / 위도 37.001</span>
+										<span class="txtBox"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</span>
 									</div>
 								</div>
 							<!--
@@ -154,7 +142,7 @@
 					</div>
 					<div class="infoDetail">
 						<div class="level" id="popup_level_icon">
-							<span id="popup_level">LEVEL4. 심각</span>
+							<span id="popup_level">LEVEL. -</span>
 						</div>
 						<div class="itemvalue">
 							<span><em id="portholeCnt">-</em> <fmt:message key="POTHOLE" bundle="${bundle}" /></span>
@@ -243,7 +231,7 @@
 	<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
 		<div class="pop_riskPopImg">
 			<div class="photo_area">
-				<img src="/img/sample_highway03.jpg" alt="도로위험목록 이미지" id="popup_imgDetail">
+				<!-- <img src="/img/sample_highway03.jpg" alt="도로위험목록 이미지" id="popup_imgDetail"> -->
 			</div>
 		</div>
 		<button class="riskPopImg_close" id=""></button>
