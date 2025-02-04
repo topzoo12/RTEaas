@@ -18,6 +18,7 @@ package egovframework.zieumtn.common.web;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -78,7 +79,8 @@ public class DCSApiController {
 
 	@RequestMapping(value = "/uploadDetectedData.do", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	//public void jsonFileDown(@RequestPart HashMap<String,Object> param, @RequestPart(value = "image",required=false) MultipartFile image) throws Exception {
-	public void jsonFileDown(HttpServletRequest req, HttpServletResponse response, @RequestPart HashMap<String,Object> meta_json, @RequestPart(value = "uploadfile",required=false) List<MultipartFile> images) throws Exception {
+	public void jsonFileDown(HttpServletRequest req, HttpServletResponse response, @RequestPart HashMap<String,Object> meta_json,
+							@RequestPart(value = "uploadfile",required=false) List<MultipartFile> images) throws Exception {
 
 		//System.out.println(req.getRequestURI());
 		//System.out.println(req.getRequestURL());
@@ -283,11 +285,18 @@ public class DCSApiController {
 		DcsVO.setImgCnt(imageCount);
 
 
-		PrintWriter jsonFileOut = new PrintWriter(new FileWriter(uploadFolder + "/" + jsonFileName));
+
+
+		//PrintWriter jsonFileOut = new PrintWriter(new FileWriter(uploadFolder + "/" + jsonFileName));
+		BufferedWriter jsonFileOut = new BufferedWriter(new FileWriter(uploadFolder + "/" + jsonFileName));
 		try {
 
-			jsonFileOut.write(meta_json.toString());
-			jsonFileOut.close();
+			JSONObject TojsonObject = new JSONObject(meta_json);  // HashMap -> JSONObject 변환
+            jsonFileOut.write(TojsonObject.toString(4));
+
+			//jsonFileOut.write(meta_json.toString());
+			//jsonFileOut.write(meta_json);
+			//jsonFileOut.close();
 
 			//Integer DcsInsert = dcsService.insertDcsData(DcsVO);
 
