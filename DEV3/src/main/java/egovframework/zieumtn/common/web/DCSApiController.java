@@ -90,8 +90,10 @@ public class DCSApiController {
 
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jObject = new JSONObject(meta_json);
+
 		PrintWriter out = response.getWriter();
 
+		//System.out.println(meta_json);
 
     	if ( jObject == null || jObject.isEmpty() ) {
     		//jsonObject.put("success", true);
@@ -285,14 +287,13 @@ public class DCSApiController {
 		DcsVO.setImgCnt(imageCount);
 
 
-
-
 		//PrintWriter jsonFileOut = new PrintWriter(new FileWriter(uploadFolder + "/" + jsonFileName));
 		BufferedWriter jsonFileOut = new BufferedWriter(new FileWriter(uploadFolder + "/" + jsonFileName));
 		try {
 
-			JSONObject TojsonObject = new JSONObject(meta_json);  // HashMap -> JSONObject 변환
-            jsonFileOut.write(TojsonObject.toString(4));
+			//JSONObject TojsonObject = new JSONObject(meta_json);  // HashMap -> JSONObject 변환
+            jsonFileOut.write(jObject.toString(2));
+            jsonFileOut.flush();
 
 			//jsonFileOut.write(meta_json.toString());
 			//jsonFileOut.write(meta_json);
