@@ -79,7 +79,7 @@ public class DCSApiController {
 
 	@RequestMapping(value = "/uploadDetectedData.do", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	//public void jsonFileDown(@RequestPart HashMap<String,Object> param, @RequestPart(value = "image",required=false) MultipartFile image) throws Exception {
-	public void jsonFileDown(HttpServletRequest req, HttpServletResponse response, @RequestPart HashMap<String,Object> meta_json,
+	public void jsonFileDown(HttpServletRequest req, HttpServletResponse response, @RequestParam String meta_json, //@RequestPart HashMap<String,Object> meta_json,
 							@RequestPart(value = "uploadfile",required=false) List<MultipartFile> images) throws Exception {
 
 		//System.out.println(req.getRequestURI());
