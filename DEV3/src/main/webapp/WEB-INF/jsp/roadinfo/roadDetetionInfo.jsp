@@ -1282,14 +1282,7 @@ function statusName(code) {
 		}
 
 	} else {
-		switch (statusNameByCdna) {
-        case 'KR':
-            return '미분류';
-        case 'US':
-            return '(us)미분류';
-        case 'JP':
-            return '(jp)미분류';
-		}
+		return '<fmt:message key="UNCLASSIFIED" bundle="${bundle}"/>';
 	}
 }
 

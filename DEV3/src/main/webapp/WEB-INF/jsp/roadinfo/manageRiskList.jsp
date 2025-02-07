@@ -620,18 +620,11 @@
 			        case 'US':
 			        	return result.statusNmEng;
 			        case 'JP':
-			        	return result.statusNmJp;;
+			        	return result.statusNmJp;
 				}
 
 			} else {
-				switch ('${nowCdNa}') {
-		        case 'KR':
-		            return '미분류';
-		        case 'US':
-		            return '(us)미분류';
-		        case 'JP':
-		            return '(jp)미분류';
-				}
+				return '<fmt:message key="UNCLASSIFIED" bundle="${bundle}"/>';
 			}
 			return result;
 		}

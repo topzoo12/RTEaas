@@ -620,14 +620,7 @@ function statusName(code) {
 		}
 
 	} else {
-		switch (statusNameByCdna) {
-        case 'KR':
-            return '미분류';
-        case 'US':
-            return '(us)미분류';
-        case 'JP':
-            return '(jp)미분류';
-		}
+		return '<fmt:message key="UNCLASSIFIED" bundle="${bundle}"/>';
 	}
 }
 
@@ -1055,13 +1048,13 @@ function detail(id, clusterChk){
 
 			// 포트홀
 			//$("#CntPothole").text(totCnt + " 개")
-			$("#CntPothole").text(thisData.risk['count-of-potholes'] + " 개")
+			$("#CntPothole").text(thisData.risk['count-of-potholes'] + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
 			// 수직균열
-			$("#CntVertical").text(thisData.risk['count-of-vertical-cracks'] + " 개")
+			$("#CntVertical").text(thisData.risk['count-of-vertical-cracks'] + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
 			// 수평균열
-			$("#CntHorizontal").text(thisData.risk['count-of-horizontal-cracks'] + " 개")
+			$("#CntHorizontal").text(thisData.risk['count-of-horizontal-cracks'] + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
 			// 피로균열
-			$("#CntAlligators").text(thisData.risk['count-of-alligators'] + " 개")
+			$("#CntAlligators").text(thisData.risk['count-of-alligators'] + " <fmt:message key="COUNT1" bundle="${bundle}"/>")
 
 			// detail영역
 			$("#detail_title").text(deviceNm + " ( " + deviceId + " )");

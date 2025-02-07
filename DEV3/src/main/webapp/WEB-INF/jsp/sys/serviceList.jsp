@@ -190,9 +190,9 @@
 									</td>
 								</tr>
                                 <tr>
-									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (최소값)<span class="remark"></span></th>
-									<td><input type="text" value="" name="wtY" id="map_MinSize" class="input3" placeholder="<fmt:message key="MIN_SIZE" bundle="${bundle}"/>"></td>
-									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (최대값)<span class="remark"></span></th>
+									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (<fmt:message key="MIN_VALUE" bundle="${bundle}"/>)<span class="remark"></span></th>
+									<td><input type="text" value="" name="wtY" id="map_MinSize" class="input3" placeholder="<fmt:message key="MIN_VALUE" bundle="${bundle}"/>"></td>
+									<th><fmt:message key="MAP_SIZE" bundle="${bundle}"/> (<fmt:message key="MAX_VALUE" bundle="${bundle}"/>)<span class="remark"></span></th>
 									<td><input type="text" value="" name="wtX" id="map_MaxSize" class="input3" placeholder="19" disabled></td>
 								</tr>
 

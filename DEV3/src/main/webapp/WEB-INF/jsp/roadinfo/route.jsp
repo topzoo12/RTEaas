@@ -1945,14 +1945,7 @@ function detail(id, device_name, device_id, addr_po_locality, dateFormat, lat, l
 			        	return result.codeNameJP;
 					}
 				} else {
-					switch ('${nowCdNa}') {
-			        case 'KR':
-			            return '미분류';
-			        case 'US':
-			            return '(us)미분류';
-			        case 'JP':
-			            return '(jp)미분류';
-					}
+					return '<fmt:message key="UNCLASSIFIED" bundle="${bundle}"/>';
 				}
 			})(potholeListData[i].status);
 
