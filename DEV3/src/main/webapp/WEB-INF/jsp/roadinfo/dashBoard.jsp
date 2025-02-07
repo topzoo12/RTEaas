@@ -871,7 +871,6 @@
 
 			})
 			getPotholesByRoad();
-
 		}
 
 		function chartInfo(data, labels) {

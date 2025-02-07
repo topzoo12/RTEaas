@@ -1820,7 +1820,6 @@ $(document).ready(function() {
 	// $('#fromDt').val(dateFormat(date2, 'select'))
 	//$('#fromDt').val('2023-10-01')
 
-
 //setLevelList(1, '');
 region = "${authInfo.cdNa}";
 

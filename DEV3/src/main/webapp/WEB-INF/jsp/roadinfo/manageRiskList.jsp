@@ -1151,6 +1151,7 @@
 			var date2 = new Date(date1.setDate(date1.getDate() - 30));
 
 			$('#fromDt').val('2023-10-01')
+
 			// 레벨 조회 부분 생성
 			setLevelList(1, '');
 

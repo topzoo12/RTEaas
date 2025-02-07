@@ -196,7 +196,6 @@
                 </div>
             </div>
             <!-- e:상세설명 -->
-
             <!-- 검색목록 -->
             <div class="infoListWrap" style="overflow-y:auto;">
                 <div class="infoListTop">

@@ -1110,7 +1110,6 @@ function setLevelList(level, id){
 				setLevelList(3 ,  $('#level2').data('code'))
 			} else if (levelChk == 'level3_ul'){
 
-
 			 	$('#level4').text('Level4');
 			 	$('#level4').removeClass("on");
 				searchLv = 3
