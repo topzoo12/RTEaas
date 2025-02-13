@@ -66,17 +66,14 @@
 						</p>
 					</div>
 
-
-
-					<div class="worstList">
-
+					<div class="worstList" style="display: none;">
 						<article class="beefup example-opensingle is-open">
-							<div class="beefup__head worstHead">
+							 <div class="beefup__head worstHead">
 								<div>
 									<!-- <h3>서부간선도로</h3>
 									<span>위험 23건</span> <span>2023.11.17 16:12:48</span> -->
-									<h3>No search data</h3>
-									<span><fmt:message key="CRITICAL" bundle="${bundle}"/> -<fmt:message key="COUNT2" bundle="${bundle}"/></span> <span></span>
+									<h3></h3>
+									<span></span> <span></span>
 								</div>
 								<span class="badge_risk badge_danger"></span>
 							</div>
@@ -85,42 +82,44 @@
 								<div class="worstInfo">
 									<p class="infoPhoto">
 
-									<img id="detail_img" src="/img/sample_highway03.jpg" alt="no data" onclick=""> <span class="noPhoto"style="display: none;">
-									<span class="material-symbols-outlined">no_photography</span></span>
+									<img id="detail_img" src="" alt="no data" onclick="">
+									<span class="noPhoto"style="display: none;">
+									  <span class="material-symbols-outlined"></span>
+									</span>
 									</p>
 									<div class="infoDetail">
 										<dl class="">
 											<dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-											<dd id="detail_device_id">-</dd>
+											<dd id="detail_device_id"></dd>
 											<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_device_name">-</dd>
+											<dd id="detail_device_name"></dd>
 											<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-											<dd id="detail_risk_level">-</dd>
+											<dd id="detail_risk_level"></dd>
 											<dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-											<dd id="detail_latlng"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</dd>
+											<dd id="detail_latlng"></dd>
 											<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_route_name">-</dd>
+											<dd id="detail_route_name"></dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
-											<dd id="detail_ctime">-</dd>
+											<dd id="detail_ctime"></dd>
 											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
-											<dd id="popup_road_status">미분류</dd>
+											<dd id="popup_road_status"></dd>
 										</dl>
 									</div>
 								</div>
 								<div class="itemvalue">
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
 								</div>
 							</div>
 						</article>
 
 						<article class="beefup example-opensingle">
-							<div class="beefup__head worstHead">
+							 <div class="beefup__head worstHead">
 								<div>
-									<h3>No search data</h3>
-									<span><fmt:message key="CRITICAL" bundle="${bundle}"/> -<fmt:message key="COUNT2" bundle="${bundle}"/></span> <span></span>
+									<h3></h3>
+									<span></span> <span></span>
 								</div>
 								<span class="badge_risk badge_danger"></span>
 							</div>
@@ -128,174 +127,172 @@
 							<div class="beefup__body worstBody">
 								<div class="worstInfo">
 									<p class="infoPhoto">
-										<img id="detail_img" src="/img/sample_highway03.jpg"
-											alt="대표이미지" onclick=""> <span class="noPhoto"
-											style="display: none;"> <span
-											class="material-symbols-outlined">no_photography</span>
+										<img id="detail_img" src="" alt="대표이미지" onclick="">
+										<span class="noPhoto" style="display: none;">
+										  <span class="material-symbols-outlined"></span>
 										</span>
 									</p>
 									<div class="infoDetail">
 										<dl class="">
 											<dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-											<dd id="detail_device_id">-</dd>
+											<dd id="detail_device_id"></dd>
 											<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_device_name">-</dd>
+											<dd id="detail_device_name"></dd>
 											<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-											<dd id="detail_risk_level">LEVEL. -</dd>
+											<dd id="detail_risk_level"></dd>
 											<dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-											<dd id="detail_latlng"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</dd>
+											<dd id="detail_latlng"></dd>
 											<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_route_name">-</dd>
+											<dd id="detail_route_name"></dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
 											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
-											<dd id="popup_road_status">미분류</dd>
+											<dd id="popup_road_status"></dd>
 										</dl>
 									</div>
 								</div>
 								<div class="itemvalue">
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
 								</div>
 							</div>
 						</article>
 
 						<article class="beefup example-opensingle">
-							<div class="beefup__head worstHead">
+							 <div class="beefup__head worstHead">
 								<div>
-									<h3>No search data</h3>
-									<span><fmt:message key="CRITICAL" bundle="${bundle}"/> -<fmt:message key="COUNT2" bundle="${bundle}"/></span> <span></span>
+									<h3></h3>
+									<span></span> <span></span>
 								</div>
-								<span class="badge_risk badge_danger"></span>
+								 <span class="badge_risk badge_danger"></span>
 							</div>
 
 							<div class="beefup__body worstBody">
 								<div class="worstInfo">
 									<p class="infoPhoto">
-										<img id="detail_img" src="/img/sample_highway03.jpg"
-											alt="대표이미지" onclick=""> <span class="noPhoto"
-											style="display: none;"> <span
-											class="material-symbols-outlined">no_photography</span>
+										<img id="detail_img" src="" alt="대표이미지" onclick="">
+										<span class="noPhoto" style="display: none;">
+										  <span class="material-symbols-outlined"></span>
 										</span>
 									</p>
 									<div class="infoDetail">
 										<dl class="">
 											<dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-											<dd id="detail_device_id">-</dd>
+											<dd id="detail_device_id"></dd>
 											<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_device_name">-</dd>
+											<dd id="detail_device_name"></dd>
 											<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-											<dd id="detail_risk_level">LEVEL. -</dd>
+											<dd id="detail_risk_level"></dd>
 											<dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-											<dd id="detail_latlng"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</dd>
+											<dd id="detail_latlng"></dd>
 											<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_route_name">-</dd>
+											<dd id="detail_route_name"></dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
 											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
-											<dd id="popup_road_status">미분류</dd>
+											<dd id="popup_road_status"></dd>
 										</dl>
 									</div>
 								</div>
 								<div class="itemvalue">
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
 								</div>
 							</div>
 						</article>
 
 						<article class="beefup example-opensingle">
-							<div class="beefup__head worstHead">
+							 <div class="beefup__head worstHead">
 								<div>
-									<h3>No search data</h3>
-									<span><fmt:message key="CRITICAL" bundle="${bundle}"/> -<fmt:message key="COUNT2" bundle="${bundle}"/></span> <span></span>
+									<h3></h3>
+									<span></span> <span></span>
 								</div>
-								<span class="badge_risk badge_danger"></span>
+								 <span class="badge_risk badge_danger"></span>
 							</div>
 
 							<div class="beefup__body worstBody">
 								<div class="worstInfo">
 									<p class="infoPhoto">
-										<img id="detail_img" src="/img/sample_highway03.jpg"
+										<img id="detail_img" src=""
 											alt="대표이미지" onclick=""> <span class="noPhoto"
 											style="display: none;"> <span
-											class="material-symbols-outlined">no_photography</span>
+											class="material-symbols-outlined"></span>
 										</span>
 									</p>
 									<div class="infoDetail">
 										<dl class="">
 											<dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-											<dd id="detail_device_id">-</dd>
+											<dd id="detail_device_id"></dd>
 											<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_device_name">-</dd>
+											<dd id="detail_device_name"></dd>
 											<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-											<dd id="detail_risk_level">LEVEL. -</dd>
+											<dd id="detail_risk_level"></dd>
 											<dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-											<dd id="detail_latlng"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</dd>
+											<dd id="detail_latlng"></dd>
 											<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_route_name">-</dd>
+											<dd id="detail_route_name"></dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
 											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
-											<dd id="popup_road_status">미분류</dd>
+											<dd id="popup_road_status"></dd>
 										</dl>
 									</div>
 								</div>
 								<div class="itemvalue">
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
 								</div>
 							</div>
 						</article>
 
 						<article class="beefup example-opensingle">
-							<div class="beefup__head worstHead">
+							 <div class="beefup__head worstHead">
 								<div>
-									<h3>No search data</h3>
-									<span><fmt:message key="CRITICAL" bundle="${bundle}"/> -<fmt:message key="COUNT2" bundle="${bundle}"/></span> <span></span>
+									<h3></h3>
+									<span></span> <span></span>
 								</div>
-								<span class="badge_risk badge_danger"></span>
+								 <span class="badge_risk badge_danger"></span>
 							</div>
 
 							<div class="beefup__body worstBody">
 								<div class="worstInfo">
 									<p class="infoPhoto">
-										<img id="detail_img" src="/img/sample_highway03.jpg"
+										<img id="detail_img" src=""
 											alt="대표이미지" onclick=""> <span class="noPhoto"
 											style="display: none;"> <span
-											class="material-symbols-outlined">no_photography</span>
+											class="material-symbols-outlined"></span>
 										</span>
 									</p>
 									<div class="infoDetail">
 										<dl class="">
 											<dt><fmt:message key="DEVICE_ID" bundle="${bundle}"/></dt>
-											<dd id="detail_device_id">-</dd>
+											<dd id="detail_device_id"></dd>
 											<dt><fmt:message key="DEVICE_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_device_name">-</dd>
+											<dd id="detail_device_name"></dd>
 											<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-											<dd id="detail_risk_level">LEVEL. -</dd>
+											<dd id="detail_risk_level"></dd>
 											<dt><fmt:message key="COORDINATES" bundle="${bundle}"/></dt>
-											<dd id="detail_latlng"><fmt:message key="LONGITUDE" bundle="${bundle}"/> - / <fmt:message key="LATITUDE" bundle="${bundle}"/> -</dd>
+											<dd id="detail_latlng"></dd>
 											<dt><fmt:message key="ROAD_NAME" bundle="${bundle}"/></dt>
-											<dd id="detail_route_name">-</dd>
+											<dd id="detail_route_name"></dd>
 											<dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
 											<dd id="detail_ctime"></dd>
 											<dt><fmt:message key="ROAD_STATUS" bundle="${bundle}" /></dt>
-											<dd id="popup_road_status">미분류</dd>
+											<dd id="popup_road_status"></dd>
 										</dl>
 									</div>
 								</div>
 								<div class="itemvalue">
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
-									<span><em>-<fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
+									<span><em><fmt:message key="COUNT1" bundle="${bundle}"/></em><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/></span>
 								</div>
 							</div>
 						</article>
@@ -394,6 +391,10 @@
 </script>
 
 <script language="javascript">
+
+	$('.example-opensingle').beefup({
+		openSingle : true,
+	});
 
 	var potholeKeyValue = [];
 
@@ -547,13 +548,6 @@
 			return result;
 		}
 
-
-		let prependNumber = 1;
-
-		$('.example-opensingle').beefup({
-			openSingle : true,
-		});
-
 		var region = '${cdNa}';
 
 		function getPotholesByRoad() {
@@ -630,12 +624,6 @@
 
 		}
 
-	/*  클릭시 manageRiskList.jsp로 이동
-		function getDetailPage(fromDt, toDt, region, wayName){
-			console.log('디테일 페이지 이동', fromDt, ' 기간 ' , toDt, '지역', region , wayName);  // 현재 대시보드에서는 region으로만 쿼리조건 나누고, wayId로는 안쓰는데 -> manageRiskList 같은 경우 wayId로 쿼리 던져서 api 조건 불일치
-
-		} */
-
 		function getWorstRoad() {
 
 			var region = '${cdNa}';
@@ -682,7 +670,7 @@
 									  : level == 2 ? 'badge_negative'
 									  : level == 3 ? 'badge_danger'
 									  : 'badge_primary';
-						$('.badge_risk:eq(' + i + ')').removeClass('badge_danger');
+					 	$('.badge_risk:eq(' + i + ')').removeClass('badge_danger');
 						$('.badge_risk:eq(' + i + ')').removeClass('badge_warning');
 						$('.badge_risk:eq(' + i + ')').removeClass('badge_negative');
 						$('.badge_risk:eq(' + i + ')').removeClass('badge_primary');
@@ -731,16 +719,15 @@
 						// 피로균열
 						$('.itemvalue:eq(' + i + ') em').eq(3).text(data.countOfAlligators);
 
-
 					}
 
-					/*
-					 $('#swiperId').append(html); */
-					//$('#removeSwiper').remove();
+
+					$('.worstList').css('display','block');
 				}
 			})
 
 		}
+
 
 		function getChart() {
 			var port = [ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' ];
