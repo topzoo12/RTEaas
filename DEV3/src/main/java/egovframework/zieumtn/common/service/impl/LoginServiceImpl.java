@@ -84,22 +84,15 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	@Override
 	public AuthVO loginAuth(LoginVO vo) throws Exception{
 
-		System.out.println("vo--");
-		System.out.println(vo);
 		LoginVO user = loginDAO.selectById(vo); 				//여기서 로그인 유저 정보(region 포함) 생성됨
 		if(user == null) {
 			return new AuthVO("", "", "", "", "", "", "",
 					"","","","","",null,null,"", null,null,null,null,null,null,null);
 		}
 
-		System.out.println("user--");
-		System.out.println(user);
-
 		List<?> usermenu = loginDAO.selectMenuById(user);      //Common_SQL.xml에 loginDAO.selectMenuById 쿼리 호출 됨 (user 파라미터에 cdNa 포함)
 		List<?> userFavmenu = loginDAO.selectFavMenuById(user);
 
-		System.out.println(usermenu);
-		System.out.println("favorite list: " + userFavmenu);
 		return new AuthVO(user.getCoId(), user.getCoNm(), user.getUsrId(), user.getUsrNm(), user.getDeptNm(), user.getCotelNo(), user.getAuthgrpId(),
 				user.getWtX(),user.getWtY(),user.getWtNm(),user.getMapX(),user.getMapY(),usermenu, userFavmenu, user.getRestApiUrl(), user.getRestApiDistance(),
 				user.getCdNa(), user.getChangedCdNa(), user.getMapMinSize(), user.getMapMaxSize(), user.getAreaCodeLv1(), user.getAreaCodeLv2());
@@ -142,8 +135,6 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 		List<?> usermenu = loginDAO.selectMenuByChangeCdNaAndId(vo);      //Common_SQL.xml에 loginDAO.selectMenuById 쿼리 호출 됨 (user 파라미터에 cdNa 포함)
 		List<?> userFavmenu = loginDAO.selectFavMenuByChangeCdNaAndId(vo);
-
-		System.out.println(usermenu);
 
 		return new AuthVO("", "", "", "", "", "", "",
 				"","","","","",usermenu, userFavmenu, "", "", "", "","","","","");

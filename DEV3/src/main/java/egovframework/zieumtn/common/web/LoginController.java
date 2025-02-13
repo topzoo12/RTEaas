@@ -109,8 +109,9 @@ public class LoginController {
 		//String userIp = loginService.getClientIp(request);
 		//String regionData = loginService.getCountryCodeByIp(userIp);
 
-		List<?> list = ownerService.getOpenList(null);
-		mv.addObject("serviceList",list);
+		//List<?> list = ownerService.getOpenList(null);
+		//mv.addObject("serviceList",list);
+
 		//mv.addObject("regionData", regionData);
 
 		return mv;
