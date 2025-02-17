@@ -41,7 +41,7 @@
 
 	<select id="FileUploadDAO.selectFileList" parameterClass="FileVO" resultMap="file">
 			SELECT
-				ROW_NUMBER() OVER (order by co_id) as rowno,
+				ROW_NUMBER() OVER (order by SEQ_NO) as rowno,
 				CO_ID as coId,
 				UPD_ID as userId,
 				FILE_NM as fileNm,
@@ -52,6 +52,7 @@
 				SEQ_NO as seqNo
 			FROM TB_FILE_LIST
 				WHERE CO_ID = #coId#
+				ORDER BY SEQ_NO
     </select>
 
 
