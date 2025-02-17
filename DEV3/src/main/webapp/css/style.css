@@ -659,7 +659,7 @@ input:checked + .slider:before {
 		flex-direction: column;
 		gap: 40px;
 	}
-}      
+}
 @keyframes slideinB {
 	0% { left: 400px; opacity: .7; }
 	100% { left: 340px; opacity: 1; }
@@ -4707,10 +4707,14 @@ span.badge_risk.badge_danger::after{
 .fileUploadwrap label {
 	background-color: var(--bg-gray);
 	color: var(--color);
+	cursor: pointer;
 }
 .btn_uploadFile{
 	height: 32px;
 	line-height: 32px;
+}
+.btn_uploadFile:hover{
+	cursor: pointer;
 }
 .btn_uploadFile::before{
 	position: absolute;
