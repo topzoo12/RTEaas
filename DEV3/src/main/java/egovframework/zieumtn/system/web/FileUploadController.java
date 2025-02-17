@@ -290,7 +290,8 @@ public class FileUploadController {
 			System.out.println("downFileName - " + downFileName);
 
 			//File f = new File("/mnt/FileUpload/" + "83.pdf");
-			File f = new File("/mnt/FileUpload/" + chkFileName);
+			//File f = new File("/mnt/FileUpload/" + chkFileName);
+			File f = new File("/mnt/rteaas/obs/obs_upload/" + chkFileName);
 
 			BufferedInputStream bis = null;
 			BufferedOutputStream bos = null;
