@@ -91,6 +91,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,9 +104,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -191,6 +194,42 @@ public class CommonController {
 		mv.addObject("x", 37.6686932);*/
 		mv.addObject("deviceList", deviceList);
 		mv.addObject("wtNm", authInfo.getWtNm());
+
+
+		RestTemplate restTemplate = new RestTemplate();
+        //String apiUrl = "http://datahub-dev.zieumtn.com/gis/administrative/boundary";
+        String apiUrl = "http://datahub-dev.zieumtn.com/gis/pothole/latest";
+
+        //http://3.39.212.67/gis/administrative/boundary"
+        //http://datahub-dev.zieumtn.com/gis
+
+        Map<String, Object> params = new HashMap<>();
+        //params.put("administrative_id", "2505207");
+        //params.put("region", "KR");
+        params.put("co_id", "A0001");
+
+        //String urlWithParams = apiUrl + "?administrative_id={administrative_id}&region={region}";
+        String urlWithParams = apiUrl + "?co_id={co_id}";
+
+        ResponseEntity<String> result = restTemplate.getForEntity(urlWithParams, String.class, params);
+
+        // JSON 파싱
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(result.getBody());
+
+        // 필요한 데이터 추출
+        String date = rootNode.path("data").path("date").asText();
+        int count = rootNode.path("data").path("count").asInt();
+
+//        System.out.println("Date: " + date);
+//        System.out.println("Count: " + count);
+//
+//        System.out.println("Response: " + result.getBody());
+//
+//		System.out.println("◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇");
+
+		mv.addObject("lastUpdateDate", date);
+		mv.addObject("lastUpdateCount", count);
 /*
  *
 		//String naverhtml = cwGetWeather(weatherVO);

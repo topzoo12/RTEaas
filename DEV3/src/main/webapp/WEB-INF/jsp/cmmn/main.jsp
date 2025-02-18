@@ -1589,6 +1589,9 @@ $(document).ready(function() {
 
 	$('.btn_search').click();
 
+	$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
+    $("#pop_alert").stop().fadeIn(300);
+
 
 })
 
