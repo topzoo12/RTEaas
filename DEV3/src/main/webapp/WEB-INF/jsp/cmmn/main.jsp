@@ -1185,6 +1185,34 @@ function detail(id, clusterChk, listClicked){
 
 }
 
+function lastUpdateInfo() {
+	$.ajax({
+	      type: "GET",
+	      //url: "http://localhost:8081/pothole",
+	      url: "${authInfo.restApiUrl}/pothole/latest",
+	      data:{
+	         co_id : '${authInfo.coId}',
+	      },
+	      success: function(response) {
+				console.log('최근 포트홀 건수', response)
+
+				$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건이   <br> 마지막으로 업데이트 되었습니다 <br>');
+				//$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
+				$("#pop_alert").stop().fadeIn(300);
+	      },
+	      error: function(request,status,error){
+
+	      },
+	      beforeSend:function(){
+	         $('#circularG').css('display','block')
+	      },
+	      complete : function(data) {
+	         //  실패했어도 완료가 되었을 때 처리
+	         $('#circularG').css('display','none');
+	      }
+	   });
+}
+
 function statusName(code) {
 	var statusNameByCdna = getCdNa('${authInfo.changedCdNa}', '${authInfo.cdNa}');
 
@@ -1589,9 +1617,7 @@ $(document).ready(function() {
 
 	$('.btn_search').click();
 
-	$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
-    $("#pop_alert").stop().fadeIn(300);
-
+	lastUpdateInfo();
 
 })
 
