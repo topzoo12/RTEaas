@@ -231,7 +231,7 @@
 	<div class="pop_wrap" id="pop_riskPopImg" style="display: none;">
 		<div class="pop_riskPopImg">
 			<div class="photo_area">
-				<!-- <img src="/img/sample_highway03.jpg" alt="도로위험목록 이미지" id="popup_imgDetail"> -->
+				 <img src="" alt="도로위험목록 이미지" id="popup_imgDetail">
 			</div>
 		</div>
 		<button class="riskPopImg_close" id=""></button>

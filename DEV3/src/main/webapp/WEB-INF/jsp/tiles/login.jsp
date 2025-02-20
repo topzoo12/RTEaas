@@ -151,9 +151,9 @@ function checkUserCdNaByIp(){
 	 	       $('.btn_select').text('확인');
 
 	  		} else if (regionData =='JP'){
-		 	    $('.icon_id').attr("placeholder", "(jp)이메일을 입력하세요");
-		 	    $('.icon_password').attr("placeholder","(jp)비밀번호를 입력하세요 (8자 이상)");
-		 	    $('.btn_select').text('(jp)확인');
+		 	    $('.icon_id').attr("placeholder", "メールを入力してください");
+		 	    $('.icon_password').attr("placeholder","パスワードを入力してください(8文字以上)");
+		 	    $('.btn_select').text('確認');
 
 	  		} else {
 		 	    $('.icon_id').attr("placeholder", "Enter your E-Mail");
