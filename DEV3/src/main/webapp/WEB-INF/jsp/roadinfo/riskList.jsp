@@ -151,8 +151,8 @@
 						</div>
 						<!-- Add Arrows -->
 						<div class="control-wrap">
-							<div class="swiper-button-prev"></div>
-							<div class="swiper-button-next"></div>
+							<div class="swiper-button-prev" onclick="prevPothole()"></div>
+							<div class="swiper-button-next"  onclick="nextPothole()"></div>
 
 						</div>
 						<div class="swiper-count">
@@ -267,8 +267,11 @@
 		var potTemp;
 
 		var potImg = [];
+		var activePotIndex = 0;
+
 		var fromDt = '';
 		var toDt = '';
+
 
 		var searchLv = 0;
 
@@ -457,16 +460,16 @@
 		}
 
 		// Swiper 인스턴스 변수
-		var mainSwiper, thumbSwiper;
+		var thumbSwiper; // mainSwiper
 
 		function initializeSwipers() {
 		  // Swiper 1 초기화
-		  if (mainSwiper) {
+		/*   if (mainSwiper) {
 			  mainSwiper.destroy(true, true);
 		  }
 
 		  mainSwiper = new Swiper('.gallery-main-swiper', {
-			  initialSlide : 0,
+			  	initialSlide : 0,
 		        effect: 'fade',
 		        spaceBetween: 10,
 		        cssMode: false,
@@ -492,14 +495,14 @@
 
 		        }
 		  });
-
+ */
 		  // Swiper 2 초기화
 		  if (thumbSwiper) {
 			  thumbSwiper.destroy(true, true);
 		  }
 
 		  thumbSwiper = new Swiper('.gallery-thumb-swiper', {
-			  initialSlide: 0,
+			  	initialSlide: 0,
 			    spaceBetween: 5,
 			    cssMode: false,
 			    watchSlidesProgress: true,
@@ -551,9 +554,30 @@
 	    nextButton.addEventListener('click', preventDoubleClick);
 	    prevButton.addEventListener('click', preventDoubleClick);
 
+	    function prevPothole() {
+	    	if ( activePotIndex > 0){
+	    		var prevIndex = activePotIndex - 1;
+		    	getSwiperDetailInfo(prevIndex);
+				thumbSwiper.slideTo(prevIndex);
+	    	}
+	    }
+
+	    function nextPothole() {
+	    	var maxIndex = potImg.length - 1;
+
+	    	if ( activePotIndex < maxIndex ){
+	    		var nextIndex = activePotIndex + 1;
+		    	getSwiperDetailInfo(nextIndex);
+		    	thumbSwiper.slideTo(nextIndex);
+	    	}
+	    }
+
 		//포토홀 팝업 오른쪽 상세정보
 		function getPotholeDetailInfo(pothole, index){
-			detailIndex = index;
+			//detailIndex = index;
+			activePotIndex = index;
+
+			getPrevNextStyle(activePotIndex, potImg.length)
 
 			document.querySelectorAll('.gallery-thum img').forEach(img => {
                 img.classList.remove('active');
@@ -600,10 +624,12 @@
 
 		}
 
-		var detailIndex = 0;
 
 		function getSlideList(){
-			mainSwiper.slideTo(detailIndex);
+			//메인 메소드 추가 필요
+			getSwiperDetailInfo(activePotIndex)
+
+			//mainSwiper.slideTo(detailIndex);
 			//mainSwiper.slideTo(0);
 		}
 
@@ -647,13 +673,15 @@
 				}
 			}
 
-			document.querySelector('.gallery-thum:nth-child(' + (detailIndex + 1) + ') img').scrollIntoView(false);
+
+			document.querySelector('.gallery-thum:nth-child(' + (activePotIndex + 1) + ') img').scrollIntoView(false);
 
 			$('.swiper-count em').text(cnt);
 
-			$('.gallery-list .txtBox').text( '<fmt:message key="LATITUDE" bundle="${bundle}"/> ' + potInfo[detailIndex].point.latitude + ' / <fmt:message key="LONGITUDE" bundle="${bundle}"/> '+ potInfo[detailIndex].point.longitude );
+			$('.gallery-list .txtBox').text( '<fmt:message key="LATITUDE" bundle="${bundle}"/> ' + potInfo[activePotIndex].point.latitude + ' / <fmt:message key="LONGITUDE" bundle="${bundle}"/> '+ potInfo[activePotIndex].point.longitude );
 
-			getPotholeDetailInfo(potInfo[detailIndex], detailIndex);
+			getPotholeDetailInfo(potInfo[activePotIndex], activePotIndex);
+
 
 			/* 앨범 버튼 클릭시 - 첫번째 포트홀정보로 초기화
 			$('.gallery-list .txtBox').text(
@@ -717,8 +745,7 @@
 				},
 				success : function(resp) {
 					datas = resp.data;
-
-					for (var j = 0; j < datas.length; j++) {
+					 for (var j = 0; j < datas.length; j++) {
 						data = datas[j];
 						potholes = datas[j].potholes;
 
@@ -738,8 +765,10 @@
 									+ '</div>'
 									+ '</div>';
 
+
 							potImg.push(text);
-							$('#swiperId').append(text);
+
+							//$('#swiperId').append(text);
 
 							thumbSwiperInfo ='<div class="swiper-slide">'
 									+'<p class="info-img object-fit">'
@@ -752,185 +781,196 @@
 								$('#thumbSwiperId .swiper-slide:nth-child(' + (i + 1) + ') .info-img img').addClass('active');
 							}
 						}
+
+						$('#swiperId').append(potImg[0]);
+
 					}
 
 					getPotholeDetailInfo(potInfo[0], 0);
+
+
+					/* if (potInfo.length > 1) {
+						$('.swiper-button-prev').css('opacity', '0.5');
+					}else {
+						$('.swiper-button-prev').css('opacity', '0.5');
+						$('.swiper-button-next').css('opacity', '0.5');
+					}
+ */
 					$('#slide-length').text('/ ' + potInfo.length);
+					//getSwiperDetailInfo(0);
 
 				}
 			})
 
-	    // main slider 실행
-	    mainSwiper = new Swiper('.gallery-main-swiper', {
-	    	initialSlide : 0,
-	        effect: 'fade',
-	        cssMode: false,
-	        spaceBetween: 10,
-	        allowTouchMove: false,
-	        autoplay : false,
-	        loop: false,
-	        navigation: {
-	            nextEl: '.swiper-button-next',
-	            prevEl: '.swiper-button-prev'
-	        },
-	        breakpoints: {
-	            1024: {
-	                loopedSlides: 5
-	            },
-	            768: {
-	                loopedSlides: 3
-	            },
-	            480: {
-	                loopedSlides: 2
-	            }
-	        }
-	        , on : {
-		        slideChange: function(swiper) {
-		            this.currentSlideIndex = this.activeIndex;
-		            detailIndex = this.activeIndex;
+			    // main slider 실행
 
-		            getSwiperDetailInfo(this.currentSlideIndex);
-		            $('#slide-index').text(this.currentSlideIndex + 1);
-		        },
-		        click: function(swiper) {
-		        	if (potInfo[this.currentSlideIndex].id != "undefined") {
-		        		getDetailImg(potInfo[this.currentSlideIndex].id);
-		        	} else {
-		        		getDetailImg(potInfo[this.currentSlideIndex]);
-		        	}
+		/* 		 if (mainSwiper) {
+					 mainSwiper.destroy(true, true);
+				  }
+			    mainSwiper = new Swiper('.gallery-main-swiper', {
+			    	initialSlide : 1,
+			        effect: 'fade',
+			        cssMode: false,
+			        spaceBetween: 10,
+			        allowTouchMove: false,
+			        autoplay : false,
+			        loop: false,
+			        navigation: {
+			            nextEl: '.swiper-button-next',
+			            prevEl: '.swiper-button-prev'
+			        },
+			        breakpoints: {
+			            1024: {
+			                loopedSlides: 5
+			            },
+			            768: {
+			                loopedSlides: 3
+			            },
+			            480: {
+			                loopedSlides: 2
+			            }
+			        }
+			        , on : {
+				        slideChange: function(swiper) {
+				            this.currentSlideIndex = this.activeIndex;
+				            detailIndex = this.activeIndex;
+
+				            getSwiperDetailInfo(this.currentSlideIndex);
+				            $('#slide-index').text(this.currentSlideIndex + 1);
+				        },
+				        click: function(swiper) {
+				        	if (potInfo[this.currentSlideIndex].id != "undefined") {
+				        		getDetailImg(potInfo[this.currentSlideIndex].id);
+				        	} else {
+				        		getDetailImg(potInfo[this.currentSlideIndex]);
+				        	}
+				        }
+
+			        }
+			    }); */
+
+				 if (thumbSwiper) {
+					 thumbSwiper.destroy(true, true);
+				  }
+
+				thumbSwiper = new Swiper('.gallery-thumb-swiper', {
+				   	initialSlide: 1,
+				    spaceBetween: 5,
+				    cssMode: false,
+				    watchSlidesProgress: true,
+				    slideToClickedSlide: true,
+				    autoplay: false,
+				    loop: false,
+				    navigation: {
+			            nextEl: '.thumb-swiper-button-next',
+			            prevEl: '.thumb-swiper-button-prev'
+			        },
+				    breakpoints: {
+				        1024: {
+				            slidesPerView: 5, // 한 화면에 보일 섬네일 개수
+				            loopedSlides: 5   // 위 섬네일 개수와 동일한 수치 설정
+				        },
+				        768: {
+				            slidesPerView: 3,
+				            loopedSlides: 3
+				        },
+				        480: {
+				            slidesPerView: 2,
+				            loopedSlides: 2
+				        }
+				    },
+				    on: {
+				        init: function(swiper) {
+				        	setupCustomNavigation(swiper);
+				            updateSwiperAlignment(swiper);
+
+				            $('#slide-index').text('1');
+				        },
+				        resize: function(swiper) {
+				        	setupCustomNavigation(swiper);
+				            updateSwiperAlignment(swiper);
+
+				        },
+
+				        click: function(swiper, e) {
+				            var clickedIndex = swiper.clickedIndex;
+
+				            if (clickedIndex != null) {
+				            	getSwiperDetailInfo(clickedIndex);
+
+				            	//메인 메소드 추가 필요
+				            	//mainSwiper.slideTo(clickedIndex);
+
+				                $('#slide-index').text(clickedIndex + 1);
+				            }
+
+				        }
+				    }
+				});
+
+		        function setupCustomNavigation(swiper) {
+		            var nextButton = document.querySelector('.thumb-swiper-button-next');
+		            var prevButton = document.querySelector('.thumb-swiper-button-prev');
+
+		            var slidesPerView = swiper.params.slidesPerView;
+				    var slideCount = swiper.slides.length;
+
+				    if( slideCount <= slidesPerView ) {
+				    	document.querySelector('.thumb-swiper-button-next').addEventListener('click', function(event) {
+				    	    event.preventDefault();
+				    	});
+
+				    	document.querySelector('.thumb-swiper-button-prev').addEventListener('click', function(event) {
+				    	    event.preventDefault();
+				    	});
+
+				    } else {
+				    	var slidesPerView = swiper.params.slidesPerView;
+
+				    	if(slidesPerView !== null) {
+				    		nextButton.addEventListener('click', function() {
+
+				                var newIndex = swiper.activeIndex + slidesPerView -1;
+				                swiper.slideTo(newIndex);
+				            });
+
+				            prevButton.addEventListener('click', function() {
+
+				                var newIndex = swiper.activeIndex - slidesPerView -1;
+				                swiper.slideTo(newIndex);
+				            });
+				    	}
+				    }
 		        }
 
-	        }
-	    });
-
-		 if (thumbSwiper) {
-			 thumbSwiper.destroy(true, true);
-		  }
-
-		thumbSwiper = new Swiper('.gallery-thumb-swiper', {
-		    initialSlide: 0,
-		    spaceBetween: 5,
-		    cssMode: false,
-		    watchSlidesProgress: true,
-		    slideToClickedSlide: true,
-		    autoplay: false,
-		    loop: false,
-		    navigation: {
-	            nextEl: '.thumb-swiper-button-next',
-	            prevEl: '.thumb-swiper-button-prev'
-	        },
-		    breakpoints: {
-		        1024: {
-		            slidesPerView: 5, // 한 화면에 보일 섬네일 개수
-		            loopedSlides: 5   // 위 섬네일 개수와 동일한 수치 설정
-		        },
-		        768: {
-		            slidesPerView: 3,
-		            loopedSlides: 3
-		        },
-		        480: {
-		            slidesPerView: 2,
-		            loopedSlides: 2
-		        }
-		    },
-		    on: {
-		        init: function(swiper) {
-		        	setupCustomNavigation(swiper);
-		            updateSwiperAlignment(swiper);
-
-		            $('#slide-index').text('1');
-		        },
-		        resize: function(swiper) {
-		        	setupCustomNavigation(swiper);
-		            updateSwiperAlignment(swiper);
-
-		        },
-
-		        click: function(swiper, e) {
-		            var clickedIndex = swiper.clickedIndex;
-
-		            if (clickedIndex != null) {
-		            	getSwiperDetailInfo(clickedIndex);
-		                mainSwiper.slideTo(clickedIndex);
-		            	$('#slide-index').text(clickedIndex + 1);
-		            }
-
-		        }
-		    }
-		});
-	////////////////////
-		// transitionend 이벤트 리스너 추가
-		/* const handleTransitionEnd = (event) => {
-		    const cssMode = mainSwiper.params.cssMode;
-		    if (cssMode === undefined) {
-		        console.log('cssMode is undefined, skipping...');
-		        return;
-		    }
-		};
-		document.querySelector('.gallery-thumb-swiper').addEventListener('transitionEnd', handleTransitionEnd);
- */
-		/////////
-        function setupCustomNavigation(swiper) {
-            var nextButton = document.querySelector('.thumb-swiper-button-next');
-            var prevButton = document.querySelector('.thumb-swiper-button-prev');
-
-            var slidesPerView = swiper.params.slidesPerView;
-		    var slideCount = swiper.slides.length;
-
-		    if( slideCount <= slidesPerView ) {
-		    	document.querySelector('.thumb-swiper-button-next').addEventListener('click', function(event) {
-		    	    event.preventDefault();
-		    	});
-
-		    	document.querySelector('.thumb-swiper-button-prev').addEventListener('click', function(event) {
-		    	    event.preventDefault();
-		    	});
-
-		    } else {
-		    	var slidesPerView = swiper.params.slidesPerView;
-
-		    	if(slidesPerView !== null) {
-		    		nextButton.addEventListener('click', function() {
-
-		                var newIndex = swiper.activeIndex + slidesPerView -1;
-		                swiper.slideTo(newIndex);
-		            });
-
-		            prevButton.addEventListener('click', function() {
-
-		                var newIndex = swiper.activeIndex - slidesPerView -1;
-		                swiper.slideTo(newIndex);
-		            });
-		    	}
-		    }
-        }
-
-		function updateSwiperAlignment(swiper) {
-		    var slidesPerView = swiper.params.slidesPerView;
-		    var slideCount = swiper.slides.length;
+				function updateSwiperAlignment(swiper) {
+				    var slidesPerView = swiper.params.slidesPerView;
+				    var slideCount = swiper.slides.length;
 
 
-		    if (slideCount < slidesPerView) {
-		        // 갯수가 slidesPerView보다 작으면 중앙정렬
-		        swiper.allowTouchMove = false; // 드래그 비활성화
-           		swiper.isLocked = true;
-		        document.querySelector('.gallery-thumb-box').classList.add('centered');
-		        document.querySelector('.gallery-thumb-box').classList.remove('left-aligned');
+				    if (slideCount < slidesPerView) {
+				        // 갯수가 slidesPerView보다 작으면 중앙정렬
+				        swiper.allowTouchMove = false; // 드래그 비활성화
+		           		swiper.isLocked = true;
+				        document.querySelector('.gallery-thumb-box').classList.add('centered');
+				        document.querySelector('.gallery-thumb-box').classList.remove('left-aligned');
 
-		    } else {
-		        // 갯수가 slidesPerView보다 크면 왼쪽정렬
-		        swiper.allowTouchMove = true;
-           		swiper.isLocked = false;
-		        document.querySelector('.gallery-thumb-box').classList.add('left-aligned');
-		        document.querySelector('.gallery-thumb-box').classList.remove('centered');
-		    }
-		}
+				    } else {
+				        // 갯수가 slidesPerView보다 크면 왼쪽정렬
+				        swiper.allowTouchMove = true;
+		           		swiper.isLocked = false;
+				        document.querySelector('.gallery-thumb-box').classList.add('left-aligned');
+				        document.querySelector('.gallery-thumb-box').classList.remove('centered');
+				    }
+				}
 
-
-		    mainSwiper.controller.control = thumbSwiper;
-		    thumbSwiper.controller.control = mainSwiper;
+			}
+/////////////
 
 		    function getSwiperDetailInfo(clickedIndex){
+
+		    	activePotIndex = clickedIndex
+
 		    	document.querySelectorAll('.gallery-thumb-box .swiper-slide .info-img img').forEach(img => {
                     img.classList.remove('active');
                 });
@@ -943,8 +983,12 @@
                 node.innerHTML = '';
 
                 $('#swiperId').append(potImg[clickedIndex]);
-
                 var data = potInfo[clickedIndex];
+
+                $('#slide-index').text(clickedIndex + 1);
+
+                //메인 화살표
+				getPrevNextStyle(activePotIndex , potImg.length)
 
                 // 이미지와 상관 없는 부분 데이터 삽입
                 $('#piroCnt').text(data.risk['count-of-alligators'] + '<fmt:message key="COUNT1" bundle="${bundle}"/>');
@@ -977,6 +1021,25 @@
 
 			}
 
+		///////////////
+		function getPrevNextStyle(activeIndex, dataSize){
+
+		if (dataSize == 1) {
+				$('.swiper-button-prev').css('opacity', '0.5');
+				$('.swiper-button-next').css('opacity', '0.5');
+			} else {
+					 if (activePotIndex == 0){
+			    		$('.swiper-button-prev').css('opacity', '0.5');
+			    	} else {
+			    		$('.swiper-button-prev').css('opacity', '1');
+			    	}
+
+			    	if (activePotIndex == (potImg.length -1) ){
+			    		$('.swiper-button-next').css('opacity', '0.5');
+			    	} else {
+			    		$('.swiper-button-next').css('opacity', '1');
+			    	}
+			 }
 		}
 
 		//다국어 추가
