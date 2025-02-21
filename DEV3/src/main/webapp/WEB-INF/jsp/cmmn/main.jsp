@@ -1196,7 +1196,8 @@ function lastUpdateInfo() {
 	      success: function(response) {
 				console.log('최근 포트홀 건수', response)
 
-				$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건이   <br> 마지막으로 업데이트 되었습니다 <br>');
+				//$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건이   <br> 마지막으로 업데이트 되었습니다 <br>');
+				$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건의 데이터가<br> 마지막으로 업데이트 되었습니다. <br>');
 				//$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
 				$("#pop_alert").stop().fadeIn(300);
 	      },
