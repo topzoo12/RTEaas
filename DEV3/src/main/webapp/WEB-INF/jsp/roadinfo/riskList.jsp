@@ -854,7 +854,7 @@
 				  }
 
 				thumbSwiper = new Swiper('.gallery-thumb-swiper', {
-				   	initialSlide: 1,
+				   	initialSlide: 0,
 				    spaceBetween: 5,
 				    cssMode: false,
 				    watchSlidesProgress: true,
