@@ -452,7 +452,7 @@ $('.btn_search').on("click", function(){
 		type: "GET",
 		url: "${authInfo.restApiUrl}/administrative/boundary" ,
 		data: {
-			administrative_id: areaCode, //성남시
+			administrative_id: areaCode,
 			region: region,
 		},
 		success: function(resp) {
@@ -460,6 +460,11 @@ $('.btn_search').on("click", function(){
 			datas = resp.data
 
 			var boundaryLines = []
+
+			var firstPoint = new L.LatLng(datas[0].y, datas[0].x);
+
+			var firstx = datas[0].x;
+			var firsty = datas[0].y;
 
 			for (var i = 0; i < datas.length-1; i++) {
 
@@ -480,7 +485,15 @@ $('.btn_search').on("click", function(){
 
 				map.addLayer(firstpolyline);
 
-				boundaryLines.push(firstpolyline);
+
+				if (firstx == pointB.lng && firsty == pointB.lat) {
+					i++;
+					continue;
+				} else {
+
+					boundaryLines.push(firstpolyline);
+				}
+
 			}
 
 		},

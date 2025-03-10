@@ -414,7 +414,7 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		//url: "http://localhost:8081/pothole",
+		//url: "http://localhost:8083/pothole",
 		url: "${authInfo.restApiUrl}/pothole",
 		data:{
 			on_way : false,
@@ -442,9 +442,10 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		url: "${authInfo.restApiUrl}/administrative/boundary" ,
+		//url: "${authInfo.restApiUrl}/administrative/boundary" ,
+		url: "http://localhost:8083/administrative/boundary" ,
 		data: {
-			administrative_id: areaCode, //성남시
+			administrative_id: areaCode,
 			region: region,
 		},
 		success: function(resp) {
@@ -452,6 +453,11 @@ $('.btn_search').on("click", function(){
 			datas = resp.data
 
 			var boundaryLines = []
+
+			var firstPoint = new L.LatLng(datas[0].y, datas[0].x);
+
+			var firstx = datas[0].x;
+			var firsty = datas[0].y;
 
 			for (var i = 0; i < datas.length-1; i++) {
 
@@ -472,7 +478,14 @@ $('.btn_search').on("click", function(){
 
 				map.addLayer(firstpolyline);
 
-				boundaryLines.push(firstpolyline);
+				if (firstx == pointB.lng && firsty == pointB.lat) {
+					i++;
+					continue;
+				} else {
+
+					boundaryLines.push(firstpolyline);
+				}
+
 			}
 
 		},
@@ -1188,14 +1201,11 @@ function detail(id, clusterChk, listClicked){
 function lastUpdateInfo() {
 	$.ajax({
 	      type: "GET",
-	      //url: "http://localhost:8081/pothole",
 	      url: "${authInfo.restApiUrl}/pothole/latest",
 	      data:{
 	         co_id : '${authInfo.coId}',
 	      },
 	      success: function(response) {
-				console.log('최근 포트홀 건수', response)
-
 				//$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건이   <br> 마지막으로 업데이트 되었습니다 <br>');
 				$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건의 데이터가<br> 마지막으로 업데이트 되었습니다. <br>');
 				//$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
@@ -1496,7 +1506,6 @@ function setLevelList(level, id){
 
 		$.ajax({
 			type: "GET",
-			//url: "${authInfo.restApiUrl}/administrative/" + id + "?region=" + region,
 			url: "${authInfo.restApiUrl}/administrative/" + id,
 			async:false,
 			data: {
