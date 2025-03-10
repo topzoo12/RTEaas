@@ -414,7 +414,6 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		//url: "http://localhost:8083/pothole",
 		url: "${authInfo.restApiUrl}/pothole",
 		data:{
 			on_way : false,
@@ -442,8 +441,7 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		//url: "${authInfo.restApiUrl}/administrative/boundary" ,
-		url: "http://localhost:8083/administrative/boundary" ,
+		url: "${authInfo.restApiUrl}/administrative/boundary" ,
 		data: {
 			administrative_id: areaCode,
 			region: region,
