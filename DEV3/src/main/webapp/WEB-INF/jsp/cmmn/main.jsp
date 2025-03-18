@@ -365,7 +365,7 @@ var markerCluster = L.markerClusterGroup({
 });
 
 
-//검색버튼 클릭 이벤트
+//검색버튼 클릭 이벤트 dteg
 $('.btn_search').on("click", function(){
 
 	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
