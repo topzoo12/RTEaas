@@ -1625,6 +1625,12 @@ $(document).ready(function() {
 
 	$('.btn_search').click();
 
+	//pothole 제외 다 button off 로직
+	const crackCheckboxes = document.querySelectorAll('input.crack');
+    crackCheckboxes.forEach((checkbox, index) => {
+      checkbox.checked = index === 0;  // 첫 번째만 true, 나머진 false
+    });
+
 	lastUpdateInfo();
 
 })
