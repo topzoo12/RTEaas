@@ -200,7 +200,7 @@ public class CommonController {
         //String apiUrl = "http://datahub-dev.zieumtn.com/gis/administrative/boundary";
         //String apiUrl = "http://datahub-dev.zieumtn.com/gis/pothole/latest";
 		//hardcording 부분 고치기
-		String apiUrl = "http://192.168.10.223:5071/gis/pothole/latest";
+		String apiUrl = "http://3.39.212.67/gis/pothole/latest";
         //http://3.39.212.67/gis/administrative/boundary"
         //http://datahub-dev.zieumtn.com/gis
 
