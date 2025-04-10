@@ -88,14 +88,20 @@
 						<dd>
 							<div class="selectOpt">
 								<c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
-									<input type="checkbox" id="${cracklist.etc1}" class="crack" name="crack" value="${cracklist.etc2}" checked><label for="${cracklist.etc1}">
-									<c:choose>
-										<c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
-										<c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
-										<c:when test="${nowCdNa eq 'JP'}">${cracklist.cdNmJp}</c:when>
-									</c:choose>
-
-									</label>
+								  <input type="checkbox"
+								         id="${cracklist.etc1}"
+								         class="crack"
+								         name="crack"
+								         value="${cracklist.etc2}"
+								         <c:if test="${cracklist.etc1 eq 'pothole'}">checked</c:if>
+								  >
+								  <label for="${cracklist.etc1}">
+								    <c:choose>
+								      <c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
+								      <c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
+								      <c:when test="${nowCdNa eq 'JP'}">${cracklist.cdNmJp}</c:when>
+								    </c:choose>
+								  </label>
 								</c:forEach>
 							</div>
 						</dd>
@@ -1624,13 +1630,8 @@ $(document).ready(function() {
 	$('#level2').text($('.optionItem[data-code="' + chkAreaCodeLv2 + '"]').text());
 
 	$('.btn_search').click();
-	/*
-	//pothole 제외 다 button off 로직
-	const crackCheckboxes = document.querySelectorAll('input.crack');
-    crackCheckboxes.forEach((checkbox, index) => {
-      checkbox.checked = index === 0;  // 첫 번째만 true, 나머진 false
-    });
-	*/
+
+
 	lastUpdateInfo();
 
 })
