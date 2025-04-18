@@ -19,119 +19,52 @@
 	<div class="contentsWrap">
 		<p class="title ${fav}">${pageName.srnNm}</p>
 
-		<ul class="search_box" style="min-width: 1500px;">
-			<li>
-				<span class="selectBox resp bottom" id="msgdivCd_span">
-						<button class="label" id="level1" data-code="">Level1</button>
-						<ul class="optionList" id="level1_ul"></ul>
-				</span> <span class="selectBox resp bottom" id="msgdivCd_span">
-						<button class="label" id="level2" data-code="">Level2</button>
-						<ul class="optionList" id="level2_ul"></ul>
-				</span> <span class="selectBox resp bottom" id="msgdivCd_span">
-						<button class="label" id="level3" data-code="">Level3</button>
-						<ul class="optionList" id="level3_ul"></ul>
+		<ul class="search_box" style="min-width: 1390px;">
+			<li><span class="selectBox resp bottom" id="msgdivCd_span">
+					<button class="label" id="level1" data-code="">Level1</button>
+					<ul class="optionList" id="level1_ul"></ul>
+			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
+					<button class="label" id="level2" data-code="">Level2</button>
+					<ul class="optionList" id="level2_ul"></ul>
+			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
+					<button class="label" id="level3" data-code="">Level3</button>
+					<ul class="optionList" id="level3_ul"></ul>
 
-				</span>
+			</span>
 
-				<span class="stl"><fmt:message key="PERIOD" bundle="${bundle}" /><span class="remark2"></span></span>
-				<span class="date"> <input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly> ~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2" readonly>
-						<button class="search_calender" id="search_calender"></button>
-				</span>
-				 <span class="search" style="display: none;"> <input type="text" value="" name="deviceNm" id="deviceNm" class="input1" placeholder="디바이스명">
-				</span>
-				<!--  <input type="radio" name="sortchk" value='asc' checked style="left:1100px; appearance:auto; position:static;"/><label style="color:white">오름차순</label>
-	           	 <input type="radio" name="sortchk" value='desc' style="left:1100px; appearance:auto; position:static;"/><label style="color:white">내림차순</label>
-				 -->
+			<span class="stl"><fmt:message key="PERIOD" bundle="${bundle}" /><span class="remark2"></span></span>
+			<span class="date"> <input type="text" value="${fromDt}" name="start" id="fromDt" class="input2" readonly> ~ <input type="text" value="${toDt}" name="end" id="toDt" class="input2" readonly>
+					<button class="search_calender" id="search_calender"></button>
+			</span>
+			 <span class="search" style="display: none;"> <input type="text" value="" name="deviceNm" id="deviceNm" class="input1" placeholder="디바이스명">
+			</span>
+			<!--  <input type="radio" name="sortchk" value='asc' checked style="left:1100px; appearance:auto; position:static;"/><label style="color:white">오름차순</label>
+           	 <input type="radio" name="sortchk" value='desc' style="left:1100px; appearance:auto; position:static;"/><label style="color:white">내림차순</label>
+			 -->
 
-				<button class="btn_search">
-					<fmt:message key="SEARCH" bundle="${bundle}" />
-				</button>
-			</li>
-			<!-- 검색 결과 내 재검색 버튼 -->
-	        <li style="margin-right: auto; margin-left: 240px;">
-			    <button class="btn_re-search" onclick='btnClick()'>
-			        <fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/>
-			    </button>
-			</li>
+			<button class="btn_search">
+				<fmt:message key="SEARCH" bundle="${bundle}" />
+			</button></li>
 
 		</ul>
-		<!-- 검색 결과 내 재검색 -->
-		<div class="re-search-container" id="re-search-container" style="display: none; width: 100% ;">
-                <button type="button" id="btn_re-searchWrap" class="btn_re-searchWrap" onclick='btnClick()'></button>
-				<div class="group">
-					<dl class="">
-						<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
-						<dd>
-							<div class="selectOpt">
-								<c:forEach var="risklist" items="${codeListLv}" varStatus="status">
-									<input type="checkbox" id="${risklist.etc2}" class="risklist" name="risklist" value="${risklist.etc3}" checked><label for="${risklist.etc2}">
-									<c:choose>
-										<c:when test="${nowCdNa eq 'KR'}">${risklist.cdNm}</c:when>
-										<c:when test="${nowCdNa eq 'US'}">${risklist.cdNmEng}</c:when>
-										<c:when test="${nowCdNa eq 'JP'}">${risklist.cdNmJp}</c:when>
-									</c:choose>
-									</label>
-								</c:forEach>
-						</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="group">
-					<dl class="">
-						<dt><fmt:message key="TYPE" bundle="${bundle}"/></dt>
-						<dd>
-							<div class="selectOpt">
-								<c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
-								  <input type="checkbox"
-								         id="${cracklist.etc1}"
-								         class="crack"
-								         name="crack"
-								         value="${cracklist.etc2}"
-								         <c:if test="${cracklist.etc1 eq 'pothole'}">checked</c:if>
-								  >
-								  <label for="${cracklist.etc1}">
-								    <c:choose>
-								      <c:when test="${nowCdNa eq 'KR'}">${cracklist.cdNm}</c:when>
-								      <c:when test="${nowCdNa eq 'US'}">${cracklist.cdNmEng}</c:when>
-								      <c:when test="${nowCdNa eq 'JP'}">${cracklist.cdNmJp}</c:when>
-								    </c:choose>
-								  </label>
-								</c:forEach>
-							</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="group">
-					<dl class="">
-						<dt><fmt:message key="STATUS" bundle="${bundle}"/></dt>
-						<dd>
-							<div class="selectOpt">
-								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
-									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-										<c:choose>
-											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
-											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
-											<c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
-										</c:choose>
-									</label>
-								</c:forEach>
-								<input type="checkbox" id="ETC" class="statusstat" name="statusstat" value="ETC" checked><label for="ETC"><fmt:message key="UNCLASSIFIED" bundle="${bundle}" /></label>
-						</div>
-						</dd>
-					</dl>
-					<div class="submitarea">
-						<input type="checkbox" id="renew">
-						<button class="btn_iconTXT btn_r btn_m btn_resetOpt" onclick="optionReset()"><fmt:message key="RESET_SELECT" bundle="${bundle}"/></button>
-					</div>
-				</div>
-		</div>
 		<ul class="contents">
 			<li class="view">
 				<div class="stitle">
 					<div class="">
 						<ul class="optList">
+							<li><a href="#" onclick="setListByStatus('ALL')" class="active" id="selectAll"><fmt:message key="ALL" bundle="${bundle}" /></a></li>
 
+								<c:forEach var="risklist" items="${codeListSd}" varStatus="status">
+	 								<li><a href="#" onclick="setListByStatus('${risklist.cdId}')" id="select${risklist.cdId}">
+			                           <c:choose>
+											<c:when test="${nowCdNa eq 'KR'}">${risklist.cdNm}</c:when>
+											<c:when test="${nowCdNa eq 'US'}">${risklist.cdNmEng}</c:when>
+											<c:when test="${nowCdNa eq 'JP'}">${risklist.cdNmJp}</c:when>
+										</c:choose>
+									</a></li>
+		                        </c:forEach>
 
+		                        <li><a href="#" onclick="setListByStatus('ETC')" id="selectETC"><fmt:message key="UNCLASSIFIED" bundle="${bundle}" /></a></li>
 	 							<!-- <c:forEach var="risklist" items="${codeListLv}" varStatus="status">
 	 								<li><a href="#" onclick="setListByLv(${risklist.cdId+0})" id="selectLv${risklist.cdId+0}">
 			                           <c:choose>
@@ -181,7 +114,6 @@
 			<div class="pop_content">
 				<h3 class="pop_tit"></h3>
 				<div class="pop_riskInfo">
-				<button id="btn_re-search_move" class="btn_re-search" onclick='btnClick()'><fmt:message key="RESULT_IN_SEARCH" bundle="${bundle}"/></button>
 					<!-- Swiper -->
 					<div class="riskSlide">
 						<div class="swiper">
@@ -401,16 +333,6 @@
 			return deviceInfo;
 
 		}
-		///////////// 재검색
-		function btnClick() {
-		  const searchOpt = document.getElementById('re-search-container');
-
-		  if (searchOpt.style.display === 'none') {
-		    searchOpt.style.display = 'block';
-		  } else {
-		    searchOpt.style.display = 'none';
-		  }
-		}
 
 		/////////////////// level 표기 관련
 		var riskLvList = [];
@@ -435,109 +357,162 @@
 			}
 
 		}
-		//포트홀 현재 상태 etc를 null이랑 맵핑
-		function normalizeStatus(status) {
-		    return status === null ? 'ETC' : status;
-		}
-		///////////////////// 검사 결과 내 재검색
 
-		function setListByStatus() {
-		    var cnt = 0;
-		    var node = document.getElementById('riskList2');
-		    node.innerHTML = '';
+		///////////////////// 포트홀 조치상태별 검색
+		var clickedStatus = 'ALL';
 
-		    var date = '';
-		    var deviceInfo = {
-		        deviceId: '',
-		        deviceNm: ''
-		    };
-		    var imgUrl = '/img/no_imagesBG.png';
-		    var potholeCnt = 0;
-		    var vertical = 0;
-		    var horizontal = 0;
-		    var cracks = 0;
-		    var portId = '';
+		function setListByStatus(status) {
 
-		    // 체크된 risklist, crack, statusstat 값 가져오기
-		    var selectedRisk = [];
-		    $('input[name="risklist"]:checked').each(function() {
-		        selectedRisk.push($(this).val());
-		    });
+			clickedStatus = status;
 
-		    var selectedCracks = [];
-		    $('input[name="crack"]:checked').each(function() {
-		        selectedCracks.push($(this).val());
-		    });
+			var cnt = 0;
+			var node = document.getElementById('riskList2')
+			node.innerHTML = '';
 
-		    var selectedStatus = [];
-		    $('input[name="statusstat"]:checked').each(function() {
-		    	var val = $(this).val();
-		        if (val.startsWith('SD')) {
-		            selectedStatus.push(val.replace('SD', ''));
-		        } else {
-		            selectedStatus.push(val);
-		        }
-		    });
-		    for (var i = 0; i < wayDatas.length; i++) {
-				var boolCrack= false;
-		        var pothole = wayDatas[i].pothole;
-		        var roadNm = wayDatas[i].name;
-		        if (roadNm == null) roadNm = ''; // way id는 있으나 도로명 없는 경우
-		        // 포트홀 개수
-		        potholeCnt = pothole.risk['count-of-potholes'];
-		        vertical = pothole.risk['count-of-vertical-cracks'];
-		        horizontal = pothole.risk['count-of-horizontal-cracks'];
-		        cracks = pothole.risk['count-of-alligators'];
-		        for ( var c = 0; c < selectedCracks.length; c++ ) {
-					if (pothole.risk[selectedCracks[c]] > 0 ) {
-						boolCrack = true;
+			$(".optList li a").removeAttr('class');
+
+			if (status == 'ALL') {
+				$('#selectAll').addClass('active');
+			} else {
+				$('#select'+ status).addClass('active');
+			}
+
+			var date = '';
+			var deviceInfo = {
+				deviceId : '',
+				deviceNm : ''
+			};
+			var imgUrl = '/img/no_imagesBG.png';
+			var potholeCnt = 0;
+			var vertical = 0;
+			var horizontal = 0;
+			var cracks = 0;
+			var portId = '';
+
+			for (var i = 0; i < wayDatas.length; i++) {
+
+				var pothole = wayDatas[i].pothole;
+				var roadNm = wayDatas[i].name;
+				if (roadNm == null) roadNm = ''   //way id는 있으나 도로명 없는 경우
+
+				if (status != 'ALL') { // 레벨 맞게 검색
+
+					if (status == pothole['status'] || (status == 'ETC' && pothole['status'] == null)) {
+						cnt++;
+						date = dateFormat(new Date(pothole['timestamp']), 'list');
+						deviceInfo = getDeviceName(pothole['device-id']);
+
+						//포트홀 개수
+						potholeCnt = pothole.risk['count-of-potholes'];
+						vertical = pothole.risk['count-of-vertical-cracks'];
+						horizontal = pothole.risk['count-of-horizontal-cracks'];
+						cracks = pothole.risk['count-of-alligators'];
+
+						var className = statusClassName(pothole['status']);
+
+						/* var parentWayInfo = '';
+
+						$.ajax({
+							type : "GET",
+							url : "${authInfo.restApiUrl}/administrative/parent-wayinfo/"+ pothole.id ,
+							//url : "http://localhost:8080/administrative/parent-wayinfo/"+ pothole.id ,
+							async : false,
+							success : function(resp) {
+								parentWayInfo = resp.data // 데이터
+							}
+						})
+ 						*/
+						var html = '<li>'
+							html += '<a class="riskPop">'
+							html += '<div class="riskItem">'
+							html += '<span class="num">' + cnt + '</span>'
+							html += '<div class="deviceInfo">'
+							html += '<span class="deviceId">' + deviceInfo.deviceId + '</span>'
+							html += '<span class="deviceName">' + deviceInfo.deviceNm + '</span>'
+							html += '</div>'
+							html += "<span class='badge sm2 " + className + "'>" + getRoadStatus(pothole['status']) + "</span>"
+							html += '<span class="time">' + date + '</span>'
+							html += '<span class="risk">'
+							html += '<span><fmt:message key="POTHOLE" bundle="${bundle}"/> ' + potholeCnt + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+							html += '<span><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/> ' + vertical + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+							html += '<span><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/> ' + horizontal + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+							html += '<span><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/> ' + cracks + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+							html += '</span>'
+							html += '<span class="place">' + roadNm + '</span>'
+
+							html += '</div>'
+							html += "<button type='button' class='btn_more' onclick=\"getDetail('" + roadNm+ "','" + i + "')\"'></button>"
+							html += '</a>'
+							html += '</li>'
+
+							$('.riskList').append(html);
 					}
+
+				} else {
+					cnt++;
+					date = dateFormat(new Date(pothole['timestamp']), 'list');
+					deviceInfo = getDeviceName(pothole['device-id']);
+
+					//포트홀 개수
+					potholeCnt = pothole.risk['count-of-potholes'];
+					vertical = pothole.risk['count-of-vertical-cracks'];
+					horizontal = pothole.risk['count-of-horizontal-cracks'];
+					cracks = pothole.risk['count-of-alligators'];
+
+					var className = statusClassName(pothole['status']);
+
+					/*
+					var parentWayInfo = '';
+
+					$.ajax({
+						type : "GET",
+						url : "${authInfo.restApiUrl}/administrative/parent-wayinfo/"+ pothole.id ,
+						//url : "http://localhost:8080/administrative/parent-wayinfo/"+ pothole.id ,
+						async : false,
+						success : function(resp) {
+							parentWayInfo = resp.data // 데이터
+						}
+					})
+ 					*/
+
+					var html = '<li>'
+						html += '<a class="riskPop">'
+						html += '<div class="riskItem">'
+						html += '<span class="num">' + cnt + '</span>'
+						html += '<div class="deviceInfo">'
+						html += '<span class="deviceId">' + deviceInfo.deviceId + '</span>'
+						html += '<span class="deviceName">' + deviceInfo.deviceNm + '</span>'
+						html += '</div>'
+						html += "<span class='badge sm2 " + className + "'>" + getRoadStatus(pothole['status']) + "</span>"
+						html += '<span class="time">' + date + '</span>'
+						html += '<span class="risk">'
+						html += '<span><fmt:message key="POTHOLE" bundle="${bundle}"/> ' + potholeCnt + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+						html += '<span><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/> ' + vertical + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+						html += '<span><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/> ' + horizontal + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+						html += '<span><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/> ' + cracks + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
+						html += '</span>'
+						html += '<span class="place">' + roadNm + '</span>'
+
+						html += '</div>'
+						html += "<button type='button' class='btn_more' onclick=\"getDetail('" + roadNm+ "','" + i + "')\"'></button>"
+						html += '</a>'
+						html += '</li>'
+
+						$('.riskList').append(html);
+
 				}
-		        var className = statusClassName(pothole['status']);
-		        var html = '';
-		        // 조건: 선택된 risk, crack, status 값에 맞는 데이터만 표시
-		        if (selectedRisk.includes(pothole.risk.level+"") &&boolCrack&&
-		            selectedStatus.includes(normalizeStatus(pothole.status))) {
 
-		            cnt++;
-		            date = dateFormat(new Date(pothole['timestamp']), 'list');
-		            deviceInfo = getDeviceName(pothole['device-id']);
+			}
 
-		            html += '<li>';
-		            html += '<a class="riskPop">';
-		            html += '<div class="riskItem">';
-		            html += '<span class="num">' + cnt + '</span>';
-		            html += '<div class="deviceInfo">';
-		            html += '<span class="deviceId">' + deviceInfo.deviceId + '</span>';
-		            html += '<span class="deviceName">' + deviceInfo.deviceNm + '</span>';
-		            html += '</div>';
-		            html += "<span class='badge sm2 " + className + "'>" + getRoadStatus(pothole['status']) + "</span>";
-		            html += '<span class="time">' + date + '</span>';
-		            html += '<span class="risk">';
-		            html += '<span><fmt:message key="POTHOLE" bundle="${bundle}"/> ' + potholeCnt + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>';
-		            html += '<span><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/> ' + vertical + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>';
-		            html += '<span><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/> ' + horizontal + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>';
-		            html += '<span><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/> ' + cracks + '<fmt:message key="COUNT1" bundle="${bundle}"/></span>';
-		            html += '</span>';
-		            html += '<span class="place">' + roadNm + '</span>';
-		            html += '</div>';
-		            html += "<button type='button' class='btn_more' onclick=\"getDetail('" + roadNm + "','" + i + "')\"></button>";
-		            html += '</a>';
-		            html += '</li>';
+			$('#totCnt').text(cnt)
+			if (cnt == 0) {
+				$('.infoListWrapNoData').css('display', 'block')
+			} else {
+				$('.infoListWrapNoData').css('display', 'none')
+			}
+			$('#circularG').css('display', 'none')
 
-		            $('.riskList').append(html);
-		        }
-		    }
-
-		    $('#totCnt').text(cnt);
-		    if (cnt == 0) {
-		        $('.infoListWrapNoData').css('display', 'block');
-		    } else {
-		        $('.infoListWrapNoData').css('display', 'none');
-		    }
-		    $('#circularG').css('display', 'none');
 		}
-
 
 		//////////////////
 		var potholeData = [];
@@ -625,23 +600,6 @@
 
 			$('#road_status').val(statusCode).prop("selected",true);
 
-		}
-
-		//선택초기화 버튼 이벤트 ( 결과 내 재검색 옵션 )
-		function optionReset() {
-
-			$("input[name='risklist']").each(function() {
-				$(this).prop('checked', true);
-			});
-
-			$("input[name='crack']").each(function() {
-				$(this).prop('checked', true);
-			});
-
-			$("input[name='statusstat']").each(function() {
-				$(this).prop('checked', true);
-			});
-			setListByStatus();
 		}
 
 		//다국어 추가
@@ -739,12 +697,12 @@
 			        });
 			    }
 
-			    setListByStatus();
+			    setListByStatus(clickedStatus);
 
 		 }
 
 		///////////////////// 조회
-		function getList() {
+		function getList(status) {
 
 			$("#selectAll").removeAttr('class');
 			$("#selectLv0").removeAttr('class');
@@ -752,7 +710,11 @@
 			$("#selectLv2").removeAttr('class');
 			$("#selectLv3").removeAttr('class');
 
-
+			if (status == 'ALL') {
+				$('#selectAll').addClass('active');
+			} else {
+				$('#select'+ status).addClass('active');
+			}
 
 			var sortStatus = sortButton2 != null? sortButton2.getAttribute('data-code'): "desc" ;
 
@@ -912,7 +874,7 @@
 						$('.infoListWrapNoData').css('display', 'none')
 					}
 
-					setListByStatus();
+					setListByStatus(status);
 
 
 				} ,
@@ -1183,11 +1145,6 @@
 
 		$(document).ready(function() {
 
-			//체크박스 이벤트 추가
-			 $('input[name="risklist"], input[name="crack"], input[name="statusstat"]').change(function() {
-				 //$('#loadingSpinner').css('display', 'inline-block');
-				 setListByStatus();
-		     });
 			// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
 			var date1 = new Date();
 			$('#toDt').val(dateFormat(date1, 'select'))
@@ -1199,7 +1156,7 @@
 			setLevelList(1, '');
 
 			// 조회
-			getList();
+			getList('ALL');
 
 			setLevelList(2, '${authInfo.areaCodeLv1}');
 			setLevelList(3, '${authInfo.areaCodeLv2}');
@@ -1234,7 +1191,7 @@
 			$('.btn_search').on("click", function() {
 
 				if (searchLv == 2 || searchLv == 3 || searchLv == 4) {
-					getList();
+					getList('ALL');
 				} else {
 					$("#alert_msg").html("<fmt:message key="REQ_LV1_LV2" bundle="${bundle}"/>");
 					$('#pop_alert').stop().fadeIn(300);
@@ -1338,7 +1295,7 @@
 		let $pop_wrap = $('.pop_wrap')
 
 	    function pop_close(){
-	 		getList();
+	 		getList(clickedStatus);
 
 	        $pop_wrap.stop().fadeOut(300);
 	    }
