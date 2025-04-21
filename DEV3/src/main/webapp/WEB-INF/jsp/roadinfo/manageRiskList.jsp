@@ -439,9 +439,10 @@
 		function normalizeStatus(status) {
 		    return status === null ? 'ETC' : status;
 		}
-		///////////////////// 검사 결과 내 재검색
 
+		///////////////////// 검사 결과 내 재검색
 		function setListByStatus() {
+			var start=new Date();
 		    var cnt = 0;
 		    var node = document.getElementById('riskList2');
 		    node.innerHTML = '';
@@ -459,9 +460,9 @@
 		    var portId = '';
 
 		    // 체크된 risklist, crack, statusstat 값 가져오기
-		    var selectedRisk = [];
+		    var selectedRisk = new Set();  // Set으로 변경
 		    $('input[name="risklist"]:checked').each(function() {
-		        selectedRisk.push($(this).val());
+		        selectedRisk.add($(this).val());  // add() 사용
 		    });
 
 		    var selectedCracks = [];
@@ -469,39 +470,46 @@
 		        selectedCracks.push($(this).val());
 		    });
 
-		    var selectedStatus = [];
+		    var selectedStatus = new Set();  // Set으로 변경
 		    $('input[name="statusstat"]:checked').each(function() {
-		    	var val = $(this).val();
+		        var val = $(this).val();
 		        if (val.startsWith('SD')) {
-		            selectedStatus.push(val.replace('SD', ''));
+		            selectedStatus.add(val.replace('SD', ''));  // add() 사용
 		        } else {
-		            selectedStatus.push(val);
+		            selectedStatus.add(val);  // add() 사용
 		        }
 		    });
+
+		    var listHtml = '';  // 전체 HTML 누적용
+
 		    for (var i = 0; i < wayDatas.length; i++) {
-				var boolCrack= false;
+
+		        var boolCrack = false;
 		        var pothole = wayDatas[i].pothole;
 		        var roadNm = wayDatas[i].name;
 		        if (roadNm == null) roadNm = ''; // way id는 있으나 도로명 없는 경우
+
 		        // 포트홀 개수
-		        potholeCnt = pothole.risk['count-of-potholes'];
-		        vertical = pothole.risk['count-of-vertical-cracks'];
-		        horizontal = pothole.risk['count-of-horizontal-cracks'];
-		        cracks = pothole.risk['count-of-alligators'];
-		        for ( var c = 0; c < selectedCracks.length; c++ ) {
-					if (pothole.risk[selectedCracks[c]] > 0 ) {
-						boolCrack = true;
-					}
-				}
+		        var potholeCnt = pothole.risk['count-of-potholes'];
+		        var vertical = pothole.risk['count-of-vertical-cracks'];
+		        var horizontal = pothole.risk['count-of-horizontal-cracks'];
+		        var cracks = pothole.risk['count-of-alligators'];
+
+		        // 크랙 확인 부분
+		        var boolCrack = selectedCracks.some(function(crack) {
+		            return pothole.risk[crack] > 0;
+		        });
+
 		        var className = statusClassName(pothole['status']);
 		        var html = '';
+
 		        // 조건: 선택된 risk, crack, status 값에 맞는 데이터만 표시
-		        if (selectedRisk.includes(pothole.risk.level+"") &&boolCrack&&
-		            selectedStatus.includes(normalizeStatus(pothole.status))) {
+		        if (selectedRisk.has(pothole.risk.level + "") && boolCrack &&
+		            selectedStatus.has(normalizeStatus(pothole.status))) {
 
 		            cnt++;
-		            date = dateFormat(new Date(pothole['timestamp']), 'list');
-		            deviceInfo = getDeviceName(pothole['device-id']);
+		            var date = dateFormat(new Date(pothole['timestamp']), 'list');
+		            var deviceInfo = getDeviceName(pothole['device-id']);
 
 		            html += '<li>';
 		            html += '<a class="riskPop">';
@@ -525,10 +533,13 @@
 		            html += '</a>';
 		            html += '</li>';
 
-		            $('.riskList').append(html);
+		            listHtml += html;  // html을 누적
 		        }
 		    }
-
+		    var end=new Date();
+			console.log(end-start);
+		    // 루프가 끝난 후 한 번에 .html()으로 추가
+		    $('.riskList').html(listHtml);
 		    $('#totCnt').text(cnt);
 		    if (cnt == 0) {
 		        $('.infoListWrapNoData').css('display', 'block');
@@ -746,11 +757,11 @@
 		///////////////////// 조회
 		function getList() {
 
-			$("#selectAll").removeAttr('class');
+		/* 	$("#selectAll").removeAttr('class');
 			$("#selectLv0").removeAttr('class');
 			$("#selectLv1").removeAttr('class');
 			$("#selectLv2").removeAttr('class');
-			$("#selectLv3").removeAttr('class');
+			$("#selectLv3").removeAttr('class'); */
 
 
 
@@ -808,109 +819,7 @@
 
 					} */
 
-					var cnt = 0;
-					var date = '';
-					var deviceInfo = {
-						deviceId : '',
-						deviceNm : ''
-					};
-					var imgUrl = '/img/no_imagesBG.png';
-					var potholeCnt = 0;
-					var vertical = 0;
-					var horizontal = 0;
-					var cracks = 0;
-					var portId = '';
 
-					for (var i = 0; i < wayDatas.length; i++) {
-
-						var pothole = wayDatas[i].pothole;
-						var roadNm = wayDatas[i].name;
-						cnt++;
-
-						imgUrl = '${authInfo.restApiUrl}/pothole/'+ pothole.id + '/thumbnail'
-						date = dateFormat(new Date(pothole['timestamp']), 'list')
-						deviceInfo = getDeviceName(pothole['device-id'])
-
-						// 위험도 레벨
-						var lv = pothole.risk['level'];
-						var iconClass = lv == 0 ? 'badge_primary'
-								: lv == 1 ? 'badge_warning'
-										: lv == 2 ? 'badge_negative'
-														: 'badge_danger'
-
-						//포트홀 개수
-						potholeCnt = pothole.risk['count-of-potholes']
-						vertical = pothole.risk['count-of-vertical-cracks']
-						horizontal = pothole.risk['count-of-horizontal-cracks']
-						cracks = pothole.risk['count-of-alligators']
-
-						var className = statusClassName(pothole['status']);
-
-						/* var parentWayInfo = '';
-
-						$.ajax({
-							type : "GET",
-							url : "${authInfo.restApiUrl}/administrative/parent-wayinfo/"+ pothole.id ,
-							//url : "http://localhost:8080/administrative/parent-wayinfo/"+ pothole.id ,
-							async : false,
-							success : function(resp) {
-								parentWayInfo = resp.data // 데이터
-
-								console.log('parentWayInfo ', parentWayInfo);
-							}
-						})
-
-						*/
-
-
-						var html = '<li>'
-							html += '<a class="riskPop">'
-							html += '<div class="riskItem">'
-							html += '<span class="num">' + cnt + '</span>'
-							html += '<div class="deviceInfo">'
-							html += '<span class="deviceId">'
-									+ deviceInfo.deviceId + '</span>'
-							html += '<span class="deviceName">'
-									+ deviceInfo.deviceNm + '</span>'
-							html += '</div>'
-							html += "<span class='badge sm2 " + className + "'>" + getRoadStatus(pothole['status']) + "</span>"
-							html += '<span class="time">' + date
-									+ '</span>'
-							html += '<span class="risk">'
-							html += '<span><fmt:message key="POTHOLE" bundle="${bundle}"/> '
-									+ potholeCnt
-									+ '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
-							html += '<span><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/> '
-									+ vertical
-									+ '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
-							html += '<span><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/> '
-									+ horizontal
-									+ '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
-							html += '<span><fmt:message key="FATIGUE_CRACK" bundle="${bundle}"/> '
-									+ cracks
-									+ '<fmt:message key="COUNT1" bundle="${bundle}"/></span>'
-							html += '</span>'
-							html += '<span class="place">' +  roadNm
-									+ '</span>'
-							html += '</div>'
-
-							html += "<button type='button' class='btn_more' onclick=\"getDetail('" + roadNm+ "','" + i + "')\"'></button>"
-							html += '</a>'
-							html += '</li>'
-
-							$('.riskList').append(html);
-
-						}
-
-					$('#circularG').css('display', 'none')
-
-					$('#totCnt').text(cnt)
-					if (cnt == 0) {
-						$('.infoListWrapNoData')
-								.css('display', 'block')
-					} else {
-						$('.infoListWrapNoData').css('display', 'none')
-					}
 
 					setListByStatus();
 
@@ -1241,10 +1150,10 @@
 					$('#pop_alert').stop().fadeIn(300);
 				}
 
-				//필터 초기화
+				/* //필터 초기화
 				$(".optList li a").removeAttr('class');
 				$("#selectAll").attr('class', 'level');
-				$('#selectAll').addClass('active')
+				$('#selectAll').addClass('active') */
 			})
 
 		});
