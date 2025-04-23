@@ -31,6 +31,42 @@
 .contents_box.roadinfo .contents.mainMap{
     height: calc(100% - 64px);
 }
+.map-center-btn.with-icon {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 10px 20px 10px 40px; /* 왼쪽 여백 줘서 아이콘 공간 확보 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-size: 16px;
+    cursor: pointer;
+    background-image: url('../../img/icon_search2.png'); /* 상대 경로 확인 필요 */
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 18px 18px; /* 아이콘 크기 */
+}
+/* .map-center-btn {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-size: 16px;
+    cursor: pointer;
+} */
+
+
 </style>
 
 <div class="contents_box item mainpage roadinfo">
@@ -50,7 +86,6 @@
 				</span>
 				</span>
 			</c:forEach>
-
         </div>
         <div class="mapWrap">
 
@@ -67,7 +102,10 @@
 					</div>
 					<button class="riskPopImg_close pop_close" id=""></button>
 				</div>
-
+				<!--   지도 위에 떠 있는 재검색 버튼 (icon 사용 x 이면 with-icon 지우기) -->
+  				<button id="drawlineBtn" class="map-center-btn with-icon" style="display: none;">
+				    현 지도에서 검색
+				</button>
 			</div>
 		</div>
 	</div>
@@ -241,13 +279,25 @@ $(document).ready(function() {
 	//mapInfo(map);
 	drawline();
 
-map.on("moveend", function(){
+	/* map.on("moveend", function(){
 
-	drawline();
+		drawline();
 
-	map.closePopup();
+		map.closePopup();
 
-})
+	}) */
+
+	// 지도 이동이 끝났을 때 버튼 보이기
+	map.on("moveend", function () {
+	    document.getElementById("drawlineBtn").style.display = "block";
+	});
+
+	// 버튼 클릭 시 drawline 실행 + 버튼 다시 숨기기
+	document.getElementById("drawlineBtn").addEventListener("click", function () {
+	    drawline();  // 지음에서 만든 선 그리기 함수
+	    map.closePopup();
+	    this.style.display = "none";
+	});
 
 /*
 function removeLine() {
