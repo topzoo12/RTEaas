@@ -32,6 +32,26 @@
     height: calc(100% - 64px);
 }
 
+.map-center-btn.with-icon {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 10px 20px 10px 40px; /* 왼쪽 여백 줘서 아이콘 공간 확보 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-size: 16px;
+    cursor: pointer;
+    background-image: url('../../img/icon_search2.png'); /* 상대 경로 확인 필요 */
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 18px 18px; /* 아이콘 크기 */
+}
+
 </style>
 
 <div class="contents_box item mainpage roadinfo">
@@ -103,7 +123,10 @@
 						</div>
 						<button class="riskPopImg_close pop_close" id=""></button>
 					</div>
-
+					<!--   지도 위에 떠 있는 재검색 버튼 (icon 사용하지 않을 시 class=> with-icon 지우기) -->
+	  				<button id="drawlineBtn" class="map-center-btn with-icon" style="display: none;">
+					    현 지도에서 검색
+					</button>
 				</div>
 			</div>
 
@@ -268,6 +291,27 @@ map.on('click', onMapClick);
 
 map.on("moveend", function(){
 
+	/* // 접음
+	$('.infoWrap').removeClass('on');
+	$('.infoWrap').addClass('off');
+   	$('.infoDetailWrap').css('display', 'none');
+   	$('.infoListWrap').css('display', 'none');
+   	//$(".infoListWrap p").text("")
+   	$(".infoListWrap p").css('display', 'hidden');
+   	$('.infoListWrapNoData').css('display', 'none');
+
+	$('.btn_infoWrap').addClass("off");
+	map.closePopup(); */
+	map.closePopup();
+	document.getElementById("drawlineBtn").style.display = "block";
+/* 	mapInfo(map);
+	//ttt();
+
+	map.closePopup(); */
+
+})
+// 버튼 클릭 시 mapInfo 실행 + 버튼 다시 숨기기
+document.getElementById("drawlineBtn").addEventListener("click", function () {
 	// 접음
 	$('.infoWrap').removeClass('on');
 	$('.infoWrap').addClass('off');
@@ -278,13 +322,12 @@ map.on("moveend", function(){
    	$('.infoListWrapNoData').css('display', 'none');
 
 	$('.btn_infoWrap').addClass("off");
-
 	mapInfo(map);
 	//ttt();
 
 	map.closePopup();
-
-})
+    this.style.display = "none";
+});
 
 var deviceKeyValue = [];
 
