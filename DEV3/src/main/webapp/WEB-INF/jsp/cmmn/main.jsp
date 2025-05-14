@@ -1708,7 +1708,8 @@ $(document).ready(function() {
 	//$('#level0').text(region);
 	$('#level0').text($('.optionItem[data-iso3166="' + region + '"]').text());
 
-	$('#level1').data('code', area_code_lv0);
+	//$('#level1').data('code', area_code_lv0);
+	$('#level1').data('code', '${authInfo.areaCodeLv1}');
 	$('#level1').text($('.optionItem[data-code="' + chkAreaCodeLv1 + '"]').text());
 
 	$('#level2').data('code', chkAreaCodeLv2);
