@@ -20,7 +20,12 @@
 		<p class="title ${fav}">${pageName.srnNm}</p>
 
 		<ul class="search_box" style="min-width: 1390px;">
-			<li><span class="selectBox resp bottom" id="msgdivCd_span">
+			<li>
+			<span class="selectBox resp bottom" id="msgdivCd_span">
+						<button class="label" id="level0" data-code="" data-lat="" data-lng="">Level0</button>
+						<ul class="optionList" id="level0_ul"></ul>
+			</span>
+			<span class="selectBox resp bottom" id="msgdivCd_span">
 					<button class="label" id="level1" data-code="">Level1</button>
 					<ul class="optionList" id="level1_ul"></ul>
 			</span> <span class="selectBox resp bottom" id="msgdivCd_span">
@@ -1325,6 +1330,49 @@
 
 			region = "${authInfo.cdNa}";
 			// 레벨1인 경우
+			if(level == 0){
+				var node = document.getElementById('level0_ul')
+			 	node.innerHTML = '';
+				$.ajax({
+					type: "GET",
+					url: "${authInfo.restApiUrl}/administrative?region=" + region,
+					async:false,
+					data: {
+
+					},
+					headers: {
+				    	'Authorization': 'Bearer ' + localStorage.getItem("accessToken"),
+				    	'Refresh-Token': localStorage.getItem("Refresh-Token")
+				    },
+				    beforeSend:function(){
+						$('#circularG').css('display','block');
+				    },
+				    complete:function(){
+						$('#circularG').css('display','none');
+				    },
+					success: function(resp) {
+
+						datas = resp.data;
+
+					 	var node = document.getElementById('level0_ul');
+					 	node.innerHTML = '';
+
+		            	var html = '';
+
+			            for(var i = 0; i <datas.length; i++){
+			            	data = datas[i];
+			            	var lat = data.center?.latitude ?? null;
+			            	var lng = data.center?.longitude ?? null;
+			            	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
+			            	html += '<li class="optionItem" data-iso3166="'+ data.iso3166 +'" data-code="' + data.id + '" data-lat="' + lat + '" data-lng="' + lng + '">' + data.name + '</li>'
+						}
+
+			            node.innerHTML = html;
+
+					}
+
+				})
+			}
 			if (level == 1) {
 
 				var node = document.getElementById('level2_ul');
@@ -1334,7 +1382,7 @@
 
 				$.ajax({
 					type : "GET",
-					url : "${authInfo.restApiUrl}" + "/administrative?region=" + region,
+					url: "${authInfo.restApiUrl}" + "/administrative/" + id + "?region=" + region,
 					//url : "http://localhost:8080" + "/administrative?region=" + region,
 					async : false,
 					headers : {
@@ -1473,7 +1521,20 @@
 						$(this).parent(".optionList").css("display", "none");
 
 						var levelChk = $(this).parent(".optionList")[0].id;
+						if(levelChk == 'level0_ul'){
+							// 하위 레벨 초기화
+						 	$('#level4').text('Level4');
+						 	$('#level3').text('Level3');
+						 	$("#level2").text('Level2');
+						 	$("#level1").text('Level1');
+						 	$('#level4').removeClass("on");
+						 	$('#level3').removeClass("on");
+						 	$("#level2").removeClass("on");
+						 	$("#level1").removeClass("on");
 
+							searchLv = 0
+							setLevelList(1 ,  $('#level0').data('code'))
+						}
 						if (levelChk == 'level1_ul') {
 
 							// 하위 레벨 초기화
@@ -1520,8 +1581,12 @@
 			var date2 = new Date(date1.setDate(date1.getDate() - 30));
 			// $('#fromDt').val(dateFormat(date2, 'select'))
 			$('#fromDt').val('2023-10-01');
+			setLevelList(0, '');
+			var area_code_lv0 = $('.optionItem[data-iso3166="'+ region +'"]').attr('data-code');
+			//console.log(area_code_lv0);
+			setLevelList(1, area_code_lv0);
 			// 레벨 조회 부분 생성
-			setLevelList(1, '');
+			//setLevelList(1, '');
 			// 조회
 			getList(999);
 
@@ -1532,7 +1597,7 @@
 			const area1 = selectedItemLv1.textContent;
 			const selectedItemLv2 = document.querySelector('.optionItem[data-code="${authInfo.areaCodeLv2}"]');
 			const area2 = selectedItemLv2.textContent;
-
+			$('#level0').text($('.optionItem[data-iso3166="' + region + '"]').text());
 			$('#level1').text(area1);
 			$('#level1').data('code', '${authInfo.areaCodeLv1}');
 			$('#level1').addClass("on");
