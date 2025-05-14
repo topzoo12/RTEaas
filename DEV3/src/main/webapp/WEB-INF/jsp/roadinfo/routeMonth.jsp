@@ -126,7 +126,6 @@
 </div>
 
 
-<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLlGOOgY5Y88zXjRQq_gIHJabQI5eXG1U&callback=initMap"></script>
 <script>
 
 	let searchLv;
