@@ -1594,7 +1594,7 @@ function setLevelList(level, id){
 			success: function(resp) {
 
 				datas = resp.data
-				console.log(datas);
+				//console.log(datas);
 			 	var node = document.getElementById('level3_ul')
 			 	node.innerHTML = '';
 
