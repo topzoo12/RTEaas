@@ -766,7 +766,23 @@ function onMapClick(e) {
 	$('.infoDetailWrap').css('display', 'none')
 
 }
+function clearMapLayers() {
+    map.eachLayer(function (layer) {
+        if (!(layer instanceof L.TileLayer)) {
+            map.removeLayer(layer);
+        }
+    });
 
+    // 그룹이 있다면 내부도 전부 제거
+    [layerGroup0, layerGroup1, layerGroup2, layerGroup3].forEach(group => {
+        if (group) {
+            group.clearLayers();
+            if (map.hasLayer(group)) {
+                map.removeLayer(group);
+            }
+        }
+    });
+}
 
 
 function mapInfo(map) {
@@ -776,11 +792,12 @@ function mapInfo(map) {
 
 	markerList = [];
 
-	map.eachLayer(function (layer) {
+	/* map.eachLayer(function (layer) {
 	    if (!(layer instanceof L.TileLayer)) {
 	        map.removeLayer(layer);
 	    }
-	});
+	}); */
+	clearMapLayers();
 
 	$.ajax({
 		type: "GET",
