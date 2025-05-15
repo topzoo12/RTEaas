@@ -1734,7 +1734,7 @@
 		});
 
 		$('.pop_close').on('click', function () {
-			getList(clickedRiskLevel);
+			//getList(clickedRiskLevel);
 		})
 
 	</script>
