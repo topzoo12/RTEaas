@@ -475,7 +475,7 @@ $('.btn_search').on("click", function(){
 		},
 		success: function(resp) {
 
-			datas = resp.data
+			/* datas = resp.data
 
 			var boundaryLines = []
 
@@ -511,7 +511,34 @@ $('.btn_search').on("click", function(){
 					boundaryLines.push(firstpolyline);
 				}
 
+			} */
+			datas = resp.data;
+
+			//var boundaryLines = [];
+			var pathGroups = {};
+
+			// 1. path 값 기준으로 그룹핑
+			for (var i = 0; i < datas.length; i++) {
+			    var path = datas[i].path;
+			    var latlng = new L.LatLng(datas[i].y, datas[i].x);
+
+			    if (!pathGroups[path]) {
+			        pathGroups[path] = [];
+			    }
+			    pathGroups[path].push(latlng);
 			}
+
+			// 2. 그룹별로 폴리라인 생성 및 지도에 추가
+			for (var path in pathGroups) {
+			    var polyline = new L.Polyline(pathGroups[path], {
+			        color: '#2f33fb',
+			        weight: 5,
+			        smoothFactor: 1
+			    });
+			    map.addLayer(polyline);
+			    //boundaryLines.push(polyline);
+			}
+
 
 		},
 		error: function(request,status,error){
