@@ -3607,7 +3607,7 @@ span.badge.sm2.badge_primary::before{	/* 복구완료 */
   transition: .1s;
 }
 .selectBox.resp {
-    width: 180px;
+    width: 160px;
 }
 .selectBox.resp  .optionItem {
     line-height: 1.8rem;
