@@ -1232,7 +1232,7 @@ function getDetectedRoad() {
 
 					for (var b = 0; b < crackListLv00.length; b++) {
 
-						if ( datas[a].id == crackListLv00[b] ) {
+						if ( datas[i].id == crackListLv00[b] ) {
 							//console.log("인덱스 >> ", a , " - ", datas[a]);
 							crackListLv0.push(i);
 						}
