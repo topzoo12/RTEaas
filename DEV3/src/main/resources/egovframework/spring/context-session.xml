@@ -16,6 +16,7 @@
     <interceptors>
         <interceptor>
             <mapping path="/*/**.do"/>
+            <mapping path="/*/**.active"/> <!-- 추가 -->
             <mapping path="/main.do"/>
             <exclude-mapping path="/login.do"/>
             <exclude-mapping path="/logout.do"/>
@@ -34,7 +35,9 @@
     <interceptors>
         <interceptor>
             <mapping path="/**.do"/>
+            <mapping path="/**.active"/> <!-- 추가 -->
             <exclude-mapping path="/uploadDetectedData.do"/>
+            <exclude-mapping path="/uploadDetectedData.active"/>
             <exclude-mapping path="/login.do"/>
             <exclude-mapping path="/loginGPKI.do"/>
             <exclude-mapping path="/logout.do"/>

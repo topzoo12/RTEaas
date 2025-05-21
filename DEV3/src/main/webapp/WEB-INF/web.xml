@@ -17,7 +17,10 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
-
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.active</url-pattern>
+	</filter-mapping>
 	<filter>
 		<filter-name>HTMLTagFilter</filter-name>
 		<filter-class>egovframework.rte.ptl.mvc.filter.HTMLTagFilter</filter-class>
@@ -25,6 +28,10 @@
 	<filter-mapping>
 		<filter-name>HTMLTagFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>HTMLTagFilter</filter-name>
+		<url-pattern>*.active</url-pattern>
 	</filter-mapping>
 
     <listener>
@@ -56,6 +63,11 @@
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.active</url-pattern>
 	</servlet-mapping>
 
 	<!-- 서블릿 등록 -->

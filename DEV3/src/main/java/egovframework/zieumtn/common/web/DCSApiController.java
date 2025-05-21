@@ -32,6 +32,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -61,6 +64,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -75,6 +79,53 @@ public class DCSApiController {
 
 	@Resource(name = "dcsService")
 	private DcsService dcsService;
+
+/*	@RequestMapping(value = "/helloworld.do", method = RequestMethod.GET)
+    @ResponseBody
+    public String helloWorld() {
+        return "hello world";
+    }*/
+
+	@RequestMapping(value = "/uploadDetectedData.active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> checkUploadRoadSeverityActive(
+	        @RequestParam(value = "device_id", required = false) String deviceId) {
+
+	    Map<String, Object> result = new HashMap<>();
+
+	    // 현재 시간 (서버는 UTC 기준, 우리는 KST 기준으로 변환해야 함)
+	    ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+
+	    // 시간 출력: "HH:mm:ss 'GMT'Z (z)" -> 예: 14:37:39 GMT+0900 (KST)
+	    String currentTimeFormatted = nowKST.format(DateTimeFormatter.ofPattern("HH:mm:ss 'GMT'Z (z)"));
+	    //System.out.println("Current Time (KST): " + currentTimeFormatted);
+
+	    // 활성 시간대: 08:00:00 ~ 16:00:00
+	    String currentTimeOnly = nowKST.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+	    boolean isActive = currentTimeOnly.compareTo("08:00:00") >= 0 &&
+	                       currentTimeOnly.compareTo("16:00:00") <= 0;
+
+	    result.put("srv_time", currentTimeFormatted);
+	    result.put("api_name", "/uploadDetectedData.do");
+	    result.put("is_active", isActive);
+
+	    if (isActive) {
+	        result.put("reason", "");
+	    } else {
+	        result.put("reason", "Time ");
+	    }
+
+	    if (isActive) {
+	        result.put("msg", "");
+	    } else {
+	        result.put("msg", "Not included in the time condition range(08:00:00~16:00:00)");
+	    }
+
+	    if (deviceId == null || deviceId.trim().isEmpty()) {
+	        System.out.println("invalid device_id: " + deviceId);
+	    }
+
+	    return ResponseEntity.ok(result);
+	}
 
 
 	@RequestMapping(value = "/uploadDetectedData.do", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
