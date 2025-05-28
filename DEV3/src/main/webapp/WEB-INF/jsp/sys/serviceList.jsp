@@ -474,31 +474,47 @@ $('#btn_search').on('click', function () {
 	});
 
 	$('#pop_save-1').on('click', function(){
+
+		// cdNa 처리 로직
+		var $btn = $('#p1_cdNa');
+		var cdNaRaw = $btn.data('iso3166');
+		var cdNa;
+
+		if (!cdNaRaw) {
+		    var btnText = $btn.text().trim();
+		    var matchedLi = $('#selectCdna .optionItem').filter(function() {
+		        return $(this).text().trim() === btnText;
+		    }).first();
+
+		    cdNa = matchedLi.length ? matchedLi.data('iso3166') : '';
+		} else {
+		    cdNa = cdNaRaw;
+		}
+
+		// 최종 params 객체
 		var params = {
-			'coId':$('#p1_coId').val()
-			,'coNm':$('#p1_coNm').val()
-			,'rdrtrNm':$('#p1_rdrtrNm').val()
-			,'emailAddr':$('#p1_emailAddr').val()
-			,'roadzpNo':$('#p1_roadzpNo').val()
-			,'roadnmAddr':$('#p1_roadnmAddr').val()
-			,'roadnmdtlAddr':$('#p1_roadnmdtlAddr').val()
-			,'telNo':$('#p1_telNo').val()
-			,'hpNo' :$('#p1_hpNo').val()
-			,'useYn':$('#p1_useYn').is(':checked')?$('#p1_useYn').val():''
-			,'hpgAddr' : $('#p1_hpgAddr').val()
-			//,'wtX'  : $('#p1_wtX').val()
-			//,'wtY'  : $('#p1_wtY').val()
-			,'mapMinSize'  : $('#map_MinSize').val()
-			//,'mapMaxSize'  : $('#map_MaxSize').val()
-			,'mapMaxSize'  : '19'
-			,'cdNa' : $('#p1_cdNa').data('code')
-			, 'areaCodeLv1' : $('#level1').data('code')
-			, 'areaCodeLv2' : $('#level2').data('code')
-			, 'wtX' : $("#level2").data('lat')
-			, 'wtY' : $("#level2").data('lng')
+		    'coId': $('#p1_coId').val(),
+		    'coNm': $('#p1_coNm').val(),
+		    'rdrtrNm': $('#p1_rdrtrNm').val(),
+		    'emailAddr': $('#p1_emailAddr').val(),
+		    'roadzpNo': $('#p1_roadzpNo').val(),
+		    'roadnmAddr': $('#p1_roadnmAddr').val(),
+		    'roadnmdtlAddr': $('#p1_roadnmdtlAddr').val(),
+		    'telNo': $('#p1_telNo').val(),
+		    'hpNo': $('#p1_hpNo').val(),
+		    'useYn': $('#p1_useYn').is(':checked') ? $('#p1_useYn').val() : '',
+		    'hpgAddr': $('#p1_hpgAddr').val(),
+		    'mapMinSize': $('#map_MinSize').val(),
+		    'mapMaxSize': '19',
+		    'cdNa': cdNa,
+		    'areaCodeLv1': $('#level1').data('code'),
+		    'areaCodeLv2': $('#level2').data('code'),
+		    'wtX': $('#level2').data('lat'),
+		    'wtY': $('#level2').data('lng')
 		};
 
-		//console.log(params)
+
+		//console.log(params);
 
   	 if(valid(params)){
 			$.ajax({
@@ -507,7 +523,7 @@ $('#btn_search').on('click', function () {
 				dataType : 'text',
 				url : (g_isInsert?'/insertService.do':'/updateService.do'),
 				success : function (resp) {
-					console.log(resp);
+					//console.log(resp);
 					var json = JSON.parse(resp);
 					var result = json.result;
 
@@ -755,10 +771,8 @@ $('#btn_search').on('click', function () {
 	function popupData(target_pop,row){
 
 		//const cdNa = document.getElementById('p1_cdNa');
-
 		if(target_pop=='write-1'){
 			if(row.length) {
-
 				$('#p1_coId').val(row.find('td:eq(1)').text());
 				//$('#p1_coId').prop("disabled",true);
 
@@ -789,15 +803,15 @@ $('#btn_search').on('click', function () {
 				$('#map_MaxSize').val(row.find('td:eq(17)').text());
 
 				//console.log($('#p1_cdNa').data('code'));
-
-				setLevelList(1, '');
+				setLevelList(0, '');
+				var area_code_lv0 = $('.optionItem[data-iso3166="'+ row.find('td:eq(12)').text() +'"]').attr('data-code');
+				setLevelList(1, area_code_lv0);
 
 				$('#level1').text("");
 				$('#level2').text("");
 
 				if (document.querySelector('.optionItem[data-code="' + row.find('td:eq(19)').text() + '"]') != null) {
 				//if (row.find('td:eq(19)').text().length > 0 ) {
-
 					const selectedItemLv1 = document.querySelector('.optionItem[data-code="' + row.find('td:eq(19)').text() + '"]');
 					//const lat1 = selectedItemLv1.dataset.lat;
 				    //const lng1 = selectedItemLv1.dataset.lng;
@@ -818,7 +832,6 @@ $('#btn_search').on('click', function () {
 				    //console.log('area : ', area1, ' / Latitude:', lat1, ' / Longitude:', lng1);
 
 				} else {
-
 					setLevelList(1, '');
 					//setLevelList(2, row.find('td:eq(19)').text());
 
@@ -833,7 +846,6 @@ $('#btn_search').on('click', function () {
  */
 				g_isInsert = false;
 			} else {
-
 				$('#p1_coId').val('');
 				$('#p1_coId').prop("disabled",false);
 
@@ -859,8 +871,10 @@ $('#btn_search').on('click', function () {
 
 				$('#p1_cdNa').text('대한민국');
 				$('#p1_cdNa').data('code','KR');
-
-				setLevelList(1, '');
+				setLevelList(0, '');
+				var area_code_lv0 = $('.optionItem[data-iso3166="'+ 'KR' +'"]').attr('data-code');
+				//console.log(area_code_lv0);
+				setLevelList(1, area_code_lv0);
 
 				$('#level1').text('');
 				$('#level2').text('');
@@ -889,11 +903,52 @@ function setLevelList(level, id){
 		//region = "${authInfo.cdNa}";
 		//$("#p1_cdNa").data('code');
 
-		var region = $("#p1_cdNa").data('code');
-
+		//var region = $("#p1_cdNa").data('iso3166');
+		var region='KR';
 		//document.getElementById('p1_cdNa').dataset.code;
 		//console.log(document.getElementById('p1_cdNa').dataset.code);
+		if(level == 0){
+			var node = document.getElementById('selectCdna')
+		 	node.innerHTML = '';
+			$.ajax({
+				type: "GET",
+				url: "${authInfo.restApiUrl}/administrative?region=" + region,
+				async:false,
+				data: {
 
+				},
+				headers: {
+			    	'Authorization': 'Bearer ' + localStorage.getItem("accessToken"),
+			    	'Refresh-Token': localStorage.getItem("Refresh-Token")
+			    },
+			    beforeSend:function(){
+					$('#circularG').css('display','block');
+			    },
+			    complete:function(){
+					$('#circularG').css('display','none');
+			    },
+				success: function(resp) {
+					datas = resp.data;
+					//console.log(datas);
+				 	var node = document.getElementById('selectCdna');
+				 	node.innerHTML = '';
+
+	            	var html = '';
+
+		            for(var i = 0; i <datas.length; i++){
+		            	data = datas[i];
+		            	var lat = data.center?.latitude ?? null;
+		            	var lng = data.center?.longitude ?? null;
+		            	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
+		            	html += '<li class="optionItem" data-iso3166="'+ data.iso3166 +'" data-code="' + data.id + '" data-lat="' + lat + '" data-lng="' + lng + '">' + data.name + '</li>'
+					}
+
+		            node.innerHTML = html;
+
+				}
+
+			})
+		}
 		// 레벨1인 경우
 		if(level == 1){
 
@@ -910,7 +965,7 @@ function setLevelList(level, id){
 		 	node.innerHTML = ''; */
 			$.ajax({
 				type: "GET",
-				url: "${authInfo.restApiUrl}/administrative?region=" + region,
+				url: "${authInfo.restApiUrl}" + "/administrative/" + id + "?region=" + region,
 				async:false,
 				data: {
 
@@ -937,8 +992,10 @@ function setLevelList(level, id){
 
 		            for(var i = 0; i <datas.length; i++){
 		            	data = datas[i];
+		            	var lat = data.center?.latitude ?? null;
+		            	var lng = data.center?.longitude ?? null;
 		            	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
-		            	html += '<li class="optionItem" data-code="' + data.id + '" data-lat="' + data.center.latitude + '" data-lng="' + data.center.longitude + '">' + data.name + '</li>'
+		            	html += '<li class="optionItem" data-code="' + data.id + '" data-lat="' + lat+ '" data-lng="' + lng + '">' + data.name + '</li>'
 					}
 
 		            node.innerHTML = html;
@@ -986,10 +1043,11 @@ function setLevelList(level, id){
 	            	var html = '';
 
 		            for(var i = 0; i <datas.length; i++){
-		            	data = datas[i]
+		            	data = datas[i];
+		            	var lat = data.center?.latitude ?? null;
+		            	var lng = data.center?.longitude ?? null;
 		            	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
-		            	html += '<li class="optionItem" data-code="' + data.id + '" data-lat="' + data.center.latitude + '" data-lng="' + data.center.longitude + '">' + data.name + '</li>'
-
+		            	html += '<li class="optionItem" data-code="' + data.id + '" data-lat="' + lat+ '" data-lng="' + lng + '">' + data.name + '</li>'
 					}
 
 		            node.innerHTML = html;
@@ -1087,6 +1145,8 @@ function setLevelList(level, id){
 			} else if (levelChk == 'selectCdna'){
 				$('#p1_cdNa').data('code',value);
 				$('#p1_cdNa').text(tmpSelectValue);
+				setLevelList(1 ,  value);
+
 				//const temp = document.getElementById('p1_cdNa');
 
 			 	//temp.setAttribute('data-code', temp.dataset.code);
@@ -1094,7 +1154,7 @@ function setLevelList(level, id){
 			 	//temp.setAttribute('data-lat', '37.4201556');
 			 	//temp.setAttribute('data-lng', '127.1262092');
 
-				setLevelList(1, '')
+				//setLevelList(1, '')
 			}
 			/* else if (levelChk == 'level2_ul'){
 
