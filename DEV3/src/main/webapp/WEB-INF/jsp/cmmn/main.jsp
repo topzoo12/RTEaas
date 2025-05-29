@@ -1257,12 +1257,26 @@ function lastUpdateInfo() {
 	      data:{
 	         co_id : '${authInfo.coId}',
 	      },
-	      success: function(response) {
+	      /* success: function(response) {
 				//$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건이   <br> 마지막으로 업데이트 되었습니다 <br>');
 				$("#alert_msg").html(response.data.date + ' 에  ' + response.data.count + ' 건의 데이터가<br> 마지막으로 업데이트 되었습니다. <br>');
 				//$("#alert_msg").html('${lastUpdateDate} 에  ${lastUpdateCount} 건이 <br> 마지막으로 업데이트 되었습니다 <br>');
 				$("#pop_alert").stop().fadeIn(300);
-	      },
+	      }, */
+	      success: function(response) {
+	    	    // 기본값 설정
+	    	    const date = response.data.date && response.data.date.trim() !== ""
+	    	        ? response.data.date
+	    	        : new Date().toISOString().slice(0, 10);  // "YYYY-MM-DD"
+
+	    	    const count = (typeof response.data.count === 'number' && !isNaN(response.data.count))
+	    	        ? response.data.count
+	    	        : 0;
+
+	    	    $("#alert_msg").html(date + ' 에  ' + count + ' 건의 데이터가<br> 마지막으로 업데이트 되었습니다. <br>');
+	    	    $("#pop_alert").stop().fadeIn(300);
+	    	},
+
 	      error: function(request,status,error){
 
 	      },
