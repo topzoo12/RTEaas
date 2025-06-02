@@ -436,6 +436,7 @@ public class UserController {
 		try {
 			AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
 
+			paramVO.setUsrId(authInfo.getSessionUserId());
 			paramVO.setSessionCoId(authInfo.getSessionCoId());
 			paramVO.setSessionUserId(authInfo.getSessionUserId());
 			int iResult = userService.updateUserPwd(paramVO);
