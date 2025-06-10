@@ -136,11 +136,50 @@
 						</div>
 						</dd>
 					</dl>
+					</div>
+					<div class="group">
+					<dl class="">
+						<dt>도로 유형</dt>
+						<dd>
+							<div class="selectOpt">
+							  <input type="checkbox" id="road1" class="roadstatus" name="roadstatus" value="road1" checked>
+							  <label for="road1">고속도로</label>
+
+							  <input type="checkbox" id="road2" class="roadstatus" name="roadstatus" value="road2" checked>
+							  <label for="road2">고속화도로</label>
+
+							  <input type="checkbox" id="road3" class="roadstatus" name="roadstatus" value="road3" checked>
+							  <label for="road3">일반국도</label>
+
+							  <input type="checkbox" id="road4" class="roadstatus" name="roadstatus" value="road4" checked>
+							  <label for="road4">지방도</label>
+
+							  <input type="checkbox" id="road5" class="roadstatus" name="roadstatus" value="road5" checked>
+							  <label for="road5">시군구도</label>
+
+							  <input type="checkbox" id="road6" class="roadstatus" name="roadstatus" value="road6" checked>
+							  <label for="road6">주거도로</label>
+
+							  <input type="checkbox" id="road7" class="roadstatus" name="roadstatus" value="road7" checked>
+							  <label for="road7">미분류도로</label>
+
+							  <input type="checkbox" id="road8" class="roadstatus" name="roadstatus" value="road8" checked>
+							  <label for="road8">보조도로</label>
+
+							  <input type="checkbox" id="road9" class="roadstatus" name="roadstatus" value="road9" checked>
+							  <label for="road9">기타유형</label>
+
+							  <input type="checkbox" id="roadnull" class="roadstatus" name="roadstatus" value="roadnull" checked>
+							  <label for="roadnull">정보없음</label>
+							</div>
+						</dd>
+					</dl>
 					<div class="submitarea">
 						<input type="checkbox" id="renew">
 						<button class="btn_iconTXT btn_r btn_m btn_resetOpt" onclick="optionReset()"><fmt:message key="RESET_SELECT" bundle="${bundle}"/></button>
 					</div>
-				</div>
+					</div>
+
 			</div>
 		<!-- ******************************************************************************************************************* -->
 		<!-- Level List 부분 end -->
@@ -771,7 +810,9 @@ $(".crack").change(function(){
 $(".statusstat").change(function(){
 	reSearch();
 });
-
+$(".roadstatus").change(function(){
+	reSearch();
+});
 $('#sortchk .sorting').on('click', function() {
     // 클릭된 'optionItem'의 data-value 값을 가져옵니다.
     var selectedValue = $(this).data('code');
@@ -925,7 +966,25 @@ function btnClick() {
 function mapClosePopup() {
 	map.closePopup();
 }
-
+//도로 유형 필터링 기준 정의
+const roadTypeGroups = {
+  road1: ['motorway', 'motorway_link'],
+  road2: ['trunk', 'trunk_link'],
+  road3: ['primary', 'primary_link'],
+  road4: ['secondary', 'secondary_link'],
+  road5: ['tertiary', 'tertiary_link'],
+  road6: ['residential', 'residential_link'],
+  road7: ['unclassified'],
+  road8: ['service', 'living_street', 'track', 'road'],
+  road9: [
+    'footway', 'path', 'pedestrian', 'cycleway', 'bridleway', 'steps', 'platform',
+    'corridor', 'crossing', 'bus_stop', 'busway', 'bus_guideway', 'construction',
+    'proposed', 'planned', 'abandoned', 'disused', 'razed', 'no', 'yes',
+    'elevator', 'emergency_access_point', 'emergency_bay', 'escape', 'raceway',
+    'passing_place', 'rest_area', 'services'
+  ],
+ roadnull: [null]
+};
 function reSearch() {
 
 	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
@@ -960,6 +1019,7 @@ function reSearch() {
 	var riskChk = $("input[name='risklist']:checked");
 	var crackChk = $("input[name='crack']:checked");
 	var statusChk = $("input[name='statusstat']:checked");
+	var roadChk = $("input[name='roadstatus']:checked");
 
 	map.eachLayer(function(layer) {
 		if ((layer instanceof L.Marker) || (layer instanceof L.MarkerCluster) || (layer instanceof L.MarkerClusterGroup)) {
@@ -977,6 +1037,17 @@ function reSearch() {
 		var boolRisk = false;
 		var boolCrack = false;
 		var boolStatus = false;
+		var boolRoadType = false;
+
+		// 도로 유형 필터
+		  const roadType = allData[i].way?.highway ?? null;
+		  for (var r = 0; r < roadChk.length; r++) {
+		    const checkedRoad = roadChk[r].value;
+		    if (roadTypeGroups[checkedRoad].includes(roadType)) {
+		      boolRoadType = true;
+		      break;
+		    }
+		  }
 
 		// 위험도
 		for ( var r = 0; r < riskChk.length; r++ ) {
@@ -1006,7 +1077,7 @@ function reSearch() {
 			}
 		}
 
-		if(boolRisk && boolCrack && boolStatus){
+		if(boolRisk && boolCrack && boolStatus && boolRoadType){
 			markerList.push(i);
 		}
 	}
@@ -1062,6 +1133,7 @@ function reSearch() {
 					vertical : item.risk['count-of-vertical-cracks'],
 					horizontal : item.risk['count-of-horizontal-cracks'],
 					alligators : item.risk['count-of-alligators'],
+					highway : item?.way?.highway ?? null,
 					icon : blueIcon,
 				}).on('click', onMarkerClick);
 
@@ -1141,14 +1213,14 @@ function reSearch() {
 
 function detail(id, clusterChk, listClicked){
 
-	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm;
+	var deviceNm, deviceId, addrPoLocality, dateFormat, lat, lng, level, status, potholes, vertical, horizontal, alligators, riskLvNm,highway;
 
 	markerIconCheck();
 	markerCluster.eachLayer(function(layer) {
 		if (layer.options.id === id) {
 			layer.setIcon(redIcon);
 			layer.options.iconChanged = true;
-
+			highway = layer.options.highway;
 			deviceNm = layer.options.deviceName;
 			deviceId = layer.options.deviceId;
 			addrPoLocality = layer.options.addrName;
@@ -1170,7 +1242,8 @@ function detail(id, clusterChk, listClicked){
 
 	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
 				+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
-				+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>";
+				+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>"
+				+ "도로유형 : " + highway + "</div>";
 
 	var lat = Number(lat);
 	var lng = Number(lng);
@@ -1319,6 +1392,9 @@ function optionReset() {
 	});
 
 	$("input[name='statusstat']").each(function() {
+		$(this).prop('checked', true);
+	});
+	$("input[name='roadstatus']").each(function() {
 		$(this).prop('checked', true);
 	});
 
