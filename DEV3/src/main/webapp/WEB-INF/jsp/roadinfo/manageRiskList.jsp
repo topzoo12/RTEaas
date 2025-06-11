@@ -123,6 +123,45 @@
 						</div>
 						</dd>
 					</dl>
+
+				</div>
+				<div class="group">
+					<dl class="">
+						<dt>도로 유형</dt>
+						<dd>
+							<div class="selectOpt">
+							  <input type="checkbox" id="road1" class="roadstatus" name="roadstatus" value="road1" checked>
+							  <label for="road1">고속도로</label>
+
+							  <input type="checkbox" id="road2" class="roadstatus" name="roadstatus" value="road2" checked>
+							  <label for="road2">고속화도로</label>
+
+							  <input type="checkbox" id="road3" class="roadstatus" name="roadstatus" value="road3" checked>
+							  <label for="road3">일반국도</label>
+
+							  <input type="checkbox" id="road4" class="roadstatus" name="roadstatus" value="road4" checked>
+							  <label for="road4">지방도</label>
+
+							  <input type="checkbox" id="road5" class="roadstatus" name="roadstatus" value="road5" checked>
+							  <label for="road5">시군구도</label>
+
+							  <input type="checkbox" id="road6" class="roadstatus" name="roadstatus" value="road6" checked>
+							  <label for="road6">주거도로</label>
+
+							  <input type="checkbox" id="road7" class="roadstatus" name="roadstatus" value="road7" checked>
+							  <label for="road7">미분류도로</label>
+
+							  <input type="checkbox" id="road8" class="roadstatus" name="roadstatus" value="road8" checked>
+							  <label for="road8">보조도로</label>
+
+							  <input type="checkbox" id="road9" class="roadstatus" name="roadstatus" value="road9" checked>
+							  <label for="road9">기타유형</label>
+
+							  <input type="checkbox" id="roadnull" class="roadstatus" name="roadstatus" value="roadnull" checked>
+							  <label for="roadnull">정보없음</label>
+							</div>
+						</dd>
+					</dl>
 					<div class="submitarea">
 						<input type="checkbox" id="renew">
 						<button class="btn_iconTXT btn_r btn_m btn_resetOpt" onclick="optionReset()"><fmt:message key="RESET_SELECT" bundle="${bundle}"/></button>
@@ -443,79 +482,94 @@
 		function normalizeStatus(status) {
 		    return status === null ? 'ETC' : status;
 		}
-
+		//도로 유형 필터링 기준 정의
+		const roadTypeGroups = {
+		  road1: ['motorway', 'motorway_link'],
+		  road2: ['trunk', 'trunk_link'],
+		  road3: ['primary', 'primary_link'],
+		  road4: ['secondary', 'secondary_link'],
+		  road5: ['tertiary', 'tertiary_link'],
+		  road6: ['residential', 'residential_link'],
+		  road7: ['unclassified'],
+		  road8: ['service', 'living_street', 'track', 'road'],
+		  road9: [
+		    'footway', 'path', 'pedestrian', 'cycleway', 'bridleway', 'steps', 'platform',
+		    'corridor', 'crossing', 'bus_stop', 'busway', 'bus_guideway', 'construction',
+		    'proposed', 'planned', 'abandoned', 'disused', 'razed', 'no', 'yes',
+		    'elevator', 'emergency_access_point', 'emergency_bay', 'escape', 'raceway',
+		    'passing_place', 'rest_area', 'services'
+		  ],
+		 roadnull: [null]
+		};
 		///////////////////// 검사 결과 내 재검색
 		function setListByStatus() {
-			var start=new Date();
+		    var start = new Date();
 		    var cnt = 0;
 		    var node = document.getElementById('riskList2');
 		    node.innerHTML = '';
 
-		    var date = '';
-		    var deviceInfo = {
-		        deviceId: '',
-		        deviceNm: ''
-		    };
-		    var imgUrl = '/img/no_imagesBG.png';
-		    var potholeCnt = 0;
-		    var vertical = 0;
-		    var horizontal = 0;
-		    var cracks = 0;
-		    var portId = '';
+		    var listHtml = '';
 
-		    // 체크된 risklist, crack, statusstat 값 가져오기
-		    var selectedRisk = new Set();  // Set으로 변경
-		    $('input[name="risklist"]:checked').each(function() {
-		        selectedRisk.add($(this).val());  // add() 사용
+		    // 필터 체크값들 가져오기
+		    var selectedRisk = new Set();
+		    $('input[name="risklist"]:checked').each(function () {
+		        selectedRisk.add($(this).val());
 		    });
 
 		    var selectedCracks = [];
-		    $('input[name="crack"]:checked').each(function() {
+		    $('input[name="crack"]:checked').each(function () {
 		        selectedCracks.push($(this).val());
 		    });
 
-		    var selectedStatus = new Set();  // Set으로 변경
-		    $('input[name="statusstat"]:checked').each(function() {
+		    var selectedStatus = new Set();
+		    $('input[name="statusstat"]:checked').each(function () {
 		        var val = $(this).val();
-		        if (val.startsWith('SD')) {
-		            selectedStatus.add(val.replace('SD', ''));  // add() 사용
-		        } else {
-		            selectedStatus.add(val);  // add() 사용
-		        }
+		        selectedStatus.add(val.startsWith('SD') ? val.replace('SD', '') : val);
 		    });
 
-		    var listHtml = '';  // 전체 HTML 누적용
+		    var selectedRoadTypes = new Set();
+		    $('input[name="roadstatus"]:checked').each(function () {
+		        selectedRoadTypes.add($(this).val());
+		    });
 
 		    for (var i = 0; i < wayDatas.length; i++) {
+		        var item = wayDatas[i];
+		        var pothole = item.pothole;
+		        var roadType = item.highway ?? null;
+		        var roadNm = item.name ?? '';
 
-		        var boolCrack = false;
-		        var pothole = wayDatas[i].pothole;
-		        var roadNm = wayDatas[i].name;
-		        if (roadNm == null) roadNm = ''; // way id는 있으나 도로명 없는 경우
-
-		        // 포트홀 개수
 		        var potholeCnt = pothole.risk['count-of-potholes'];
 		        var vertical = pothole.risk['count-of-vertical-cracks'];
 		        var horizontal = pothole.risk['count-of-horizontal-cracks'];
 		        var cracks = pothole.risk['count-of-alligators'];
 
-		        // 크랙 확인 부분
-		        var boolCrack = selectedCracks.some(function(crack) {
+		        // 크랙 필터
+		        var boolCrack = selectedCracks.some(function (crack) {
 		            return pothole.risk[crack] > 0;
 		        });
 
+		        // 도로 유형 필터
+		        var boolRoadType = false;
+		        for (let roadKey of selectedRoadTypes) {
+		            if (roadTypeGroups[roadKey].includes(roadType)) {
+		                boolRoadType = true;
+		                break;
+		            }
+		        }
+
 		        var className = statusClassName(pothole['status']);
-		        var html = '';
 
-		        // 조건: 선택된 risk, crack, status 값에 맞는 데이터만 표시
-		        if (selectedRisk.has(pothole.risk.level + "") && boolCrack &&
-		            selectedStatus.has(normalizeStatus(pothole.status))) {
-
+		        if (
+		            selectedRisk.has(String(pothole.risk.level)) &&
+		            boolCrack &&
+		            selectedStatus.has(normalizeStatus(pothole.status)) &&
+		            boolRoadType
+		        ) {
 		            cnt++;
 		            var date = dateFormat(new Date(pothole['timestamp']), 'list');
 		            var deviceInfo = getDeviceName(pothole['device-id']);
 
-		            html += '<li>';
+		            var html = '<li>';
 		            html += '<a class="riskPop">';
 		            html += '<div class="riskItem">';
 		            html += '<span class="num">' + cnt + '</span>';
@@ -537,21 +591,19 @@
 		            html += '</a>';
 		            html += '</li>';
 
-		            listHtml += html;  // html을 누적
+		            listHtml += html;
 		        }
 		    }
-		    var end=new Date();
-			console.log(end-start);
-		    // 루프가 끝난 후 한 번에 .html()으로 추가
+
+		    var end = new Date();
+		    console.log(end - start);
+
 		    $('.riskList').html(listHtml);
 		    $('#totCnt').text(cnt);
-		    if (cnt == 0) {
-		        $('.infoListWrapNoData').css('display', 'block');
-		    } else {
-		        $('.infoListWrapNoData').css('display', 'none');
-		    }
+		    $('.infoListWrapNoData').css('display', cnt === 0 ? 'block' : 'none');
 		    $('#circularG').css('display', 'none');
 		}
+
 
 
 		//////////////////
@@ -654,6 +706,9 @@
 			});
 
 			$("input[name='statusstat']").each(function() {
+				$(this).prop('checked', true);
+			});
+			$("input[name='roadstatus']").each(function() {
 				$(this).prop('checked', true);
 			});
 			setListByStatus();
@@ -1152,7 +1207,7 @@
 		$(document).ready(function() {
 
 			//체크박스 이벤트 추가
-			 $('input[name="risklist"], input[name="crack"], input[name="statusstat"]').change(function() {
+			 $('input[name="risklist"], input[name="crack"], input[name="statusstat"],input[name="roadstatus"]').change(function() {
 				 //$('#loadingSpinner').css('display', 'inline-block');
 				 setListByStatus();
 		     });
