@@ -133,11 +133,11 @@
 				</div>
 				<div class="group">
 					<dl class="">
-						<dt>도로 유형</dt>
+						<dt><fmt:message key="ROAD_TYPE" bundle="${bundle}"/></dt>
 						<dd>
 							<div class="selectOpt">
 							  <input type="checkbox" id="road1" class="roadstatus" name="roadstatus" value="road1" checked>
-							  <label for="road1">고속도로</label>
+							  <label for="road1"><fmt:message key="HIGHWAY_ROAD" bundle="${bundle}"/></label>
 
 							  <input type="checkbox" id="road2" class="roadstatus" name="roadstatus" value="road2" checked>
 							  <label for="road2">고속화도로</label>
@@ -1239,7 +1239,7 @@ function detail(id, clusterChk, listClicked){
 	var popuptxt = "<div><h1><fmt:message key="DEVICE_NAME" bundle="${bundle}"/> : " + deviceNm + " ( " + deviceId + " )</h1>"
 				+ "<fmt:message key="ROAD_NAME" bundle="${bundle}"/> : " + addrPoLocality + " (" + lat + ", " + lng + ")<br>"
 				+ "<fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/> : " + dateFormat + "</div>"
-				+ "도로유형 : " + highway + "</div>";
+				+ "<fmt:message key="ROAD_TYPE" bundle="${bundle}"/> : " + highway + "</div>";
 
 	var lat = Number(lat);
 	var lng = Number(lng);
@@ -1842,6 +1842,7 @@ $(document).ready(function() {
 
 
 	lastUpdateInfo();
+	//console.log(riskKeyValue);
 
 })
 

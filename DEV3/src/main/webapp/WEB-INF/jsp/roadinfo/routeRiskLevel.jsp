@@ -125,7 +125,7 @@
 					</div>
 					<!--   지도 위에 떠 있는 재검색 버튼 (icon 사용하지 않을 시 class=> with-icon 지우기) -->
 	  				<button id="drawlineBtn" class="map-center-btn with-icon" style="display: none;">
-					    현 지도에서 검색
+					    <fmt:message key="MAP_RESEARCH" bundle="${bundle}"/>
 					</button>
 				</div>
 			</div>

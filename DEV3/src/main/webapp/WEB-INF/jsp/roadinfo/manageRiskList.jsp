@@ -127,7 +127,7 @@
 				</div>
 				<div class="group">
 					<dl class="">
-						<dt>도로 유형</dt>
+						<dt><fmt:message key="ROAD_TYPE" bundle="${bundle}"/></dt>
 						<dd>
 							<div class="selectOpt">
 							  <input type="checkbox" id="road1" class="roadstatus" name="roadstatus" value="road1" checked>
