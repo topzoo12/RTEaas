@@ -1618,7 +1618,7 @@ $(document).ready(function() {
 
 	$('.btn_search').click();
 
-	lastUpdateInfo();
+	//lastUpdateInfo();
 
 })
 

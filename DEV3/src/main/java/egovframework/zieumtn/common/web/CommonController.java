@@ -228,8 +228,8 @@ public class CommonController {
 //
 //		System.out.println("◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇");
 
-		mv.addObject("lastUpdateDate", date);
-		mv.addObject("lastUpdateCount", count);
+		//mv.addObject("lastUpdateDate", date);
+		//mv.addObject("lastUpdateCount", count);
 /*
  *
 		//String naverhtml = cwGetWeather(weatherVO);
