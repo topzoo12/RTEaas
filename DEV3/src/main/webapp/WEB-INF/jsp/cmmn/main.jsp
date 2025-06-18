@@ -430,7 +430,48 @@ $('.btn_search').on("click", function(){
 
 	var areaCode;
 
-	if(searchLv == 2 || searchLv == 3){
+	if (searchLv == 3 && $("#level3").data('code') > 0) {
+	    var lat_l3 = $("#level3").data().lat;
+	    var lng_l3 = $("#level3").data().lng;
+
+	    if (lat_l3 !== undefined && lat_l3 !== null && lat_l3 !== "" &&
+	        lng_l3 !== undefined && lng_l3 !== null && lng_l3 !== "") {
+	        map.setView([lat_l3, lng_l3], map.getZoom());
+	    } else {
+	        console.warn("유효하지 않은 좌표입니다. setView를 실행하지 않습니다.");
+	    }
+	    areaCode = $("#level3").data('code');
+
+	} else if (searchLv >= 2 && $("#level2").data('code') > 0) {
+	    var lat_l2 = $("#level2").data().lat;
+	    var lng_l2 = $("#level2").data().lng;
+
+	    if (lat_l2 !== undefined && lat_l2 !== null && lat_l2 !== "" &&
+	        lng_l2 !== undefined && lng_l2 !== null && lng_l2 !== "") {
+	        map.setView([lat_l2, lng_l2], map.getZoom());
+	    } else {
+	        console.warn("유효하지 않은 좌표입니다. setView를 실행하지 않습니다.");
+	    }
+	    areaCode = $("#level2").data('code');
+
+	} else if (searchLv >= 1 && $("#level1").data('code') > 0) {
+	    var lat_l1 = $("#level1").data().lat;
+	    var lng_l1 = $("#level1").data().lng;
+
+	    if (lat_l1 !== undefined && lat_l1 !== null && lat_l1 !== "" &&
+	        lng_l1 !== undefined && lng_l1 !== null && lng_l1 !== "") {
+	        map.setView([lat_l1, lng_l1], map.getZoom());
+	    } else {
+	        console.warn("유효하지 않은 좌표입니다. setView를 실행하지 않습니다.");
+	    }
+	    areaCode = $("#level1").data('code');
+
+	} else {
+	    $("#alert_msg").html("<fmt:message key='REQ_LV1_LV2' bundle='${bundle}'/>");
+	    $("#pop_alert").stop().fadeIn(300);
+	}
+
+	/* if(searchLv == 2 || searchLv == 3){
 
 		if ($("#level3").data('code') > 0) {
 			var lat_l3 = $("#level3").data().lat;
@@ -462,7 +503,7 @@ $('.btn_search').on("click", function(){
 		$("#pop_alert").stop().fadeIn(300);
     	$("#pop_alert").stop().fadeIn(300);
 	}
-
+ */
 	var startDate = new Date($("#fromDt").val());
 	var endDate = new Date($("#toDt").val());
 

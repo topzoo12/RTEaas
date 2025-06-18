@@ -835,10 +835,20 @@
 
 			// var wayId = region == 'KR' ? '2409180' : '2409180' // 최초조회시 기본 성남 (일본좌표아직없음)
 
-			if (searchLv != 0) {
+			/* if (searchLv != 0) {
 				wayId = searchLv == 2 ? $('#level2').data('code')
 						: $('#level3').data('code');
 			}
+ */
+			 if (searchLv != 0) {
+					if (searchLv == 3) {
+						wayId = $('#level3').data('code');
+					} else if (searchLv == 2) {
+						wayId = $('#level2').data('code');
+					} else if (searchLv == 1) {
+						wayId = $('#level1').data('code');
+					}
+				}
 
 			$.ajax({
 				type : "GET",
@@ -973,6 +983,10 @@
 
 						for (var i = 0; i < datas.length; i++) {
 							data = datas[i]
+
+			            	//html += '<li class="optionItem" data-code="' + data.id + '">' + data.name + '</li>'
+			            	//html += '<li class="optionItem" data-iso3166="'+ data.iso3166 +'" data-code="' + data.id + '" data-lat="' + lat + '" data-lng="' + lng + '">' + data.name + '</li>'
+
 							html += '<li class="optionItem" data-code="' + data.id + '">'
 									+ data.name + '</li>'
 
@@ -1259,7 +1273,7 @@
 			// 검색버튼 클릭 이벤트
 			$('.btn_search').on("click", function() {
 
-				if (searchLv == 2 || searchLv == 3 || searchLv == 4) {
+				if (searchLv == 1 || searchLv == 2 || searchLv == 3 || searchLv == 4) {
 					getList();
 				} else {
 					$("#alert_msg").html("<fmt:message key="REQ_LV1_LV2" bundle="${bundle}"/>");
