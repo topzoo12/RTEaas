@@ -209,6 +209,7 @@ public class CommonController {
         params.put("co_id", "A0001");
 
         //String urlWithParams = apiUrl + "?administrative_id={administrative_id}&region={region}";
+        /*
         String urlWithParams = apiUrl + "?co_id={co_id}";
 
         ResponseEntity<String> result = restTemplate.getForEntity(urlWithParams, String.class, params);
@@ -220,7 +221,7 @@ public class CommonController {
         // 필요한 데이터 추출
         String date = rootNode.path("data").path("date").asText();
         int count = rootNode.path("data").path("count").asInt();
-
+         */
 //        System.out.println("Date: " + date);
 //        System.out.println("Count: " + count);
 //
