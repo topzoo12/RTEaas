@@ -198,15 +198,15 @@ public class CommonController {
 
 		RestTemplate restTemplate = new RestTemplate();
         //String apiUrl = "http://datahub-dev.zieumtn.com/gis/administrative/boundary";
-        String apiUrl = "http://datahub-dev.zieumtn.com/gis/pothole/latest";
+        //String apiUrl = "http://datahub-dev.zieumtn.com/gis/pothole/latest";
 
         //http://3.39.212.67/gis/administrative/boundary"
         //http://datahub-dev.zieumtn.com/gis
 
-        Map<String, Object> params = new HashMap<>();
+        //Map<String, Object> params = new HashMap<>();
         //params.put("administrative_id", "2505207");
         //params.put("region", "KR");
-        params.put("co_id", "A0001");
+        //params.put("co_id", "A0001");
 
         //String urlWithParams = apiUrl + "?administrative_id={administrative_id}&region={region}";
         /*
