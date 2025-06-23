@@ -20,6 +20,80 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<style>
+    .myDropdown_container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .myDropdown_button {
+      background:
+        url('../img/icon_arrow_dropdown.png') calc(100% - 8px) center no-repeat white;
+      padding: 8px 40px 8px 16px; /* 오른쪽에 아이콘 공간 확보 */
+      color: black;
+      border: none;          /* 테두리 제거 */
+      outline: none;         /* 포커스 테두리 제거 */
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* 드롭다운 열리면 아이콘 바뀜 */
+    .myDropdown_container.show .myDropdown_button {
+      background-image: url('../img/icon_arrow_dropup.png');
+    }
+
+    .myDropdown_content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      min-width: 200px;
+      margin-top: 5px;
+      z-index: 1;
+    }
+
+    .myDropdown_container.show .myDropdown_content {
+      display: block;
+    }
+
+    .myDropdown_device-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .myDropdown_device-label {
+      font-size: 14px;
+      padding-left: 4px; /* 왼쪽 여백 추가 */
+      color: var(--color-sub);
+    }
+
+    .myDropdown_toggle-btn {
+      padding: 6px 14px;
+      border: 1px solid #05B98C;
+      border-radius: 8px;
+      background-color: #05B98C;
+      color: white;
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+      transition: all 0.2s ease;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .myDropdown_toggle-btn.off {
+      background-color: #ccc;
+      border-color: #ccc;
+      color: #333;
+    }
+</style>
 
 <div class="contents_box item mainpage">
     <div class="contents mainMap">
@@ -257,6 +331,22 @@
                                 <li class="optionItem sorting" id="asc" data-code="asc"><fmt:message key="DATE_ASC" bundle="${bundle}"/></li>
                             </ul>
                         </span>
+                        <div class="myDropdown_container" id="myDropdown_unique">
+						  <button class="myDropdown_button" onclick="myDropdown_toggle()" aria-expanded="false" aria-haspopup="true">
+						   <fmt:message key="DEVICE" bundle="${bundle}"/>
+						  </button>
+						  <div class="myDropdown_content" role="menu" aria-labelledby="myDropdown_unique">
+						    <c:forEach var="deList" items="${deviceList}">
+						          <c:if test="${deList.useYn eq 'Y'}">
+						            <div class="myDropdown_device-control" data-device="device_${deList.deviceId}" data-mac="${deList.macAddr}">
+								      <span class="myDropdown_device-label">${deList.deviceId}</span>
+								      <button class="myDropdown_toggle-btn" onclick="myDropdown_toggleState(this)">ON</button>
+								    </div>
+						          </c:if>
+						  </c:forEach>
+
+						  </div>
+						</div>
                     </div>
                     <p class="itemCount">총 <em>0건</em></p>
                 </div>
@@ -291,7 +381,59 @@
 </div>
 
 <script>
+//디바이스 필터링
+function myDropdown_toggle() {
+    const dropdown = document.getElementById("myDropdown_unique");
+    const button = dropdown.querySelector('.myDropdown_button');
 
+    dropdown.classList.toggle("show");
+    const isOpen = dropdown.classList.contains("show");
+
+    button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  window.onclick = function(event) {
+    const dropdown = document.getElementById("myDropdown_unique");
+    if (!event.target.closest('.myDropdown_container')) {
+      if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+        dropdown.querySelector('.myDropdown_button').setAttribute('aria-expanded', 'false');
+      }
+    }
+  }
+
+  function myDropdown_toggleState(button) {
+	 // const deviceControl = button.closest('.myDropdown_device-control');
+	 // const deviceId = deviceControl ? deviceControl.dataset.device : null;
+	  // const newState = button.classList.contains('off') ? 'ON' : 'OFF'; // 토글되기 전 상태 기준
+
+	  // 토글 상태 변경
+	  if (button.classList.contains('off')) {
+	    button.classList.remove('off');
+	    button.textContent = 'ON';
+	    button.style.borderColor = '#05B98C';
+	    button.style.backgroundColor = '#05B98C';
+	    button.style.color = 'white';
+	  } else {
+	    button.classList.add('off');
+	    button.textContent = 'OFF';
+	    button.style.borderColor = '#ccc';
+	    button.style.backgroundColor = '#ccc';
+	    button.style.color = '#333';
+	  }
+	  reSearch();
+	}
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.myDropdown_toggle-btn').forEach(btn => {
+      btn.classList.remove('off');
+      btn.textContent = 'ON';
+      btn.style.borderColor = '#05B98C';
+      btn.style.backgroundColor = '#05B98C';
+      btn.style.color = 'white';
+    });
+  });
+///////
 var requiredMsg = '<fmt:message key="CONTENTS_REQUIRED" bundle="${bundle}"/>';
 var region = "${authInfo.cdNa}";
 
@@ -1067,11 +1209,25 @@ function reSearch() {
 
 	$('.infoList li').remove();
 
+	// 현재 ON 상태인 디바이스들의 macAddr 수집
+	const enabledMacAddrs = [];
+	$('.myDropdown_device-control').each(function () {
+		const isOn = $(this).find('.myDropdown_toggle-btn').text().trim() === 'ON';
+		if (isOn) {
+			enabledMacAddrs.push($(this).data('mac'));
+		}
+	});
+
 	for ( var i = 0; i < allData.length; i++ ) {
 		var boolRisk = false;
 		var boolCrack = false;
 		var boolStatus = false;
 		var boolRoadType = false;
+
+		//macAddr 필터 추가
+		if (!enabledMacAddrs.includes(allData[i]['device-id'])) {
+			continue; // OFF 상태 디바이스는 제외
+		}
 
 		// 도로 유형 필터
 		  const roadType = allData[i].way?.highway ?? null;

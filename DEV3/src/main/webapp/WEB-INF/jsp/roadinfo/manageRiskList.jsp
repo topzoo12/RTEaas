@@ -16,6 +16,67 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
+<style>
+
+.btn-device-dropdown-trigger-unique {
+  background:
+    url('../img/icon_arrow_dropdown.png') calc(100% - 8px) center no-repeat white;
+  padding: 8px 40px 8px 16px; /* 오른쪽에 아이콘 공간 확보 */
+  color: black;
+  border: none;          /* 테두리 제거 */
+  outline: none;         /* 포커스 테두리 제거 */
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.device-dropdown-panel-unique {
+  position: absolute;
+  top: 100%;
+  right: 0;  /* left: 0 대신 right: 0 */
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  width: 200px;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+
+/* wrapper 스타일 */
+.device-dropdown-wrapper-unique {
+  position: relative;
+  display: inline-block;
+}
+
+/* 디바이스 항목 */
+.device-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+/* ON/OFF 버튼 스타일 */
+.device-toggle-btn {
+  background-color: #05B98C;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.device-toggle-btn.off {
+  background-color: #ccc;
+  color: #333;
+}
+</style>
 	<div class="contentsWrap">
 		<p class="title ${fav}">${pageName.srnNm}</p>
 
@@ -207,6 +268,25 @@
 		                         <li class="optionItem" data-value="asc"><fmt:message key="DATE_ASC" bundle="${bundle}"/></li>
 		                     </ul>
 		                 </span>
+		                 <span>
+			                 <!-- 버튼과 드롭다운 감싸는 부모 -->
+							<div class="device-dropdown-wrapper-unique" style="position: relative; display: inline-block;">
+							  <button class="btn-device-dropdown-trigger-unique" id="btnDeviceDropdownTriggerUnique">
+							    <fmt:message key="DEVICE" bundle="${bundle}"/>
+							  </button>
+
+							  <div class="device-dropdown-panel-unique" id="deviceDropdownPanelUnique" style="display: none;">
+							  <c:forEach var="deList" items="${deviceList}">
+										<c:if test="${deList.useYn eq 'Y'}">
+											<div class="device-item" data-device="device_${deList.deviceId}" data-mac="${deList.macAddr}">
+										      <span>${deList.deviceId}</span>
+										      <button class="device-toggle-btn" onclick="toggleDeviceState(this)">ON</button>
+									    	</div>
+										 </c:if>
+								</c:forEach>
+							  </div>
+							</div>
+		                 </span>
                     </div>
 				</div>
 
@@ -369,6 +449,43 @@
 		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<script
 		src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<!--device filtering  -->
+	<script>
+	  const dropdownButton = document.getElementById('btnDeviceDropdownTriggerUnique');
+	  const dropdownPanel = document.getElementById('deviceDropdownPanelUnique');
+	  const dropdownWrapper = document.querySelector('.device-dropdown-wrapper-unique');
+
+	  // 드롭다운 토글
+	  dropdownButton.addEventListener('click', function (event) {
+	    event.stopPropagation();
+	    dropdownPanel.style.display = (dropdownPanel.style.display === 'none') ? 'block' : 'none';
+	  });
+
+	  // 바깥 클릭 시 닫기
+	  document.addEventListener('click', function (event) {
+	    if (!dropdownWrapper.contains(event.target)) {
+	      dropdownPanel.style.display = 'none';
+	    }
+	  });
+
+	  // ON/OFF 토글 및 mac 출력 + ON된 리스트 출력
+	  function toggleDeviceState(button) {
+	    //const deviceItem = button.closest('.device-item');
+	    //const macAddr = deviceItem.getAttribute('data-mac');
+
+	    // 토글 상태 변경
+	    if (button.classList.contains('off')) {
+	      button.classList.remove('off');
+	      button.textContent = 'ON';
+	    } else {
+	      button.classList.add('off');
+	      button.textContent = 'OFF';
+	    }
+	    setListByStatus()
+	    // 해당 디바이스 mac 출력
+	    //console.log(macAddr);
+	  }
+	</script>
 
 	<script language="javascript">
 
@@ -503,12 +620,22 @@
 		};
 		///////////////////// 검사 결과 내 재검색
 		function setListByStatus() {
-		    var start = new Date();
+		    //var start = new Date();
 		    var cnt = 0;
 		    var node = document.getElementById('riskList2');
 		    node.innerHTML = '';
 
 		    var listHtml = '';
+
+		    // ON 상태 디바이스 MAC 수집
+		    const onDeviceMacList = [];
+		    document.querySelectorAll('.device-item').forEach(item => {
+		        const button = item.querySelector('.device-toggle-btn');
+		        const mac = item.getAttribute('data-mac');
+		        if (!button.classList.contains('off')) {
+		            onDeviceMacList.push(mac);
+		        }
+		    });
 
 		    // 필터 체크값들 가져오기
 		    var selectedRisk = new Set();
@@ -537,6 +664,12 @@
 		        var pothole = item.pothole;
 		        var roadType = item.highway ?? null;
 		        var roadNm = item.name ?? '';
+		        var macAddr = pothole['device-id']; //  MAC 주소 가져오기
+
+		        // 디바이스가 ON 상태인지 확인
+		        if (!onDeviceMacList.includes(macAddr)) {
+		            continue;
+		        }
 
 		        var potholeCnt = pothole.risk['count-of-potholes'];
 		        var vertical = pothole.risk['count-of-vertical-cracks'];
@@ -567,7 +700,7 @@
 		        ) {
 		            cnt++;
 		            var date = dateFormat(new Date(pothole['timestamp']), 'list');
-		            var deviceInfo = getDeviceName(pothole['device-id']);
+		            var deviceInfo = getDeviceName(macAddr);
 
 		            var html = '<li>';
 		            html += '<a class="riskPop">';
@@ -595,8 +728,8 @@
 		        }
 		    }
 
-		    var end = new Date();
-		    console.log(end - start);
+		    //var end = new Date();
+		    //console.log('setListByStatus 처리 시간(ms):', end - start);
 
 		    $('.riskList').html(listHtml);
 		    $('#totCnt').text(cnt);

@@ -193,7 +193,7 @@ $(function() {
 				"srnUrl":"/"+pageSplit[3]+"/"+pageSplit[4].split('.')[0],
 				"mnuNm":$('.title').text()
 		}
-		console.log(params);
+		//console.log(params);
 		if($('.title').hasClass("message") === true) {
 			$.ajax({
 				type : 'POST',
