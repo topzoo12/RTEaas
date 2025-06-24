@@ -21,6 +21,26 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <style>
+	.map-center-btn.with-icon {
+	    position: absolute;
+	    bottom: 50px;
+	    left: 50%;
+	    transform: translateX(-50%);
+	    z-index: 1000;
+	    padding: 10px 20px 10px 40px; /* 왼쪽 여백 줘서 아이콘 공간 확보 */
+	    background-color: #007bff;
+	    color: white;
+	    border: none;
+	    border-radius: 8px;
+	    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+	    font-size: 16px;
+	    cursor: pointer;
+	    background-image: url('../../img/icon_search2.png'); /* 상대 경로 확인 필요 */
+	    background-repeat: no-repeat;
+	    background-position: 12px center;
+	    background-size: 18px 18px; /* 아이콘 크기 */
+	}
+
     .myDropdown_container {
       position: relative;
       display: inline-block;
@@ -263,8 +283,12 @@
 					</div>
 					<button class="riskPopImg_close pop_close" id=""></button>
 				</div>
-
+				<!--   지도 위에 떠 있는 재검색 버튼 (icon 사용 x 이면 with-icon 지우기) -->
+  				<button id="drawlineBtn" class="map-center-btn with-icon" style="display: none;">
+				    <fmt:message key="MAP_RESEARCH" bundle="${bundle}"/>
+				</button>
 			</div>
+
 		</div>
 
 	</div>
@@ -434,6 +458,7 @@ function myDropdown_toggle() {
     });
   });
 ///////
+
 var requiredMsg = '<fmt:message key="CONTENTS_REQUIRED" bundle="${bundle}"/>';
 var region = "${authInfo.cdNa}";
 
@@ -495,7 +520,106 @@ map.on('zoomend', function() {
 	map.closePopup();
 });
 
+////////현지도에서 검색////////////
+//지도 이동이 끝났을 때 버튼 보이기
 
+map.on('moveend', function () {
+ document.getElementById("drawlineBtn").style.display = "block";
+});
+
+//버튼 클릭 시 drawline 실행 + 버튼 다시 숨기기
+document.getElementById("drawlineBtn").addEventListener("click", function () {
+	if ($(".infoListWrap").css("display") == "none" && $(".infoDetailWrap").css("display") == "none") {
+		$(".btn_infoWrap").click();
+	}
+	//btn_infoWrap
+	//$(".btn_infoWrap").click();
+	map.eachLayer(function (layer) {
+	    if (!(layer instanceof L.TileLayer)) {
+	        map.removeLayer(layer);
+	    }
+	});
+	this.style.display = "none";
+	var startDate = new Date($("#fromDt").val());
+	var endDate = new Date($("#toDt").val());
+
+	var startDateMonth = (startDate.getMonth()+1 ) < 10 ?  "0" + "" +  (startDate.getMonth()+1 ): (startDate.getMonth()+1 );
+	var startDateDay = startDate.getDate() < 10 ?  "0" + "" +  startDate.getDate() : startDate.getDate();
+
+	var endDateMonth = (endDate.getMonth()+1 ) < 10 ?  "0" + "" +  (endDate.getMonth()+1 ): (endDate.getMonth()+1 );
+	var endDateDay = endDate.getDate() < 10 ?  "0" + "" +  endDate.getDate() : endDate.getDate();
+
+	var startDateFormat  = "" + startDate.getFullYear() + startDateMonth + startDateDay;
+	var endDateFormat  = "" + endDate.getFullYear() + endDateMonth + endDateDay;
+	drawViewportPolyline(map);
+	$.ajax({
+		type: "GET",
+		url: "${authInfo.restApiUrl}/potholeInArea",
+		data:{
+			on_way : false,
+			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+			south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+			region : region,
+			co_id : '${authInfo.coId}',
+			from : startDateFormat,
+			to : endDateFormat
+		},
+		success: function(response) {
+			allData = response.data;
+			reSearch();
+		},
+		error: function(request,status,error){
+
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block')
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none');
+		}
+	});
+});
+
+//사각형 polygon 함수
+function drawViewportPolyline(map, padding = 0.0025) {
+    if (!map) {
+        console.error("map 객체가 없습니다.");
+        return;
+    }
+
+    const bounds = map.getBounds();
+
+    const nw = [
+        bounds.getNorthWest().lat + padding,
+        bounds.getNorthWest().lng - padding
+    ];
+    const ne = [
+        bounds.getNorthEast().lat + padding,
+        bounds.getNorthEast().lng + padding
+    ];
+    const se = [
+        bounds.getSouthEast().lat - padding,
+        bounds.getSouthEast().lng + padding
+    ];
+    const sw = [
+        bounds.getSouthWest().lat - padding,
+        bounds.getSouthWest().lng - padding
+    ];
+
+    const rectanglePath = [nw, ne, se, sw, nw]; // 폴리라인은 닫지 않음 (하지만 마지막 점이 첫 점이면 사각형처럼 됨)
+
+
+    // 새 Polyline 추가
+    currentViewportPolyline = new L.Polyline(rectanglePath, {
+        color: '#2f33fb',
+        weight: 5,
+        smoothFactor: 1
+    }).addTo(map);
+}
+/////////
 var redIcon = L.icon({
 	iconUrl: '/img/pin_select.png',
 	iconSize:     [32, 32], 	// size of the icon
