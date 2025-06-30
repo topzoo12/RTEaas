@@ -101,8 +101,8 @@ public class DCSApiController {
 
 	    // 활성 시간대: 08:00:00 ~ 16:00:00
 	    String currentTimeOnly = nowKST.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-	    boolean isActive = currentTimeOnly.compareTo("08:00:00") >= 0 &&
-	                       currentTimeOnly.compareTo("16:00:00") <= 0;
+	    boolean isActive = currentTimeOnly.compareTo("09:00:00") >= 0 &&
+	                       currentTimeOnly.compareTo("18:00:00") <= 0;
 
 	    result.put("srv_time", currentTimeFormatted);
 	    result.put("api_name", "/uploadDetectedData.do");
@@ -117,7 +117,7 @@ public class DCSApiController {
 	    if (isActive) {
 	        result.put("msg", "");
 	    } else {
-	        result.put("msg", "Not included in the time condition range(08:00:00~16:00:00)");
+	        result.put("msg", "Not included in the time condition range(09:00:00~18:00:00)");
 	    }
 
 	    if (deviceId == null || deviceId.trim().isEmpty()) {
