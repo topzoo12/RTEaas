@@ -218,7 +218,7 @@
 
 $(document).ready(function() {
 
-	let now1 = new Date('2023-03-30');
+	/* let now1 = new Date('2023-03-30');
 	//console.log("현재 : ", now1);
 
 	let oneMonthAgo = new Date(now1.setMonth(now1.getMonth() - 1)); // 한달
@@ -229,7 +229,7 @@ $(document).ready(function() {
 
 	let oneMonthLater = new Date(now2.setMonth(now2.getMonth() + 1));
 	//console.log("한달 후 : ", oneMonthLater)
-
+ */
 	var fromDt = '';
 	var toDt = '';
 
@@ -309,7 +309,7 @@ var lines = [];
 
 })
 
-function drawline() {
+function drawline_zieum_version() {
 
 	//console.log($("#searchYearMonth").data('code'))
 
@@ -460,6 +460,110 @@ function drawline() {
 	})
 }
 
+function drawline() {
+
+	lineList.forEach(function(polyline) {
+        polyline.remove();  // 각 polyline 객체를 맵에서 제거
+    });
+
+	$.ajax({
+		type: "GET",
+		url: "${authInfo.restApiUrl}/detected-road-by-way",
+
+		data: {
+			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+			north_east:"latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+			south_west:"latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+			south_east:"latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+			//searchMonth:$("#searchYearMonth").data('code'),
+			region:"${authInfo.cdNa}",
+			co_id :"${authInfo.coId}"
+		},
+		success: function(resp) {
+			datas = resp.data
+
+			// 날짜 설정 오늘날짜로부터 1주일 (임시10.1)
+			var date1 = new Date();
+			var date2 = new Date(date1.setDate(date1.getDate() - 30));
+
+			var nowDate = new Date();
+
+			var oneMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 1)); // 한달
+			var twoMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 2)); // 두달
+			var threeMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 3)); // 세달
+			var fourMonthAgo = new Date(nowDate.setMonth(nowDate.getMonth() - 4)); // 네달
+
+			color = 'gray';
+
+			for (var i = 0; i < datas.length; i++) {
+
+				var positionDatas = datas[i].detectedRoadWayInfo;
+
+				/* const aa={
+                    "id": "20250405071540-MH2C62300039",
+                    "device-id": "MH2C62300039",
+                    "timestamp": "2025-05-04T22:15:40.000+00:00",
+                    "latitude": 37.393829,
+                    "longitude": 127.071022,
+                    "riskLevel": 0,
+                    "way": "{\"type\":\"LineString\",\"coordinates\":[[127.0698969,37.3874894],[127.070126,37.3887805],[127.0701943,37.3891655],[127.070242,37.3894343],[127.0702865,37.3896846],[127.0703675,37.390141],[127.0704776,37.3907614],[127.0705746,37.3913082],[127.0707494,37.3922931],[127.0709126,37.3932128],[127.0710306,37.3938777]]}",
+                    "dayCount": 8
+                };
+				positionDatas.push(aa); */
+				for (var x = 0; x < positionDatas.length; x++) {
+
+					const givenDate = new Date(positionDatas[x].timestamp);
+
+					// 현재 날짜
+					const now = new Date();
+
+					// 두 날짜 간의 차이 계산 (밀리초 차이 -> 일수로 변환)
+					const diffInMilliseconds = now - givenDate;
+					const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
+
+					// 30일, 30~60일, 60~90일, 그 이상으로 구분
+					if (diffInDays <= 30) {
+					    color = (monthColorKeyValue.find(item => item.code === 'one')).color;
+					} else if (diffInDays > 30 && diffInDays <= 60) {
+					    color = (monthColorKeyValue.find(item => item.code === 'two')).color;
+					} else if (diffInDays > 60 && diffInDays <= 90) {
+					    color = (monthColorKeyValue.find(item => item.code === 'thre')).color;
+					} else {010101154100
+					    color = (monthColorKeyValue.find(item => item.code === 'else')).color;
+					}
+
+
+					const geojson = JSON.parse(positionDatas[x].way);
+					const geo_polyline = L.geoJSON(geojson, {
+						                style: {
+						                    color: color,
+						                    weight: 4,
+						                    opacity: 0.7
+						                }
+						            });
+
+					map.addLayer(geo_polyline);
+
+					lineList.push(geo_polyline);
+				}
+			}
+
+		},
+		error: function(request,status,error){
+
+			//console.log("request.status = " + request.status);
+
+		},
+		beforeSend:function(){
+			$('#circularG').css('display','block');
+		},
+		complete : function(data) {
+			//  실패했어도 완료가 되었을 때 처리
+			$('#circularG').css('display','none');
+
+		}
+	})
+}
 </script>
 <script>
 /* document.addEventListener('DOMContentLoaded', function() {
