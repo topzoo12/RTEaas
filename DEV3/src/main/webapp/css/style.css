@@ -3,7 +3,7 @@
 /* 도로위험심각도 레벨 스위치 241204 */
 .markerOnOffpopup {
 	position: absolute;
-    left: 295px;
+    left: 245px;
     bottom: 8px;
     width: fit-content;
     z-index: 19999;

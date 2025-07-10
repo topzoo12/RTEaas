@@ -62,20 +62,38 @@
 	<!-- ******************************************************************************************************************* -->
 	<div class="contents mainMap">
         <div class="riskInfopopup" >
-	        <c:forEach var="lvList" items="${levelList}" varStatus="status">
+	        <%-- <c:forEach var="lvList" items="${levelList}" varStatus="status">
 				<!--
 				<input type="checkbox" id="${monthColor.etc2}" class="risklist" name="risklist" value="${monthColor.etc3}" checked><label for="${monthColor.etc2}">${monthColor.cdNm}</label>
 				 -->
 				<span id="riskbgcolorLv1" style="background:${lvList.etc1}">&nbsp;</span>
 				<span id="${lvList.cdId}" onclick="toggleLayer('${lvList.cdId}')">
-				<%-- ${lvList.cdNm} --%>
+				${lvList.cdNm}
 					<c:choose>
 						<c:when test="${nowCdNa eq 'KR'}">${lvList.cdNm}</c:when>
 						<c:when test="${nowCdNa eq 'US'}">${lvList.cdNmEng}</c:when>
 						<c:when test="${nowCdNa eq 'JP'}">${lvList.cdNmJp}</c:when>
 					</c:choose>
 				</span>
+			</c:forEach> --%>
+			<c:forEach var="lvList" items="${levelList}" varStatus="status">
+			    <c:if test="${lvList.cdId ne '99'}">
+			        <!--
+			        <input type="checkbox" id="${monthColor.etc2}" class="risklist" name="risklist" value="${monthColor.etc3}" checked>
+			        <label for="${monthColor.etc2}">${monthColor.cdNm}</label>
+			        -->
+			        <span id="riskbgcolorLv1" style="background:${lvList.etc1}">&nbsp;</span>
+			        <span id="${lvList.cdId}" onclick="toggleLayer('${lvList.cdId}')">
+			            <c:choose>
+			                <c:when test="${nowCdNa eq 'KR'}">${lvList.cdNm}</c:when>
+			                <c:when test="${nowCdNa eq 'US'}">${lvList.cdNmEng}</c:when>
+			                <c:when test="${nowCdNa eq 'JP'}">${lvList.cdNmJp}</c:when>
+			            </c:choose>
+			        </span>
+			    </c:if>
 			</c:forEach>
+
+
         </div>
         <div class="markerOnOffpopup" >
         	<input type="checkbox" name="markerOnOff" id="Levelswitch" checked/><label for="Levelswitch"></label>
@@ -1155,6 +1173,116 @@ function detail(id, clusterChk){
 }
 
 function getDetectedRoad() {
+    // 레이어 그룹 초기화 또는 초기 데이터 제거 필요 시 여기서
+    layerGroup0.clearLayers();
+    layerGroup1.clearLayers();
+    layerGroup2.clearLayers();
+    layerGroup3.clearLayers();
+	//console.log(lvColorKeyValue);
+    // 첫 번째 AJAX 요청 (위험도 기반)
+    const severityPromise = new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "${authInfo.restApiUrl}/detected-road-by-severity",
+            data: {
+                north_west: "latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+                north_east: "latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+                south_west: "latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+                south_east: "latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+                region: "${authInfo.cdNa}",
+                co_id: "${authInfo.coId}"
+            },
+            success: function (resp) {
+                const dataes = resp.data;
+                for (let i = 0; i < dataes.length; i++) {
+                    const positionDatas = dataes[i].detectedRoadWayInfo;
+                    for (let x = 0; x < positionDatas.length; x++) {
+                        const geojson = JSON.parse(positionDatas[x].way);
+                        const riskLevel = positionDatas[x].riskLevel;
+                        const color = lvColorKeyValue.find(item => item.riskLv == positionDatas[x].riskLevel).color;
+
+                        const geo_polyline = L.geoJSON(geojson, {
+                            style: {
+                                color: color,
+                                weight: 5,
+                                opacity: 0.9
+                            }
+                        });
+
+                        if (riskLevel === 1) {
+                            layerGroup1.addLayer(geo_polyline);
+                        } else if (riskLevel === 2) {
+                            layerGroup2.addLayer(geo_polyline);
+                        } else if (riskLevel === 3) {
+                            layerGroup3.addLayer(geo_polyline);
+                        } else {
+                            console.log("Unknown riskLevel:", riskLevel);
+                        }
+                    }
+                }
+                resolve(); // AJAX 1 완료
+            },
+            error: reject
+        });
+    });
+
+    // 두 번째 AJAX 요청 (도로 주행 경로 모두 표시)
+    const wayPromise = new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "${authInfo.restApiUrl}/detected-road-by-way",
+            data: {
+                north_west: "latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
+                north_east: "latitude:" + (map.getBounds().getNorthEast().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthEast().lng + 0.0025),
+                south_west: "latitude:" + (map.getBounds().getSouthWest().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthWest().lng - 0.0025),
+                south_east: "latitude:" + (map.getBounds().getSouthEast().lat - 0.0025) + ",longitude:" + (map.getBounds().getSouthEast().lng + 0.0025),
+                region: "${authInfo.cdNa}",
+                co_id: "${authInfo.coId}"
+            },
+            success: function (resp) {
+                const dataes = resp.data;
+                for (let i = 0; i < dataes.length; i++) {
+                    const positionDatas = dataes[i].detectedRoadWayInfo;
+                    for (let x = 0; x < positionDatas.length; x++) {
+                        const geojson = JSON.parse(positionDatas[x].way);
+                        const geo_polyline = L.geoJSON(geojson, {
+                            style: {
+                                color: lvColorKeyValue.find(item => item.lv === '00').color,
+                                weight:  5,
+                                opacity: 0.9
+                            }
+                        });
+                        layerGroup0.addLayer(geo_polyline);
+                    }
+                }
+                resolve(); // AJAX 2 완료
+            },
+            error: reject
+        });
+    });
+
+    // 두 요청이 모두 완료된 후 레이어 추가 및 순서 지정
+    Promise.all([severityPromise, wayPromise])
+        .then(() => {
+            // 지도에 레이어 추가
+            layerGroup0.addTo(map);
+            layerGroup1.addTo(map);
+            layerGroup2.addTo(map);
+            layerGroup3.addTo(map);
+
+            // 시각적 순서 정리: 0이 가장 아래, 3이 가장 위
+            layerGroup0.bringToBack();
+            layerGroup1.bringToFront();
+            layerGroup2.bringToFront();
+            layerGroup3.bringToFront();
+        })
+        .catch(err => {
+            console.error("로드 실패:", err);
+        });
+}
+
+
+function getDetectedRoad_zieum_version() {
 
 	$.ajax({
 		type: "GET",
@@ -1856,7 +1984,7 @@ function getDetectedRoad() {
 
 $(document).ready(function() {
 
-	let now1 = new Date('2023-03-30');
+	/* let now1 = new Date('2023-03-30');
 	//console.log("현재 : ", now1);
 
 	let oneMonthAgo = new Date(now1.setMonth(now1.getMonth() - 1)); // 한달
@@ -1866,7 +1994,7 @@ $(document).ready(function() {
 	//console.log("현재 : ", now2);
 
 	let oneMonthLater = new Date(now2.setMonth(now2.getMonth() + 1));
-	//console.log("한달 후 : ", oneMonthLater)
+	//console.log("한달 후 : ", oneMonthLater) */
 
 	//0.0025
 
@@ -1880,12 +2008,11 @@ $(document).ready(function() {
 	// $('#fromDt').val(dateFormat(date2, 'select'))
 	//$('#fromDt').val('2023-10-01')
 
-//setLevelList(1, '');
-region = "${authInfo.cdNa}";
+	//setLevelList(1, '');
+	region = "${authInfo.cdNa}";
 
-mapInfo(map);
-
-
+	mapInfo(map);
+	//$('#Levelswitch').click();
 
 })
 
