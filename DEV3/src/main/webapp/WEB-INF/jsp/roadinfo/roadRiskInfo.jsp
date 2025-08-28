@@ -218,13 +218,22 @@
 						<dd>
 							<div class="selectOpt">
 								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
-									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-										<c:choose>
-											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
-											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
-											<c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
-										</c:choose>
-									</label>
+
+								    <c:if test="${statuslist.cdId ne 'F'}">
+								        <input type="checkbox"
+								               id="${statuslist.cdId}"
+								               class="statusstat"
+								               name="statusstat"
+								               value="${statuslist.comCd}"
+								               checked>
+								        <label for="${statuslist.cdId}">
+								            <c:choose>
+								                <c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
+								                <c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
+								                <c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
+								            </c:choose>
+								        </label>
+								    </c:if>
 								</c:forEach>
 								<input type="checkbox" id="ETC" class="statusstat" name="statusstat" value="ETC" checked><label for="ETC"><fmt:message key="UNCLASSIFIED" bundle="${bundle}" /></label>
 						</div>
@@ -338,7 +347,33 @@
                             <dt><fmt:message key="PHOTO_DATETIME" bundle="${bundle}"/></dt>
                             <dd id="detail_ctime"></dd>
                             <dt><fmt:message key="ROAD_STATUS" bundle="${bundle}"/></dt>
-                            <dd id="detail_state"></dd>
+                            <!-- <dd id="detail_state"></dd> -->
+                            <dd id="popup_road_status">
+								<span class="selectBox bottom" id="select_road_status">
+                                    <select name="road_status" id="road_status">
+                                     <option value="Unclassified">
+                                    	 <fmt:message key="UNCLASSIFIED" bundle="${bundle}" />
+                                     </option>
+
+                                   	 <c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
+	                                     <option value="${statuslist.cdId}"  data-id="">
+		                                    <c:choose>
+													<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
+													<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
+													<c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
+											</c:choose>
+										 </option>
+                                    </c:forEach>
+
+                                   <!--  다국어 적용 전
+                                   <option value="Unclassified">미분류</option>
+                                    <option value="A">대기중</option>
+                                    <option value="B">복구중</option>
+                                    <option value="C">복구완료</option>
+                                    -->
+                                    </select>
+								</span>
+							</dd>
                         </dl>
                     </div>
                 </div>
@@ -589,6 +624,55 @@ document.getElementById("drawlineBtn").addEventListener("click", function () {
 			$('#circularG').css('display','none');
 		}
 	});
+});
+
+//포트홀 상태 변경 api
+$('#road_status').on('change', function () {
+    let newValue = $(this).val();
+    let db_id = $(this).attr('data-id');
+    // select box 비활성화
+    $(this).prop('disabled', true);
+
+    // 전송할 status 값 처리
+    let statusCode = newValue === 'Unclassified' ? null : newValue;
+    //console.log(db_id);
+
+    $.ajax({
+        type: 'POST',
+        url: '${authInfo.restApiUrl}/pothole/road-status',
+        data: {
+            "id": db_id,
+            "status": statusCode
+        },
+        success: function (resp) {
+            modifyStatus = true;
+
+            // 모달 닫기 등 추가 처리
+            if (typeof pop_close === 'function') pop_close();
+
+            // 사용자 알림 표시
+            $("#alert_msg").html('<fmt:message key="SAVE_COMPLETE" bundle="${bundle}"/>');
+            $('#pop_alert').stop().fadeIn(300);
+
+            // alldata에서 해당하는 id 데이터의 status 값 변경
+            let item = allData.find(obj => obj.id === db_id);
+            if (item) {
+                item.status = statusCode;
+                //console.log("변경된 데이터:", item);
+            } else {
+                console.warn("해당 ID를 가진 데이터를 찾을 수 없습니다:", db_id);
+            }
+        },
+        error: function (err) {
+            console.error('에러 발생:', err);
+            alert("저장 중 오류가 발생했습니다.");
+        },
+        complete: function () {
+            // select box 재활성화
+            $('#road_status').prop('disabled', false);
+            reSearch();
+        }
+    });
 });
 
 //사각형 polygon 함수
@@ -1355,10 +1439,14 @@ function reSearch() {
 		var boolStatus = false;
 		var boolRoadType = false;
 
-		//macAddr 필터 추가
-		if (!enabledMacAddrs.includes(allData[i]['device-id'])) {
-			continue; // OFF 상태 디바이스는 제외
+		// macAddr 및 status 필터 추가
+		if (
+		    !enabledMacAddrs.includes(allData[i]['device-id']) || // OFF 상태 디바이스 제외
+		    allData[i].status === 'F' // 상태값이 'F'인 경우 제외
+		) {
+		    continue;
 		}
+
 
 		// 도로 유형 필터
 		  const roadType = allData[i].way?.highway ?? null;
@@ -1637,8 +1725,11 @@ function detail(id, clusterChk, listClicked){
 	$("#detail_ctime").text(dateFormat);
 
 	// 현재상태
-	$("#detail_state").text(statusName(status));
+	//$("#detail_state").text(statusName(status));
+	var statusCode = status == null ? 'Unclassified' : status;
 
+	$('#road_status').val(statusCode).prop("selected",true);
+	$('#road_status').attr('data-id',id);
 /* 	if ($(".infoDetailWrap").css("display") == "none") {
 	    //$("div").show(); //display :none 일떄
 	    $('.infoDetailWrap').css('display', 'block')

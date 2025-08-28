@@ -148,6 +148,51 @@ public class roadRiskInfoController {
 
 	}
 
+//	@RequestMapping(value = "/roadinfo/structureInfo.do")
+//	public ModelAndView structureinfo(@ModelAttribute("fcltsInfoVO") FcltsInfoVO searchVO, ModelMap model, HttpSession session) throws Exception {
+//
+//		AuthVO authInfo = (AuthVO) session.getAttribute("authInfo");
+//
+//		searchVO.setSessionCoId(authInfo.getSessionCoId());
+//		searchVO.setSessionUserId(authInfo.getSessionUserId());
+//
+//		// 디바이스 리스트
+//		sysDeviceVO deviceVO = new sysDeviceVO();
+//		deviceVO.setCoId(authInfo.getCoId());
+//		List<?> deviceList = sysDeviceService.selectDeviceList(deviceVO);
+//
+//		LOGGER.info("접속정보" + authInfo.getCoId());
+//
+//		// 심각도 정보
+//		CodeVO select1VO = new CodeVO();
+//		select1VO.setCdgrpId("LV");
+//		select1VO.setSessionCoId(authInfo.getSessionCoId());
+//		select1VO.setSessionUserId(authInfo.getSessionUserId());
+//		List<?> levelList = codeService.selectCommCodeList(select1VO);
+//
+//
+//		session.setAttribute("deviceList", deviceList);
+//		session.setAttribute("authInfo", authInfo);
+//		session.setAttribute("levelList", levelList);
+//		session.setAttribute("cdNa", authInfo.getCdNa());
+//
+//
+//		ModelAndView mv = new ModelAndView("/roadinfo/roadStructureInfo");
+//
+//		List<LoginMenuVO> favList = (List<LoginMenuVO>) authInfo.getFavList();
+//		for(LoginMenuVO fav : favList){
+//			if(fav.getSrnUrl().equals("/roadinfo/roadRiskInfo")) {
+//				mv.addObject("fav", "message");
+//			}
+//		}
+//		System.out.println("--------------------------");
+//
+//		System.out.println(favList);
+//		System.out.println("111111111111111111111111111");
+//		return mv;
+//
+//	}
+
 	@RequestMapping(value = "/roadinfo/roadDetetionInfo.do")
 	public ModelAndView roadDetetionInfo(@ModelAttribute("fcltsInfoVO") FcltsInfoVO searchVO, ModelMap model, HttpSession session) throws Exception {
 

@@ -2364,6 +2364,12 @@ button.beefup__head[aria-disabled], .beefup__head > button[aria-disabled] {
 .badge_primary{ background-color: rgba(39,126,255,.2); color: var(--color); border: 0px solid rgba(39,126,255,.2);}
 .badge_running{ background-color: rgba(18, 231, 153, 0.2); color: var(--color); border: 0px solid rgba(7, 204, 132, 0.2);}
 .badge_secondary{ background-color: #00888A; color: var(--color);}
+.badge_out {
+    background-color: var(--bg-gray);
+    color: var(--color);
+    border: 1px solid var(--border);
+}
+
 .badge_warning{ background-color: rgba(255,184,0,.2); color: var(--color); border: 0px solid rgba(255,184,0,.2);}
 .badge_negative{ background-color: rgba(239,86,86,.2); color: var(--color); border: 0px solid rgba(239,86,86,.2);}
 .badge_danger{ background-color: rgba(222,13,0,.2); color: var(--color); border: 0px solid rgba(222,13,0,.2);}
@@ -2373,6 +2379,11 @@ button.beefup__head[aria-disabled], .beefup__head > button[aria-disabled] {
 /* 도로위험관리 조치상태 badge*/
 .badge.sm2{ font-size: 1.2rem; font-weight: 500; padding: 6px 10px 6px 26px; border-radius: 2rem; }
 span.badge.sm2.badge_waiting{ border: 1px solid var(--input-border);}
+span.badge.sm2.badge_out {
+    border: 1px solid var(--input-border);
+}
+
+
 .badge.sm2::before{
 	position: absolute;
     top: 5px;
@@ -2386,6 +2397,12 @@ span.badge.sm2.badge_waiting{ border: 1px solid var(--input-border);}
 	background-color: var(--color);
 	opacity: .5;
 }
+span.badge.sm2.badge_out::before {
+    mask-image: url(../img/ico_state2.svg); /* 필요시 변경 */
+    background-color: var(--color);
+    opacity: .5;
+}
+
 span.badge.sm2.badge_warning::before{	/* 미분류 */
     mask-image: url(../img/ico_state1.svg);
 }
@@ -2402,6 +2419,73 @@ span.badge.sm2.badge_primary::before{	/* 복구완료 */
 	background-color: var(--primary-stress);
 	opacity: 1;
     left: 4px;
+}
+/* ===== New Badge Colors ===== */
+.badge_orange {
+    background-color: rgba(255, 165, 0, 0.2); /* 주황색 */
+    color: var(--color);
+    border: 0px solid rgba(255, 165, 0, 0.2);
+}
+.badge_gray {
+    background-color: rgba(128, 128, 128, 0.2); /* 회색 (Gray) */
+    color: var(--color);
+    border: 0px solid rgba(128, 128, 128, 0.2);
+}
+
+.badge_red {
+    background-color: rgba(255, 0, 0, 0.2); /* 빨강색 */
+    color: var(--color);
+    border: 0px solid rgba(255, 0, 0, 0.2);
+}
+
+.badge_blue {
+    background-color: rgba(39, 126, 255, 0.2); /* 파랑색 */
+    color: var(--color);
+    border: 0px solid rgba(39, 126, 255, 0.2);
+}
+
+.badge_green {
+    background-color: rgba(18, 231, 153, 0.2); /* 초록색 */
+    color: var(--color);
+    border: 0px solid rgba(18, 231, 153, 0.2);
+}
+
+.badge_yellow {
+    background-color: rgba(255, 235, 59, 0.2); /* 노랑색 */
+    color: var(--color);
+    border: 0px solid rgba(255, 235, 59, 0.2);
+}
+
+/* ===== sm2 + Icon (도로위험관리 조치상태와 동일 동작) ===== */
+span.badge.sm2.badge_orange::before {
+    mask-image: url(../img/ico_state1.svg); /* 주황색 아이콘 */
+
+    opacity: 1;
+}
+span.badge.sm2.badge_gray::before {
+    mask-image: url(../img/ico_state1.svg); /* 주황색 아이콘 */
+
+    opacity: 1;
+}
+span.badge.sm2.badge_red::before {
+    mask-image: url(../img/ico_state1.svg); /* 빨강색 아이콘 */
+
+    opacity: 1;
+}
+span.badge.sm2.badge_blue::before {
+    mask-image: url(../img/ico_state1.svg); /* 파랑색 아이콘 */
+
+    opacity: 1;
+}
+span.badge.sm2.badge_green::before {
+    mask-image: url(../img/ico_state2.svg); /* 초록색 아이콘 */
+
+    opacity: 1;
+}
+span.badge.sm2.badge_yellow::before {
+    mask-image: url(../img/ico_state1.svg); /* 노랑색 아이콘 */
+
+    opacity: 1;
 }
 
 /*  */
