@@ -603,7 +603,7 @@ document.getElementById("drawlineBtn").addEventListener("click", function () {
 	$.ajax({
 		type: "GET",
 		url: "http://localhost:28080/road_obstructionInArea",
-		//url: "${authInfo.restApiUrl}/potholeInArea",
+		//url: "${authInfo.restApiUrl}/road_obstructionInArea",
 		data:{
 			on_way : false,
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
@@ -838,7 +838,7 @@ $('.btn_search').on("click", function(){
 	$.ajax({
 		type: "GET",
 		url: "http://localhost:28080/road_obstruction",
-		//url: "${authInfo.restApiUrl}/pothole",
+		//url: "${authInfo.restApiUrl}/road_obstruction",
 		data:{
 			on_way : false,
 			administrative_id : areaCode,
@@ -973,10 +973,11 @@ $('#road_status').on('change', function () {
     // 전송할 status 값 처리
     let statusCode = newValue === 'Unclassified' ? null : newValue;
     //console.log(db_id);
-
-    $.ajax({
+    console.log("status 변경 api 호출");
+	$('#road_status').prop('disabled', false);
+    /* $.ajax({
         type: 'POST',
-        url: 'http://localhost:28080/road_obstruction/road-status',
+        //url: 'http://localhost:28080/road_obstruction/road-status',
         //url: '${authInfo.restApiUrl}/pothole/road-status',
         data: {
             "id": db_id,
@@ -1010,7 +1011,7 @@ $('#road_status').on('change', function () {
             $('#road_status').prop('disabled', false);
             reSearch();
         }
-    });
+    }); */
 });
 
 

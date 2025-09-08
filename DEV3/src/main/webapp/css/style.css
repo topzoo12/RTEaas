@@ -1687,7 +1687,7 @@ input:checked + .slider:before {
     border-radius: 5px;
 }
 .infoListWrap .infoListItem .info .badge{
-	width: 66px;
+	width: 72px;
 	text-align: center;
 }
 .infoDetailWrap{}
@@ -3845,7 +3845,7 @@ span.badge.sm2.badge_yellow::before {
 
 /*도로위험관리 조치상태 badge*/
 .riskListWrap .riskList .riskItem .badge{
-	width: 76px;
+	width: 85px;
 	text-align: center;
 }
 

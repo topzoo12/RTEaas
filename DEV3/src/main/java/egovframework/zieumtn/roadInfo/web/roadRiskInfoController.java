@@ -187,8 +187,6 @@ public class roadRiskInfoController {
 //		}
 //		System.out.println("--------------------------");
 //
-//		System.out.println(favList);
-//		System.out.println("111111111111111111111111111");
 //		return mv;
 //
 //	}
