@@ -210,6 +210,14 @@ public class LoginController {
 			ModelAndView mv = new ModelAndView("/cmmn/loginSuccess");
 			// ------------------------------------------------------------------------------------------
 
+			// 시선유도봉
+			CodeVO codeVO_RO = new CodeVO();
+			codeVO_RO.setSessionCoId(authVO.getCoId());
+			codeVO_RO.setCdgrpId("RO");
+			List<?> codeListRo = codeService.selectCommCodeList(codeVO_RO);
+
+			session.setAttribute("codeListRo", codeListRo);
+
 			// 위험구분 ( ex> 포트홀, 수직균열, 수평균열, 피로균열 )
 			CodeVO codeVO_DV = new CodeVO();
 			codeVO_DV.setSessionCoId(authVO.getCoId());

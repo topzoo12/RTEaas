@@ -168,7 +168,7 @@
 			<div class="re-search-container" id="re-search-container" style="display: none; width: calc(100% - 400px);">
                 <button type="button" id="btn_re-searchWrap" class="btn_re-searchWrap" onclick='btnClick()'></button>
 
-				<%-- <div class="group">
+				<div class="group">
 					<dl class="">
 						<dt><fmt:message key="RISK_LEVEL" bundle="${bundle}"/></dt>
 						<dd>
@@ -186,12 +186,12 @@
 						</div>
 						</dd>
 					</dl>
-				</div> --%>
+				</div>
 				<div class="group">
 					<dl class="">
 						<dt><fmt:message key="TYPE" bundle="${bundle}"/></dt>
 						<dd>
-							<div class="selectOpt">
+							<!-- <div class="selectOpt">
 								<input type="checkbox"
 									         id="delineator"
 									         class="crack"
@@ -201,17 +201,17 @@
 									  >
 								  <label for="delineator">시선유도봉
 
-								  </label>
+								  </label> -->
 								  <div class="selectOpt">
 
-								  </label>
-								<%-- <c:forEach var="cracklist" items="${codeListDv}" varStatus="status">
+								  <!-- </label> -->
+								<c:forEach var="cracklist" items="${codeListRo}" varStatus="status">
 								  <input type="checkbox"
 								         id="${cracklist.etc1}"
 								         class="crack"
 								         name="crack"
 								         value="${cracklist.etc2}"
-								         <c:if test="${cracklist.etc1 eq 'pothole'}">checked</c:if>
+								         checked
 								  >
 								  <label for="${cracklist.etc1}">
 								    <c:choose>
@@ -220,7 +220,7 @@
 								      <c:when test="${nowCdNa eq 'JP'}">${cracklist.cdNmJp}</c:when>
 								    </c:choose>
 								  </label>
-								</c:forEach> --%>
+								</c:forEach>
 							</div>
 						</dd>
 					</dl>
@@ -231,13 +231,22 @@
 						<dd>
 							<div class="selectOpt">
 								<c:forEach var="statuslist" items="${codeListSd}" varStatus="status">
-									<input type="checkbox" id="${statuslist.cdId}" class="statusstat" name="statusstat" value="${statuslist.comCd}" checked><label for="${statuslist.cdId}">
-										<c:choose>
-											<c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
-											<c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
-											<c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
-										</c:choose>
-									</label>
+
+								    <c:if test="${statuslist.cdId ne 'F'}">
+								        <input type="checkbox"
+								               id="${statuslist.cdId}"
+								               class="statusstat"
+								               name="statusstat"
+								               value="${statuslist.comCd}"
+								               checked>
+								        <label for="${statuslist.cdId}">
+								            <c:choose>
+								                <c:when test="${nowCdNa eq 'KR'}">${statuslist.cdNm}</c:when>
+								                <c:when test="${nowCdNa eq 'US'}">${statuslist.cdNmEng}</c:when>
+								                <c:when test="${nowCdNa eq 'JP'}">${statuslist.cdNmJp}</c:when>
+								            </c:choose>
+								        </label>
+								    </c:if>
 								</c:forEach>
 								<input type="checkbox" id="ETC" class="statusstat" name="statusstat" value="ETC" checked><label for="ETC"><fmt:message key="UNCLASSIFIED" bundle="${bundle}" /></label>
 						</div>
@@ -332,7 +341,8 @@
                             <span id="riskLv"></span>
                         </div> -->
                         <div class="itemvalue">
-                        <span><em id="Cntdelineators"></em>시선유도봉</span>
+                        <span><em id="Cntdelineators"></em><fmt:message key="DELINEATOR" bundle="${bundle}"/></span>
+
                            <%-- <span><em id="CntPothole"></em><fmt:message key="POTHOLE" bundle="${bundle}"/></span>
                             <span><em id="CntVertical"></em><fmt:message key="VERTICAL_CRACK" bundle="${bundle}"/></span>
                             <span><em id="CntHorizontal"></em><fmt:message key="HORIZONTAL_CRACK" bundle="${bundle}"/></span>
@@ -1415,7 +1425,7 @@ function reSearch() {
 		showCoverageOnHover: false // 마우스 오버 시 폴리곤 비활성화
 	});
 
-	//var riskChk = $("input[name='risklist']:checked");
+	var riskChk = $("input[name='risklist']:checked");
 	var crackChk = $("input[name='crack']:checked");
 	var statusChk = $("input[name='statusstat']:checked");
 	var roadChk = $("input[name='roadstatus']:checked");
@@ -1447,9 +1457,12 @@ function reSearch() {
 		var boolStatus = false;
 		var boolRoadType = false;
 
-		//macAddr 필터 추가
-		if (!enabledMacAddrs.includes(allData[i]['device-id'])) {
-			continue; // OFF 상태 디바이스는 제외
+		// macAddr 및 status 필터 추가
+		if (
+		    !enabledMacAddrs.includes(allData[i]['device-id']) || // OFF 상태 디바이스 제외
+		    allData[i].status === 'F' // 상태값이 'F'인 경우 제외
+		) {
+		    continue;
 		}
 
 		// 도로 유형 필터
@@ -1462,19 +1475,19 @@ function reSearch() {
 		    }
 		  }
 
-		/* // 위험도
+		 // 위험도
 		for ( var r = 0; r < riskChk.length; r++ ) {
 			if (allData[i].risk.level == riskChk[r].value) {
 				boolRisk = true;
 			}
-		} */
+		}
 
 		for ( var c = 0; c < crackChk.length; c++ ) {
 			if (allData[i].risk[crackChk[c].value] > 0 ) {
 				boolCrack = true;
 			}
 		}
-		boolCrack = true;
+
 		for ( var d = 0; d < statusChk.length; d++ ) {
 
 			var statusValueChk = "ETC";
@@ -1490,7 +1503,7 @@ function reSearch() {
 			}
 		}
 
-		if(boolCrack && boolStatus && boolRoadType){
+		if(boolRisk && boolCrack && boolStatus && boolRoadType){
 			markerList.push(i);
 		}
 	}
