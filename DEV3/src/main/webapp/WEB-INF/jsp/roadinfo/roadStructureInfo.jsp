@@ -612,8 +612,8 @@ document.getElementById("drawlineBtn").addEventListener("click", function () {
 	drawViewportPolyline(map);
 	$.ajax({
 		type: "GET",
-		url: "http://localhost:28080/road_obstructionInArea",
-		//url: "${authInfo.restApiUrl}/road_obstructionInArea",
+		//url: "http://localhost:28080/road_obstructionInArea",
+		url: "${authInfo.restApiUrl}/road_obstructionInArea",
 		data:{
 			on_way : false,
 			north_west:"latitude:" + (map.getBounds().getNorthWest().lat + 0.0025) + ",longitude:" + (map.getBounds().getNorthWest().lng - 0.0025),
@@ -847,8 +847,8 @@ $('.btn_search').on("click", function(){
 
 	$.ajax({
 		type: "GET",
-		url: "http://localhost:28080/road_obstruction",
-		//url: "${authInfo.restApiUrl}/road_obstruction",
+		//url: "http://localhost:28080/road_obstruction",
+		url: "${authInfo.restApiUrl}/road_obstruction",
 		data:{
 			on_way : false,
 			administrative_id : areaCode,
